@@ -14,4 +14,3 @@ class Country(db.Model):
 
     def __repr__(self):
         return f"<Country(name={self.country_name}, type={self.country_type}, description={self.country_description})>"
-

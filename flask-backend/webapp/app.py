@@ -3,6 +3,7 @@ import sys
 
 from dotenv import load_dotenv
 from flask import Flask
+from flasgger import Swagger
 from webapp import db, migrate
 from webapp.routes import main_bp
 
@@ -26,6 +27,7 @@ def create_app(config: dict = None):
         app.config.update(config)
     db.init_app(app)
     migrate.init_app(app, db)
+    swagger = Swagger(app)
 
     app.register_blueprint(main_bp)
 
