@@ -21,9 +21,4 @@ class Tour(db.Model):
     reviews = db.relationship('Review', backref='tour', lazy='dynamic')
 
     def __repr__(self):
-        return f"<Tour(title={self.tour_title}, tour_type={self.tour_type}, price={self.tour_price})>"
-
-    def get_rating(self):
-        all_reviews = [review.review_value for review in self.reviews]
-        rating = sum(all_reviews) / len(all_reviews) if len(all_reviews) != 0 else 0
-        return rating
+        return f"<Tour(title={self.tour_title}, price={self.tour_price})>"
