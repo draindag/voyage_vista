@@ -14,10 +14,16 @@ class Tour(db.Model):
     tour_price = db.Column(MONEY, index=True, nullable=False)
     tour_start_date = db.Column(Date, index=True, nullable=False)
     tour_end_date = db.Column(Date, index=True, nullable=False)
+    category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.category_id'), nullable=False)
     country_id = db.Column(UUID(as_uuid=True), db.ForeignKey('countries.country_id'), nullable=False)
     offers = db.relationship('SpecialOffer', backref='tour', lazy='dynamic')
     users = db.relationship('FavTour', backref='tour', lazy='dynamic')
     reviews = db.relationship('Review', backref='tour', lazy='dynamic')
 
     def __repr__(self):
-        return f"<Tour(title={self.tour_title}, price={self.tour_price})>"
+        return f"<Tour(title={self.tour_title}, tour_type={self.tour_type}, price={self.tour_price})>"
+
+    def get_rating(self):
+        all_reviews = [review.review_value for review in self.reviews]
+        rating = sum(all_reviews) / len(all_reviews) if len(all_reviews) != 0 else 0
+        return rating

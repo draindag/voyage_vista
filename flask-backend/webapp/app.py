@@ -26,7 +26,7 @@ def create_app(config: dict = None):
     if config is not None:
         app.config.update(config)
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, compare_type=True)
     swagger = Swagger(app)
 
     app.register_blueprint(main_bp)
