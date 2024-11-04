@@ -34,6 +34,12 @@ pipenv shell
 
 ## Установка зависимостей
 
+При работе на Linux системах возможна ошибка при установке библиотеки psycopg2
+
+Необходимо установить библиотеку libpq-dev. Для примера, на Ubuntu:
+```bash
+sudo apt install libpq-dev
+```
 Все зависимости содержатся в requirements.txt или Pipfile в папке flask-backend
 
 Находясь в данной папке, после создания и активации виртуального окружения:
@@ -60,20 +66,15 @@ pipenv shell
 
 Для загрузки образа из архива необходимо прописать:
 ```bash
-docker load -i voyage-vista-database.tar
+sudo docker load -i voyage-vista-database.tar
 ```
-Перед выполнением следующей команды необходимо узнать выданное образу имя
-
-Замените my-postgres-image на фактическое имя образа, которое будет указано в выводе команды "docker load".
-Если данная команда ничего не вывела, воспользуйтесь "docker images"
-
 Запуск контейнера:
 ```bash
-docker run --name <задайте имя контейнера сами> -e POSTGRES_PASSWORD=<задайте пароль для пользователя> -d my-postgres-image
+sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 voyage-vista-database
 ```
 Подключение к консоли Postgresql сервера:
 ```bash
-docker exec -it <заданное вами имя контейнера> psql -U postgres
+sudo docker exec -it voyage-vista-db psql -U postgres
 ```
 
 ## Применение миграций
