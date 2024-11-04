@@ -6,7 +6,7 @@ from flask import Flask
 from flasgger import Swagger
 from webapp import db, migrate
 from webapp.routes import main_bp
-
+from webapp.routes.tours import tours_bp
 
 load_dotenv()
 
@@ -19,6 +19,7 @@ def create_app(config: dict = None):
         AUTH_SALT=os.getenv("AUTH_SALT"),
         SECRET_KEY=os.getenv("SECRET_KEY"),
     )
+    app.json.ensure_ascii = False
 
     if os.getenv("AUTH_SALT") is None or os.getenv("FLASK_RUN_PORT") is None or os.getenv("SECRET_KEY") is None:
         sys.exit("!!!!!!\nProgram needs a specified web_port/salt/secret in settings\n!!!!!!")
@@ -30,5 +31,7 @@ def create_app(config: dict = None):
     swagger = Swagger(app)
 
     app.register_blueprint(main_bp)
+
+    app.register_blueprint(tours_bp)
 
     return app
