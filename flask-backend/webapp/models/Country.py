@@ -13,3 +13,10 @@ class Country(db.Model):
 
     def __repr__(self):
         return f"<Country(name={self.country_name}, description={self.country_description})>"
+
+    def to_dict(self):
+        return {
+            'country_id': str(self.country_id),
+            'country_name': self.country_name,
+            'country_description': self.country_description
+        }
