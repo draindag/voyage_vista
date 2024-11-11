@@ -71,7 +71,7 @@ def show_most_popular_tours():
        """
 
     popular_tours = db.session.query(Tour).outerjoin(Tour.reviews).group_by(Tour.tour_id).order_by(
-        func.avg(Review.review_value).desc()).limit(30).all()
+        func.coalesce(func.avg(Review.review_value), 0).desc()).limit(30).all()
     popular_tours_data = []
     for tour in popular_tours:
         tour_data = tour.to_dict()
@@ -150,7 +150,7 @@ def show_category_page(category_id: str):
         }
     ]
 })
-def show_tour_page(category_id: str, tour_id: str):
+def show_tour_page_from_category(category_id: str, tour_id: str):
     """
        Возвращает всю информацию про конкретный тур
        ---
@@ -199,5 +199,50 @@ def show_country_page(country_id: str):
         valid_country_uuid = UUID(country_id)
         country = Country.query.filter_by(country_id=country_id).first_or_404()
         return jsonify(country.to_dict())
+    except ValueError:
+        abort(404)
+
+@tours_bp.route("/api/tours/countries/<string:country_id>/<string:tour_id>", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Вернул информацию по этому туру'
+        },
+        404: {
+            'description': 'Если страны или тура с таким id нет или неверный формат uuid'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'country_id',
+            'description': 'ID страны',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'tour_id',
+            'description': 'ID тура',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        }
+    ]
+})
+def show_tour_page_from_country(country_id: str, tour_id: str):
+    """
+       Возвращает всю информацию про конкретный тур
+       ---
+       """
+
+    try:
+        valid_country_uuid = UUID(country_id)
+        valid_tour_uuid = UUID(tour_id)
+        country = Country.query.filter_by(country_id=valid_country_uuid).first_or_404()
+        tour = Tour.query.filter_by(tour_id=valid_tour_uuid, country_id=valid_country_uuid).first_or_404()
+        tour_data = tour.to_dict()
+        tour_data['category'] = tour.category.to_dict()
+        tour_data['country'] = tour.country.to_dict()
+        return jsonify(tour_data)
     except ValueError:
         abort(404)
