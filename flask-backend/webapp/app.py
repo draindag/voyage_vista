@@ -2,9 +2,8 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from flask import Flask
-from flasgger import Swagger
-from webapp import db, migrate
+from flask import Flask, make_response, jsonify
+from webapp import db, migrate, ma, swagger
 from webapp.routes import main_bp
 from webapp.routes.tours import tours_bp
 
@@ -28,10 +27,15 @@ def create_app(config: dict = None):
         app.config.update(config)
     db.init_app(app)
     migrate.init_app(app, db, compare_type=True)
-    swagger = Swagger(app)
+    ma.init_app(app)
+    swagger.init_app(app)
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return make_response(jsonify({'error': 'Not found'}), 404)
 
     app.register_blueprint(main_bp)
 
-    app.register_blueprint(tours_bp)
+    app.register_blueprint(tours_bp,  url_prefix="/api/tours")
 
     return app
