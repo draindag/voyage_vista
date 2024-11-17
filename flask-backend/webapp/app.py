@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, make_response, jsonify
 from webapp import db, migrate, ma, swagger
 from webapp.routes import main_bp
+from webapp.routes.admin_panel import admin_bp
 from webapp.routes.tours import tours_bp
 
 load_dotenv()
@@ -37,5 +38,7 @@ def create_app(config: dict = None):
     app.register_blueprint(main_bp)
 
     app.register_blueprint(tours_bp,  url_prefix="/api/tours")
+
+    app.register_blueprint(admin_bp, url_prefix="/api/admin_panel")
 
     return app

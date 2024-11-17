@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Date
+from sqlalchemy import Date, UniqueConstraint
 
 from webapp import db
 from sqlalchemy.dialects.postgresql import UUID, NUMERIC
@@ -11,7 +11,7 @@ class Tour(db.Model):
     __tablename__ = 'tours'
 
     tour_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tour_title = db.Column(db.String(40), unique=True, nullable=False)
+    tour_title = db.Column(db.String(40), nullable=False)
     tour_description = db.Column(db.String(50), nullable=False)
     tour_text = db.Column(db.Text, nullable=False)
     tour_price = db.Column(NUMERIC(10, 2), index=True, nullable=False)
@@ -22,6 +22,10 @@ class Tour(db.Model):
     offers = db.relationship('SpecialOffer', backref='tour', lazy='dynamic')
     users = db.relationship('FavTour', backref='tour', lazy='dynamic')
     reviews = db.relationship('Review', backref='tour', lazy='dynamic')
+
+    __table_args__ = (
+        UniqueConstraint('tour_title', 'category_id', name='uq_tour_title_category_id'),
+    )
 
     def __repr__(self):
         return f"<Tour(title={self.tour_title}, price={self.tour_price})>"

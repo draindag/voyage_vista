@@ -33,7 +33,9 @@ def show_categories():
     categories = Category.query.all()
     categories_schema = CategorySchema(many=True)
     categories_data = categories_schema.dump(categories)
-    return jsonify(categories_data), 200
+
+    return jsonify({"success": True,
+                    "categories": categories_data}), 200
 
 
 @tours_bp.route("/special_offers", methods=["GET"])
@@ -53,7 +55,9 @@ def show_tours_with_discounts():
     tours_with_discounts = db.session.query(Tour).filter(Tour.offers.any()).all()
     tours_schema = TourSchema(many=True)
     discounts_tours_data = tours_schema.dump(tours_with_discounts)
-    return jsonify(discounts_tours_data), 200
+
+    return jsonify({"success": True,
+                    "tours": discounts_tours_data}), 200
 
 
 @tours_bp.route("/popular", methods=["GET"])
@@ -74,7 +78,9 @@ def show_most_popular_tours():
         func.coalesce(func.avg(Review.review_value), 0).desc()).limit(30).all()
     tours_schema = TourSchema(many=True)
     popular_tours_data = tours_schema.dump(popular_tours)
-    return jsonify(popular_tours_data), 200
+
+    return jsonify({"success": True,
+                    "tours": popular_tours_data}), 200
 
 
 @tours_bp.route("/categories/<string:category_id>", methods=["GET"])
@@ -83,11 +89,11 @@ def show_most_popular_tours():
         200: {
             'description': 'Вернул все туры для этой категории'
         },
-        404: {
-            'description': 'Если категории с таким id нет'
-        },
         400: {
             'description': 'Неверный формат uuid'
+        },
+        404: {
+            'description': 'Если категории с таким id нет'
         }
     },
     'parameters': [
@@ -111,14 +117,19 @@ def show_category_page(category_id: str):
         category = Category.query.filter_by(category_id=valid_category_uuid).first()
 
         if not category:
-            return {"message": "Категория не найдена"}, 404
+            return jsonify({"success": False,
+                "message": "Категория не найдена"}), 404
 
         tours_for_category = category.tours
         tours_schema = TourSchema(many=True)
         tours_for_category_data = tours_schema.dump(tours_for_category)
-        return jsonify(tours_for_category_data), 200
+
+        return jsonify({"success": True,
+                        "tours": tours_for_category_data}), 200
+
     except ValueError:
-        return jsonify({'error': 'Неверный формат ID у категории'}), 400
+        return jsonify({"success": False,
+                        'error': 'Неверный формат ID у категории'}), 400
 
 
 @tours_bp.route("/categories/<string:category_id>/<string:tour_id>", methods=["GET"])
@@ -127,11 +138,11 @@ def show_category_page(category_id: str):
         200: {
             'description': 'Вернул информацию по этому туру'
         },
-        404: {
-            'description': 'Если категории или тура с таким id нет'
-        },
         400: {
             'description': 'Неверный формат uuid у одного из параметров'
+        },
+        404: {
+            'description': 'Если категории или тура с таким id нет'
         }
     },
     'parameters': [
@@ -163,18 +174,24 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
         category = Category.query.filter_by(category_id=valid_category_uuid).first()
 
         if not category:
-            return {"message": "Категория не найдена"}, 404
+            return jsonify({"success": False,
+                            "message": "Категория не найдена"}), 404
 
         tour = category.tours.filter_by(tour_id=valid_tour_uuid).first()
 
         if not tour:
-            return {"message": "Тур не найден"}, 404
+            return jsonify({"success": False,
+                "message": "Тур не найден"}), 404
 
         tour_schema = TourSchema()
         tour_data = tour_schema.dump(tour)
-        return jsonify(tour_data), 200
+
+        return jsonify({"success": True,
+            "tour": tour_data}), 200
+
     except ValueError:
-        return jsonify({'error': 'Неверный формат ID у категории или тура'}), 400
+        return jsonify({"success": False,
+                        'error': 'Неверный формат ID у категории или тура'}), 400
 
 
 @tours_bp.route("/countries/<string:country_id>", methods=["GET"])
@@ -183,11 +200,11 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
         200: {
             'description': 'Вернул информацию по этой стране'
         },
-        404: {
-            'description': 'Если страны с таким id нет или неверный формат uuid'
-        },
         400: {
             'description': 'Неверный формат uuid'
+        },
+        404: {
+            'description': 'Если страны с таким id нет'
         }
     },
     'parameters': [
@@ -211,13 +228,18 @@ def show_country_page(country_id: str):
         country = Country.query.filter_by(country_id=valid_country_uuid).first()
 
         if not country:
-            return {"message": "Страна не найдена"}, 404
+            return jsonify({"success": False,
+                    "message": "Страна не найдена"}), 404
 
         country_schema = CountrySchema()
         country_data = country_schema.dump(country)
-        return jsonify(country_data), 200
+
+        return jsonify({"success": True,
+                        "country": country_data}), 200
+
     except ValueError:
-        return jsonify({'error': 'Неверный формат ID у страны'}), 400
+        return jsonify({"success": False,
+                        'error': 'Неверный формат ID у страны'}), 400
 
 @tours_bp.route("/countries/<string:country_id>/<string:tour_id>", methods=["GET"])
 @swag_from({
@@ -225,11 +247,11 @@ def show_country_page(country_id: str):
         200: {
             'description': 'Вернул информацию по этому туру'
         },
-        404: {
-            'description': 'Если страны или тура с таким id нет или неверный формат uuid'
-        },
         400: {
             'description': 'Неверный формат uuid у одного из параметров'
+        },
+        404: {
+            'description': 'Если страны или тура с таким id нет'
         }
     },
     'parameters': [
@@ -261,15 +283,21 @@ def show_tour_page_from_country(country_id: str, tour_id: str):
         country = Country.query.filter_by(country_id=valid_country_uuid).first()
 
         if not country:
-            return {"message": "Страна не найдена"}, 404
+            return jsonify({"success": False,
+                    "message": "Страна не найдена"}), 404
 
         tour = country.tours.filter_by(tour_id=valid_tour_uuid).first()
 
         if not tour:
-            return {"message": "Тур не найден"}, 404
+            return jsonify({"success": False,
+                            "message": "Тур не найден"}), 404
 
         tour_schema = TourSchema()
         tour_data = tour_schema.dump(tour)
-        return jsonify(tour_data), 200
+
+        return jsonify({"success": True,
+                        "tour": tour_data}), 200
+
     except ValueError:
-        return jsonify({'error': 'Неверный формат ID у страны или тура'}), 400
+        return jsonify({"success": False,
+                        'error': 'Неверный формат ID у страны или тура'}), 400

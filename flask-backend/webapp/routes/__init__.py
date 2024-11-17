@@ -17,11 +17,13 @@ main_bp = Blueprint('main', __name__)
 })
 def index():
     """
-       Возвращает все категории для туров
+       Возвращает все категории туров для слайдера на главной
        ---
        """
 
     categories = Category.query.all()
     categories_schema = CategorySchema(many=True)
     categories_data = categories_schema.dump(categories)
-    return jsonify(categories_data), 200
+
+    return jsonify({"success": True,
+                    "categories": categories_data}), 200
