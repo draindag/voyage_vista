@@ -1,21 +1,29 @@
+from flasgger import swag_from
 from flask import Blueprint, jsonify
+
+from webapp.models.Category import Category
+from webapp.schemas.CategorySchema import CategorySchema
 
 main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route("/api", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Вернул все категории'
+        }
+    }
+})
 def index():
     """
-       Это описание для Swagger.
+       Возвращает все категории туров для слайдера на главной
        ---
-       responses:
-         200:
-           description: пробный метод
        """
 
-    data = {
-        'name': 'John Doe',
-        'age': 30,
-        'city': 'New York'
-    }
-    return jsonify(data)
+    categories = Category.query.all()
+    categories_schema = CategorySchema(many=True)
+    categories_data = categories_schema.dump(categories)
+
+    return jsonify({"success": True,
+                    "categories": categories_data}), 200
