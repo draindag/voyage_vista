@@ -19,9 +19,9 @@ class Tour(db.Model):
     tour_end_date = db.Column(Date, index=True, nullable=False)
     category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.category_id'), nullable=False)
     country_id = db.Column(UUID(as_uuid=True), db.ForeignKey('countries.country_id'), nullable=False)
-    offers = db.relationship('SpecialOffer', backref='tour', lazy='dynamic')
-    users = db.relationship('FavTour', backref='tour', lazy='dynamic')
-    reviews = db.relationship('Review', backref='tour', lazy='dynamic')
+    offers = db.relationship('SpecialOffer', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
+    users = db.relationship('FavTour', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
 
     __table_args__ = (
         UniqueConstraint('tour_title', 'category_id', name='uq_tour_title_category_id'),

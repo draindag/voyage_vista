@@ -2,12 +2,14 @@ from uuid import UUID
 
 from flasgger import swag_from
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError, EXCLUDE
 
 from webapp import db
 from webapp.models.Category import Category
 from webapp.models.Country import Country
 from webapp.models.Tour import Tour
+from webapp.models.User import User
 from webapp.schemas.CategorySchema import CategorySchema
 from webapp.schemas.CountrySchema import CountrySchema
 from webapp.schemas.TourSchema import TourSchema
@@ -19,14 +21,36 @@ admin_bp = Blueprint("admin_panel", __name__)
     'responses': {
         200: {
             'description': 'Вернул все имеющиеся категории'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
-    }
+    },
+    'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
 })
+@jwt_required()
 def show_categories_for_admin():
     """
        Возвращает все категории для панели админа
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                "message": "Неизвестный пользователь!"}), 401
 
     categories = Category.query.all()
     categories_schema = CategorySchema(many=True)
@@ -39,14 +63,36 @@ def show_categories_for_admin():
     'responses': {
         200: {
             'description': 'Вернул все имеющиеся туры'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
-    }
+    },
+    'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
 })
+@jwt_required()
 def show_countries_for_admin():
     """
        Возвращает все страны для панели админа
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     countries = Country.query.all()
     countries_schema = CountrySchema(many=True)
@@ -59,14 +105,36 @@ def show_countries_for_admin():
     'responses': {
         200: {
             'description': 'Вернул все имеющиеся туры'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
-    }
+    },
+    'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
 })
+@jwt_required()
 def show_tours_for_admin():
     """
        Возвращает все туры для панели админа
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     tours = Tour.query.all()
     tours_schema = TourSchema(many=True)
@@ -82,6 +150,9 @@ def show_tours_for_admin():
         },
         400: {
             'description': 'Данные для создания новой категории не прошли проверку'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
     },
     'parameters': [
@@ -104,14 +175,31 @@ def show_tours_for_admin():
                 },
                 'required': ['category_title', 'category_description']
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def add_category():
     """
        Добавляет новую категорию
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     json_data = request.get_json()
 
@@ -125,8 +213,8 @@ def add_category():
     try:
         category = category_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-            "errors": err.messages}, 400
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
 
     db.session.add(category)
     db.session.commit()
@@ -148,6 +236,9 @@ def add_category():
         400: {
             'description': 'Неверный формат UUID категории'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если категории с таким ID нет'
         }
@@ -159,14 +250,31 @@ def add_category():
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_category_edit_page(category_id: str):
     """
        Возвращает всю информацию про конкретную категорию для формы редактирования
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_category_uuid = UUID(category_id)
@@ -198,6 +306,9 @@ def show_category_edit_page(category_id: str):
         400: {
             'description': 'Данные для обновления категории не прошли проверку или неверный формат UUID категории'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если категории с таким ID нет'
         }
@@ -229,14 +340,31 @@ def show_category_edit_page(category_id: str):
                 },
                 'required': ['category_title', 'category_description']
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def edit_category(category_id: str):
     """
        Обновляет данные категории
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_category_uuid = UUID(category_id)
@@ -263,8 +391,8 @@ def edit_category(category_id: str):
     try:
         update_data = category_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-            "errors": err.messages}, 400
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
 
     for key, value in json_data.items():
         setattr(category, key, value)
@@ -287,6 +415,9 @@ def edit_category(category_id: str):
         400: {
             'description': 'Неверный формат UUID категории'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если категории с таким ID нет'
         }
@@ -298,14 +429,31 @@ def edit_category(category_id: str):
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_category_delete_page(category_id: str):
     """
        Возвращает всю информацию про конкретную категорию для страницы удаления
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_category_uuid = UUID(category_id)
@@ -337,6 +485,9 @@ def show_category_delete_page(category_id: str):
         400: {
             'description': 'Поле с согласием не отмечено или неверный формат UUID категории'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если категории с таким ID нет'
         }
@@ -361,14 +512,31 @@ def show_category_delete_page(category_id: str):
                     }
                 }
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def delete_category(category_id: str):
     """
        Удаляет выбранную категорию
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_category_uuid = UUID(category_id)
@@ -405,6 +573,9 @@ def delete_category(category_id: str):
         },
         400: {
             'description': 'Данные для добавления новой страны не прошли проверку'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
     },
     'parameters': [
@@ -427,29 +598,46 @@ def delete_category(category_id: str):
                 },
                 'required': ['country_name', 'country_description']
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def add_country():
     """
        Добавляет новую страну
        ---
        """
 
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
     json_data = request.get_json()
 
     country_exists = Country.query.filter_by(country_name=json_data.get("country_name")).first()
     if country_exists:
-        return {"success": False,
-                "message": "Страна с таким названием уже существует"}, 400
+        return jsonify({"success": False,
+                "message": "Страна с таким названием уже существует"}), 400
 
     country_schema = CountrySchema(unknown=EXCLUDE)
 
     try:
         country = country_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-            "errors": err.messages}, 400
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
 
     db.session.add(country)
     db.session.commit()
@@ -470,6 +658,9 @@ def add_country():
         400: {
             'description': 'Неверный формат UUID страны'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если страны с таким ID нет'
         }
@@ -481,14 +672,31 @@ def add_country():
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_country_edit_page(country_id: str):
     """
        Возвращает всю информацию про конкретную страну для формы редактирования
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_country_id_uuid = UUID(country_id)
@@ -520,6 +728,9 @@ def show_country_edit_page(country_id: str):
         400: {
             'description': 'Данные для обновления страны не прошли проверку или неверный формат UUID страны'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если страны с таким ID нет'
         }
@@ -551,14 +762,31 @@ def show_country_edit_page(country_id: str):
                 },
                 'required': ['country_name', 'country_description']
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def edit_country(country_id: str):
     """
        Обновляет данные страны
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_country_uuid = UUID(country_id)
@@ -585,8 +813,8 @@ def edit_country(country_id: str):
     try:
         update_data = country_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-            "errors": err.messages}, 400
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
 
     for key, value in json_data.items():
         setattr(country, key, value)
@@ -609,6 +837,9 @@ def edit_country(country_id: str):
         400: {
             'description': 'Неверный формат UUID страны'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если страны с таким ID нет'
         }
@@ -620,14 +851,31 @@ def edit_country(country_id: str):
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_country_delete_page(country_id: str):
     """
        Возвращает всю информацию про конкретную страну для страницы удаления
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_country_uuid = UUID(country_id)
@@ -659,6 +907,9 @@ def show_country_delete_page(country_id: str):
         400: {
             'description': 'Поле с согласием не отмечено или неверный формат UUID страны'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если страны с таким ID нет'
         }
@@ -683,14 +934,31 @@ def show_country_delete_page(country_id: str):
                     }
                 }
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def delete_country(country_id: str):
     """
        Удаляет выбранную страну
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_country_uuid = UUID(country_id)
@@ -727,67 +995,87 @@ def delete_country(country_id: str):
         },
         400: {
             'description': 'Данные для добавления нового тура не прошли проверку'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         }
     },
     'parameters': [
-    {
-        'name': 'tour',
-        'in': 'body',
-        'required': True,
-        'schema': {
-            'type': 'object',
-            'properties': {
-                'tour_title': {
-                    'type': 'string',
-                    'maxLength': 40,
-                    'description': 'Название тура, не более 40 символов'
+        {
+            'name': 'tour',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'tour_title': {
+                        'type': 'string',
+                        'maxLength': 40,
+                        'description': 'Название тура, не более 40 символов'
+                    },
+                    'tour_description': {
+                        'type': 'string',
+                        'description': 'Описание тура, не более 50 символов'
+                    },
+                    'tour_text': {
+                        'type': 'string',
+                        'description': 'Текст тура, обязательно для заполнения'
+                    },
+                    'tour_price': {
+                        'type': 'number',
+                        'format': 'decimal',
+                        'description': 'Цена тура, обязательно для заполнения'
+                    },
+                    'tour_start_date': {
+                        'type': 'string',
+                        'format': 'date',
+                        'description': 'Дата начала тура, обязательно для заполнения'
+                    },
+                    'tour_end_date': {
+                        'type': 'string',
+                        'format': 'date',
+                        'description': 'Дата окончания тура, обязательно для заполнения'
+                    },
+                    'category_id': {
+                        'type': 'string',
+                        'format': 'uuid',
+                        'description': 'ID категории тура, обязательно для заполнения'
+                    },
+                    'country_id': {
+                        'type': 'string',
+                        'format': 'uuid',
+                        'description': 'ID страны тура, обязательно для заполнения'
+                    }
                 },
-                'tour_description': {
-                    'type': 'string',
-                    'description': 'Описание тура, не более 50 символов'
-                },
-                'tour_text': {
-                    'type': 'string',
-                    'description': 'Текст тура, обязательно для заполнения'
-                },
-                'tour_price': {
-                    'type': 'number',
-                    'format': 'decimal',
-                    'description': 'Цена тура, обязательно для заполнения'
-                },
-                'tour_start_date': {
-                    'type': 'string',
-                    'format': 'date',
-                    'description': 'Дата начала тура, обязательно для заполнения'
-                },
-                'tour_end_date': {
-                    'type': 'string',
-                    'format': 'date',
-                    'description': 'Дата окончания тура, обязательно для заполнения'
-                },
-                'category_id': {
-                    'type': 'string',
-                    'format': 'uuid',
-                    'description': 'ID категории тура, обязательно для заполнения'
-                },
-                'country_id': {
-                    'type': 'string',
-                    'format': 'uuid',
-                    'description': 'ID страны тура, обязательно для заполнения'
-                }
-            },
-            'required': ['tour_title', 'tour_description', 'tour_text',
-                         'tour_price', 'tour_start_date', 'tour_end_date',
-                         'category_id', 'country_id']
+                'required': ['tour_title', 'tour_description', 'tour_text',
+                             'tour_price', 'tour_start_date', 'tour_end_date',
+                             'category_id', 'country_id']
+            }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
-    }
     ]
 })
+@jwt_required()
 def add_tour():
     """
        Добавляет новый тур
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     json_data = request.get_json()
     tour_title = json_data.get("tour_title")
@@ -816,13 +1104,13 @@ def add_tour():
     try:
         tour = tour_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-                "errors": err.messages}, 400
+        return jsonify({"success": False,
+                "errors": err.messages}), 400
 
     tour_exists_in_that_category = Tour.query.filter_by(tour_title=tour_title, category_id=category_id).first()
     if tour_exists_in_that_category:
-        return {"success": False,
-                "message": "Тур с таким названием уже существует в этой категории"}, 400
+        return jsonify({"success": False,
+                "message": "Тур с таким названием уже существует в этой категории"}), 400
 
     db.session.add(tour)
     db.session.commit()
@@ -843,6 +1131,9 @@ def add_tour():
         400: {
             'description': 'Неверный формат UUID тура'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если тура с таким ID нет'
         }
@@ -854,14 +1145,31 @@ def add_tour():
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_tour_edit_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур для формы редактирования
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_tour_id_uuid = UUID(tour_id)
@@ -892,6 +1200,9 @@ def show_tour_edit_page(tour_id: str):
         },
         400: {
             'description': 'Данные для обновления тура не прошли проверку или неверный формат UUID тура'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
         },
         404: {
             'description': 'Если тура с таким ID нет'
@@ -955,14 +1266,31 @@ def show_tour_edit_page(tour_id: str):
                              'tour_price', 'tour_start_date', 'tour_end_date',
                              'category_id', 'country_id']
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def edit_tour(tour_id: str):
     """
        Обновляет данные тура
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_tour_uuid = UUID(tour_id)
@@ -1003,8 +1331,8 @@ def edit_tour(tour_id: str):
     try:
         update_data = tour_schema.load(json_data)
     except ValidationError as err:
-        return {"success": False,
-            "errors": err.messages}, 400
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
 
     if tour.tour_title != tour_title:
         tour_exists = Tour.query.filter_by(tour_title=tour_title, category_id=category_id).first()
@@ -1033,6 +1361,9 @@ def edit_tour(tour_id: str):
         400: {
             'description': 'Неверный формат UUID тура'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если тура с таким ID нет'
         }
@@ -1044,14 +1375,31 @@ def edit_tour(tour_id: str):
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def show_tour_delete_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур для страницы удаления
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_tour_uuid = UUID(tour_id)
@@ -1083,6 +1431,9 @@ def show_tour_delete_page(tour_id: str):
         400: {
             'description': 'Поле с согласием не отмечено или неверный формат UUID тура'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
         404: {
             'description': 'Если тура с таким ID нет'
         }
@@ -1107,14 +1458,31 @@ def show_tour_delete_page(tour_id: str):
                     }
                 }
             }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
         }
     ]
 })
+@jwt_required()
 def delete_tour(tour_id: str):
     """
        Удаляет выбранный тур
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
 
     try:
         valid_tour_uuid = UUID(tour_id)

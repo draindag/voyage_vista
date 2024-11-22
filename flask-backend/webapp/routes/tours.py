@@ -2,6 +2,7 @@ from uuid import UUID
 
 from flasgger import swag_from
 from flask import Blueprint, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import func
 
 from webapp import db
@@ -9,6 +10,7 @@ from webapp.models.Category import Category
 from webapp.models.Review import Review
 from webapp.models.Tour import Tour
 from webapp.models.Country import Country
+from webapp.models.User import User
 from webapp.schemas.CategorySchema import CategorySchema
 from webapp.schemas.CountrySchema import CountrySchema
 from webapp.schemas.TourSchema import TourSchema
@@ -141,11 +143,23 @@ def show_category_page(category_id: str):
         400: {
             'description': 'Неверный формат uuid у одного из параметров'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку'
+        },
         404: {
             'description': 'Если категории или тура с таким id нет'
         }
     },
     'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        },
         {
             'name': 'category_id',
             'description': 'ID категории',
@@ -162,11 +176,17 @@ def show_category_page(category_id: str):
         }
     ]
 })
+@jwt_required()
 def show_tour_page_from_category(category_id: str, tour_id: str):
     """
        Возвращает всю информацию про конкретный тур
        ---
        """
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None:
+        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
 
     try:
         valid_category_uuid = UUID(category_id)
@@ -250,11 +270,23 @@ def show_country_page(country_id: str):
         400: {
             'description': 'Неверный формат uuid у одного из параметров'
         },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку'
+        },
         404: {
             'description': 'Если страны или тура с таким id нет'
         }
     },
     'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        },
         {
             'name': 'country_id',
             'description': 'ID страны',
@@ -271,11 +303,18 @@ def show_country_page(country_id: str):
         }
     ]
 })
+@jwt_required()
 def show_tour_page_from_country(country_id: str, tour_id: str):
     """
        Возвращает всю информацию про конкретный тур
        ---
        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None:
+        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
 
     try:
         valid_country_uuid = UUID(country_id)
