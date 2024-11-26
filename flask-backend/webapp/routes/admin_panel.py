@@ -8,10 +8,12 @@ from marshmallow import ValidationError, EXCLUDE
 from webapp import db
 from webapp.models.Category import Category
 from webapp.models.Country import Country
+from webapp.models.SpecialOffer import SpecialOffer
 from webapp.models.Tour import Tour
 from webapp.models.User import User
 from webapp.schemas.CategorySchema import CategorySchema
 from webapp.schemas.CountrySchema import CountrySchema
+from webapp.schemas.OfferSchema import OfferSchema
 from webapp.schemas.TourSchema import TourSchema
 
 admin_bp = Blueprint("admin_panel", __name__)
@@ -1045,6 +1047,11 @@ def delete_country(country_id: str):
                         'type': 'string',
                         'format': 'uuid',
                         'description': 'ID страны тура, обязательно для заполнения'
+                    },
+                    'offer_id': {
+                        'type': 'string',
+                        'format': 'uuid',
+                        'description': 'ID акции на тур, необязательно для заполнения'
                     }
                 },
                 'required': ['tour_title', 'tour_description', 'tour_text',
@@ -1081,15 +1088,23 @@ def add_tour():
     tour_title = json_data.get("tour_title")
     category_id = json_data.get("category_id")
     country_id = json_data.get("country_id")
+    offer_id = json_data.get("offer_id")
 
     try:
         valid_category_uuid = UUID(category_id)
         valid_country_uuid = UUID(country_id)
         category = Category.query.filter_by(category_id=valid_category_uuid).first()
         country = Country.query.filter_by(country_id=valid_country_uuid).first()
+        offer = None
+        if offer_id:
+            valid_offer_uuid = UUID(offer_id)
+            offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+            if not offer:
+                return jsonify({"success": False,
+                                "message": "Акция с переданным UUID не найдена"}), 400
     except ValueError:
         return jsonify({"success": False,
-                        'error': 'Неверный формат ID у категории или страны'}), 400
+                        'error': 'Неверный формат ID у категории, страны или акции'}), 400
 
     if not category:
         return jsonify({"success": False,
@@ -1113,6 +1128,8 @@ def add_tour():
                 "message": "Тур с таким названием уже существует в этой категории"}), 400
 
     db.session.add(tour)
+    if offer:
+        tour.offers.append(offer)
     db.session.commit()
 
     return jsonify({
@@ -1260,6 +1277,11 @@ def show_tour_edit_page(tour_id: str):
                         'type': 'string',
                         'format': 'uuid',
                         'description': 'ID страны тура, обязательно для заполнения'
+                    },
+                    'offer_id': {
+                        'type': 'string',
+                        'format': 'uuid',
+                        'description': 'ID акции на тур, необязательно для заполнения'
                     }
                 },
                 'required': ['tour_title', 'tour_description', 'tour_text',
@@ -1302,12 +1324,20 @@ def edit_tour(tour_id: str):
     tour_title = json_data.get("tour_title")
     category_id = json_data.get("category_id")
     country_id = json_data.get("country_id")
+    offer_id = json_data.get("offer_id")
 
     try:
         valid_category_uuid = UUID(category_id)
         valid_country_uuid = UUID(country_id)
         category = Category.query.filter_by(category_id=valid_category_uuid).first()
         country = Country.query.filter_by(country_id=valid_country_uuid).first()
+        offer = None
+        if offer_id:
+            valid_offer_uuid = UUID(offer_id)
+            offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+            if not offer:
+                return jsonify({"success": False,
+                                "message": "Акция с переданным UUID не найдена"}), 400
     except ValueError:
         return jsonify({"success": False,
                         'error': 'Неверный формат ID у категории или страны'}), 400
@@ -1342,6 +1372,12 @@ def edit_tour(tour_id: str):
 
     for key, value in json_data.items():
         setattr(tour, key, value)
+
+    if tour.offers.first() != offer:
+        for special_offer in tour.offers.all():
+            tour.offers.remove(special_offer)
+        if offer_id:
+            tour.offers.append(offer)
 
     db.session.commit()
 
@@ -1509,3 +1545,426 @@ def delete_tour(tour_id: str):
 
     return jsonify({"success": True,
                     "message": "Тур успешно удалён!"}), 200
+
+
+@admin_bp.route("/offers/new", methods=["POST"])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Создана новая скидка'
+        },
+        400: {
+            'description': 'Данные для создания новой скидки не прошли проверку'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'special_offer',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'offer_title': {
+                        'type': 'string',
+                        'maxLength': 50,
+                        'description': 'Название скидки, не более 50 символов'
+                    },
+                    'discount_size': {
+                        'type': 'number',
+                        'format': 'integer',
+                        'description': 'Процент скидки, обязательно для заполнения'
+                    },
+                    'end_date': {
+                        'type': 'string',
+                        'format': 'date',
+                        'description': 'Дата окончания действия скидки, обязательно для заполнения'
+                    },
+                },
+                'required': ['offer_title', 'discount_size', 'end_date']
+            }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def add_special_offer():
+    """
+       Добавляет новую скидку
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    json_data = request.get_json()
+
+    offer_schema = OfferSchema(unknown=EXCLUDE)
+
+    try:
+        special_offer = offer_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
+
+    db.session.add(special_offer)
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Скидка успешно создана!",
+        "special_offer": offer_schema.dump(special_offer)
+    }), 201
+
+
+@admin_bp.route("/offers/<string:offer_id>/edit", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Вернул информацию по этой скидке'
+        },
+        400: {
+            'description': 'Неверный формат UUID скидки'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
+        404: {
+            'description': 'Если скидки с таким ID нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'offer_id',
+            'description': 'ID скидки',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def show_special_offer_edit_page(offer_id: str):
+    """
+       Возвращает всю информацию про конкретную скидку для формы редактирования
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    try:
+        valid_offer_uuid = UUID(offer_id)
+
+        offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+
+        if not offer:
+            return jsonify({"success": False,
+                "message": "Скидка с таким ID не найдена"}), 404
+
+        offer_schema = OfferSchema()
+
+        offer_data = offer_schema.dump(offer)
+
+        return jsonify({"success": True,
+            "special_offer": offer_data}), 200
+
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у скидки'}), 400
+
+
+@admin_bp.route("/offers/<string:offer_id>/edit", methods=["PUT"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Данные скидки обновлены'
+        },
+        400: {
+            'description': 'Данные для обновления скидки не прошли проверку или неверный формат UUID скидки'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
+        404: {
+            'description': 'Если скидки с таким ID нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'offer_id',
+            'description': 'ID скидки',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'special_offer',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'offer_title': {
+                        'type': 'string',
+                        'maxLength': 50,
+                        'description': 'Название скидки, не более 50 символов'
+                    },
+                    'discount_size': {
+                        'type': 'number',
+                        'format': 'integer',
+                        'description': 'Процент скидки, обязательно для заполнения'
+                    },
+                    'end_date': {
+                        'type': 'string',
+                        'format': 'date',
+                        'description': 'Дата окончания действия скидки, обязательно для заполнения'
+                    },
+                },
+                'required': ['offer_title', 'discount_size', 'end_date']
+            }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def edit_special_offer(offer_id: str):
+    """
+       Обновляет данные скидки
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    try:
+        valid_offer_uuid = UUID(offer_id)
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у скидки'}), 400
+
+    json_data = request.get_json()
+
+    offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+
+    if not offer:
+        return jsonify({"success": False,
+            "message": "Скидка с таким ID не найдена"}), 404
+
+    offer_schema = OfferSchema(unknown=EXCLUDE)
+
+    try:
+        update_data = offer_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"success": False,
+            "errors": err.messages}), 400
+
+    for key, value in json_data.items():
+        setattr(offer, key, value)
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Данные скидки успешно изменены!",
+        "special_offer": offer_schema.dump(offer)
+    }), 200
+
+
+@admin_bp.route("/offers/<string:offer_id>/delete", methods=["GET"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Вернул информацию по этой скидке'
+        },
+        400: {
+            'description': 'Неверный формат UUID скидки'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
+        404: {
+            'description': 'Если скидки с таким ID нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'offer_id',
+            'description': 'ID скидки',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def show_special_offer_delete_page(offer_id: str):
+    """
+       Возвращает всю информацию про конкретную скидку для страницы удаления
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    try:
+        valid_offer_uuid = UUID(offer_id)
+
+        offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+
+        if not offer:
+            return jsonify({"success": False,
+                "message": "Скидка с таким ID не найдена"}), 404
+
+        offer_schema = OfferSchema()
+
+        offer_data = offer_schema.dump(offer)
+
+        return jsonify({"success": True,
+            "special_offer": offer_data}), 200
+
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у скидки'}), 400
+
+
+@admin_bp.route("/offers/<string:offer_id>/delete", methods=["DELETE"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Скидка успешно удалена'
+        },
+        400: {
+            'description': 'Поле с согласием не отмечено или неверный формат UUID скидки'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
+        404: {
+            'description': 'Если скидки с таким ID нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'offer_id',
+            'description': 'ID скидки',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'acceptance',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'acceptance': {
+                        'type': 'boolean'
+                    }
+                }
+            }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def delete_special_offer(offer_id: str):
+    """
+       Удаляет выбранную скидку
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    try:
+        valid_offer_uuid = UUID(offer_id)
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у скидки'}), 400
+
+    json_data = request.get_json()
+    acceptance = json_data.get('acceptance')
+
+    offer = SpecialOffer.query.filter_by(offer_id=valid_offer_uuid).first()
+
+    if not offer:
+        return jsonify({"success": False,
+            "message": "Скидка с таким ID не найдена"}), 404
+
+    if acceptance is None or acceptance is False:
+        return jsonify({"success": False,
+            "message": "Если вы хотите удалить данную скидку, "
+                                   "вам необходимо поставить галочку выше"}), 400
+
+    db.session.delete(offer)
+    db.session.commit()
+
+    return jsonify({"success": True,
+                    "message": "Скидка успешно удалена!"}), 200

@@ -15,6 +15,10 @@ accounting_bp = Blueprint("accounting", __name__)
 
 
 def anonymous_required(fn):
+    """
+        Функция обертка для api-путей, куда возможно попасть только без jwt токена
+        ---
+        """
     @wraps(fn)
     @jwt_required(optional=True)
     def wrapper(*args, **kwargs):
@@ -50,6 +54,10 @@ def anonymous_required(fn):
 })
 @jwt_required(refresh=True)
 def refresh():
+    """
+        Обновляет access токен
+        ---
+        """
     user_login = get_jwt_identity()
     access_token = create_access_token(identity=user_login)
     return jsonify({"success": True,

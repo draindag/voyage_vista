@@ -1,6 +1,7 @@
-from marshmallow import fields
+from marshmallow import fields, post_load
 
 from webapp import ma
+from webapp.models.User import User
 
 
 class UserSchema(ma.Schema):
@@ -9,3 +10,7 @@ class UserSchema(ma.Schema):
     email = fields.Email(required=True, error_messages={"required": "Поле 'Email' обязательно для заполнения"})
     password = fields.String(required=True, error_messages={"required": "Поле 'Пароль' обязательно для заполнения"})
     role = fields.String()
+
+    @post_load
+    def create_review(self, data, **kwargs):
+        return User(**data)

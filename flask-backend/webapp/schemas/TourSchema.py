@@ -28,7 +28,9 @@ class TourSchema(ma.Schema):
                                                 "invalid": "ID должен быть корректным UUID"})
     category = fields.Nested("CategorySchema", dump_only=True)
     country = fields.Nested("CountrySchema", dump_only=True)
+    offers = fields.Nested("OfferSchema", dump_only=True, many=True)
     rating = fields.Function(lambda tour: tour.get_rating(), dump_only=True)
+    price_with_discount = fields.Function(lambda tour: tour.get_price_with_discount(), dump_only=True)
 
     @validates('tour_title')
     def validate_title(self, value):

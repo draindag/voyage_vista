@@ -1,10 +1,14 @@
 import uuid
+from decimal import Decimal, ROUND_HALF_UP
+
 from sqlalchemy import Date, UniqueConstraint
 
 from webapp import db
 from sqlalchemy.dialects.postgresql import UUID, NUMERIC
 from webapp.models.SpecialOffer import SpecialOffer
-from webapp.models.FavTour import FavTour
+from webapp.models.Review import Review
+from webapp.models.FavTour import fav_tours
+from webapp.models.OffersAndTours import offers_tours
 
 
 class Tour(db.Model):
@@ -19,9 +23,10 @@ class Tour(db.Model):
     tour_end_date = db.Column(Date, index=True, nullable=False)
     category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.category_id'), nullable=False)
     country_id = db.Column(UUID(as_uuid=True), db.ForeignKey('countries.country_id'), nullable=False)
-    offers = db.relationship('SpecialOffer', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
-    users = db.relationship('FavTour', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
+
     reviews = db.relationship('Review', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
+
+    offers = db.relationship('SpecialOffer', secondary=offers_tours, backref='offer_on', lazy='dynamic')
 
     __table_args__ = (
         UniqueConstraint('tour_title', 'category_id', name='uq_tour_title_category_id'),
@@ -35,3 +40,10 @@ class Tour(db.Model):
         all_reviews = [review.review_value for review in self.reviews]
         rating = sum(all_reviews) / len(all_reviews) if len(all_reviews) != 0 else 0
         return rating
+
+    def get_price_with_discount(self):
+        offer = self.offers.first()
+        if offer:
+            price_with_discount = self.tour_price * Decimal((100 - offer.discount_size)/100)
+            return price_with_discount.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        return None

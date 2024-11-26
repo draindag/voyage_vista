@@ -7,7 +7,8 @@ from webapp import db
 from sqlalchemy.dialects.postgresql import UUID
 from webapp.models.Reply import Reply
 from webapp.models.Review import Review
-from webapp.models.FavTour import FavTour
+from webapp.models.FavTour import fav_tours
+from webapp.models.Transaction import transactions
 
 
 class User(db.Model):
@@ -18,9 +19,12 @@ class User(db.Model):
     email = db.Column(db.Text, index=True, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
     role = db.Column(db.String(10), nullable=False, default="visitor")
+
     replies = db.relationship('Reply', backref='author', lazy='dynamic', cascade='all, delete-orphan')
     reviews = db.relationship('Review', backref='author', lazy='dynamic', cascade='all, delete-orphan')
-    fav_tours = db.relationship('FavTour', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+
+    fav_tours = db.relationship('Tour', secondary=fav_tours, backref='favourited_by', lazy='dynamic')
+    transactions = db.relationship('Tour', secondary=transactions, backref='paid_by', lazy='dynamic')
 
     __table_args__ = (
         CheckConstraint("role IN ('visitor', 'moderator', 'admin')", name="users_role_check"),

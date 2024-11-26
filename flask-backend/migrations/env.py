@@ -32,7 +32,8 @@ def get_engine_url():
         return str(get_engine().url).replace('%', '%%')
 
 
-from webapp.models import User, Country, Reply, SpecialOffer, Tour, FavTour, Review, Category
+from webapp.models import (User, Country, Reply, SpecialOffer, Tour, FavTour, Review, Category, Transaction,
+                           OffersAndTours)
 
 config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
