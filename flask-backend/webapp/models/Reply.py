@@ -13,8 +13,12 @@ class Reply(db.Model):
     tour_id = db.Column(UUID(as_uuid=True), db.ForeignKey('tours.tour_id'), nullable=False)
     parent_reply_id = db.Column(UUID(as_uuid=True), db.ForeignKey('replies.reply_id'), nullable=True)
 
-    replies = db.relationship('Reply', remote_side=[reply_id], backref='parent_reply', lazy='select',
-                              cascade='all', single_parent=True)
+    child_replies = db.relationship('Reply', backref=db.backref('parent_reply', remote_side=[reply_id]),
+                                    lazy='dynamic', cascade='all, delete-orphan')
+
+    @property
+    def replies(self):
+        return self.child_replies.all()
 
     def __repr__(self):
         return '<Reply {}>'.format(self.reply_text)

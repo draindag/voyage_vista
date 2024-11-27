@@ -26,9 +26,12 @@ class TourSchema(ma.Schema):
     country_id = fields.UUID(required=True, load_only=True,
                                 error_messages={"required": "Страна тура обязательна для указания",
                                                 "invalid": "ID должен быть корректным UUID"})
+
     category = fields.Nested("CategorySchema", dump_only=True)
     country = fields.Nested("CountrySchema", dump_only=True)
     offers = fields.Nested("OfferSchema", dump_only=True, many=True)
+    tour_replies = fields.Nested("ReplySchema", dump_only=True, many=True)
+
     rating = fields.Function(lambda tour: tour.get_rating(), dump_only=True)
     price_with_discount = fields.Function(lambda tour: tour.get_price_with_discount(), dump_only=True)
 

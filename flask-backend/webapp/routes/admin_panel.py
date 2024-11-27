@@ -14,6 +14,7 @@ from webapp.models.User import User
 from webapp.schemas.CategorySchema import CategorySchema
 from webapp.schemas.CountrySchema import CountrySchema
 from webapp.schemas.OfferSchema import OfferSchema
+from webapp.schemas.RegistrationSchema import RegistrationSchema
 from webapp.schemas.TourSchema import TourSchema
 
 admin_bp = Blueprint("admin_panel", __name__)
@@ -139,7 +140,8 @@ def show_tours_for_admin():
                         "message": "Неизвестный пользователь!"}), 401
 
     tours = Tour.query.all()
-    tours_schema = TourSchema(many=True)
+    tours_schema = TourSchema(many=True,  exclude=("tour_replies","tour_text", "tour_description", "tour_price",
+                                                   "tour_start_date", "tour_end_date", "offers", "price_with_discount"))
     tours_data = tours_schema.dump(tours)
     return jsonify(tours_data), 200
 
@@ -1114,7 +1116,7 @@ def add_tour():
         return jsonify({"success": False,
                         "message": "Страна с переданным UUID не найдена"}), 400
 
-    tour_schema = TourSchema(unknown=EXCLUDE)
+    tour_schema = TourSchema(unknown=EXCLUDE, exclude=("tour_replies",))
 
     try:
         tour = tour_schema.load(json_data)
@@ -1197,7 +1199,7 @@ def show_tour_edit_page(tour_id: str):
             return jsonify({"success": False,
                 "message": "Тур с таким ID не найден"}), 404
 
-        tour_schema = TourSchema()
+        tour_schema = TourSchema(exclude=("tour_replies",))
 
         tour_data = tour_schema.dump(tour)
 
@@ -1356,7 +1358,7 @@ def edit_tour(tour_id: str):
         return jsonify({"success": False,
             "message": "Страна с таким ID не найдена"}), 404
 
-    tour_schema = TourSchema(unknown=EXCLUDE)
+    tour_schema = TourSchema(unknown=EXCLUDE, exclude=("tour_replies",))
 
     try:
         update_data = tour_schema.load(json_data)
@@ -1446,7 +1448,7 @@ def show_tour_delete_page(tour_id: str):
             return jsonify({"success": False,
                 "message": "Тур с таким ID не найден"}), 404
 
-        tour_schema = TourSchema()
+        tour_schema = TourSchema(exclude=("tour_replies","tour_text", "offers"))
 
         tour_data = tour_schema.dump(tour)
 
@@ -1968,3 +1970,108 @@ def delete_special_offer(offer_id: str):
 
     return jsonify({"success": True,
                     "message": "Скидка успешно удалена!"}), 200
+
+
+@admin_bp.route('/moderator_registration', methods=['POST'])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Аккаунт модератора создан'
+        },
+        400: {
+            'description': 'Данные для регистрации не прошли проверку'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'moderator_data',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'login': {
+                        'type': 'string',
+                        'maxLength': 30,
+                        'description': 'Логин пользователя, не более 30 символов'
+                    },
+                    'email': {
+                        'type': 'string',
+                        'format': 'email',
+                        'description': 'Email пользователя'
+                    },
+                    'password': {
+                        'type': 'string',
+                        'description': 'Введенный пароль'
+                    },
+                    'password_repeat': {
+                        'type': 'string',
+                        'description': 'Повторный ввод пароля'
+                    },
+                },
+                'required': ['login', 'email', 'password', 'password_repeat']
+            }
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def registrate_moderator():
+    """
+       Создание аккаунтов для модераторов
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'admin':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    json_data = request.get_json()
+
+    email_registered = User.query.filter_by(email=json_data.get("email")).first()
+    if email_registered:
+        return {"success": False,
+                "message": "Пользователь с таким логином или email уже зарегистрирован!"}, 400
+
+    login_registered = User.query.filter_by(login=json_data.get("login")).first()
+    if login_registered:
+        return {"success": False,
+                "message": "Пользователь с таким логином или email уже зарегистрирован!"}, 400
+
+
+    registration_schema = RegistrationSchema(unknown=EXCLUDE)
+
+    try:
+        user_data = registration_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"success": False,
+                        "errors": err.messages}), 400
+
+    new_user = User(
+        login=user_data['login'],
+        email=user_data['email'],
+    )
+    new_user.set_password(user_data['password'])
+    new_user.set_moderator_role()
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Аккаунт модератора успешно зарегистрирован!",
+    }), 201

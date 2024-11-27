@@ -17,8 +17,9 @@ class ReviewSchema(ma.Schema):
     tour_id = fields.UUID(required=True, load_only=True,
                                 error_messages={"required": "Тур отзыва обязателен для указания",
                                                 "invalid": "ID должен быть корректным UUID"})
-    author = fields.Nested("UserSchema", dump_only=True)
-    tour = fields.Nested("TourSchema", dump_only=True)
+
+    author = fields.Nested("UserSchema", dump_only=True, exclude=("fav_tours","transactions"))
+    tour = fields.Nested("TourSchema", dump_only=True, exclude=("tour_replies","offers","tour_text"))
 
     @validates('review_text')
     def validate_text(self, value):

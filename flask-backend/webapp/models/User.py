@@ -23,7 +23,7 @@ class User(db.Model):
     replies = db.relationship('Reply', backref='author', lazy='dynamic', cascade='all, delete-orphan')
     reviews = db.relationship('Review', backref='author', lazy='dynamic', cascade='all, delete-orphan')
 
-    fav_tours = db.relationship('Tour', secondary=fav_tours, backref='favourited_by', lazy='dynamic')
+    fav_tours = db.relationship('Tour', secondary=fav_tours, backref='favoured_by', lazy='dynamic')
     transactions = db.relationship('Tour', secondary=transactions, backref='paid_by', lazy='dynamic')
 
     __table_args__ = (
@@ -36,11 +36,17 @@ class User(db.Model):
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
+    def set_email(self, new_email):
+        self.email = new_email
+
+    def set_login(self, new_login):
+        self.login = new_login
+
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
 
-    def get_fav_tours(self):
-        return [fav_tour.tour for fav_tour in self.fav_tours]
+    def set_moderator_role(self):
+        self.role = "moderator"
 
     def __repr__(self):
         return '<User {}>'.format(self.login)

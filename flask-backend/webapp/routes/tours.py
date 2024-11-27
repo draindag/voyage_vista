@@ -8,12 +8,13 @@ from sqlalchemy import func
 
 from webapp import db
 from webapp.models.Category import Category
+from webapp.models.Reply import Reply
 from webapp.models.Review import Review
 from webapp.models.Tour import Tour
 from webapp.models.Country import Country
 from webapp.models.User import User
 from webapp.schemas.CategorySchema import CategorySchema
-from webapp.schemas.CountrySchema import CountrySchema
+from webapp.schemas.ReplySchema import ReplySchema
 from webapp.schemas.ReviewSchema import ReviewSchema
 from webapp.schemas.TourSchema import TourSchema
 
@@ -57,7 +58,7 @@ def show_tours_with_discounts():
        """
 
     tours_with_discounts = db.session.query(Tour).filter(Tour.offers.any()).all()
-    tours_schema = TourSchema(many=True)
+    tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
     discounts_tours_data = tours_schema.dump(tours_with_discounts)
 
     return jsonify({"success": True,
@@ -80,7 +81,7 @@ def show_most_popular_tours():
 
     popular_tours = db.session.query(Tour).outerjoin(Tour.reviews).group_by(Tour.tour_id).order_by(
         func.coalesce(func.avg(Review.review_value), 0).desc()).limit(30).all()
-    tours_schema = TourSchema(many=True)
+    tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
     popular_tours_data = tours_schema.dump(popular_tours)
 
     return jsonify({"success": True,
@@ -125,7 +126,7 @@ def show_category_page(category_id: str):
                 "message": "Категория не найдена"}), 404
 
         tours_for_category = category.tours
-        tours_schema = TourSchema(many=True)
+        tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
         tours_for_category_data = tours_schema.dump(tours_for_category)
 
         return jsonify({"success": True,
@@ -220,7 +221,7 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
 @swag_from({
     'responses': {
         200: {
-            'description': 'Вернул информацию по этой стране'
+            'description': 'Вернул все туры для этой страны'
         },
         400: {
             'description': 'Неверный формат uuid'
@@ -241,7 +242,7 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
 })
 def show_country_page(country_id: str):
     """
-        Возвращает всю информацию про конкретную страну
+        Возвращает все туры, относящиеся к данной стране
        ---
        """
 
@@ -253,11 +254,12 @@ def show_country_page(country_id: str):
             return jsonify({"success": False,
                     "message": "Страна не найдена"}), 404
 
-        country_schema = CountrySchema()
-        country_data = country_schema.dump(country)
+        tours_for_country = country.tours
+        tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
+        tours_for_country_data = tours_schema.dump(tours_for_country)
 
         return jsonify({"success": True,
-                        "country": country_data}), 200
+                        "tours": tours_for_country_data}), 200
 
     except ValueError:
         return jsonify({"success": False,
@@ -538,7 +540,7 @@ def show_tour_payment_info(tour_id: str):
         return jsonify({"success": False,
                         "message": "Тур не найден"}), 404
 
-    tour_schema = TourSchema()
+    tour_schema = TourSchema(exclude=("tour_replies","tour_text"))
     tour_data = tour_schema.dump(tour)
 
     return jsonify({"success": True,
@@ -729,3 +731,184 @@ def add_review_to_tour(tour_id: str):
     return jsonify({"success": True,
                     "message": "Отзыв успешно сохранён!",
                     "review": review_schema.dump(review)}), 201
+
+
+@tours_bp.route('/<string:tour_id>/add_reply', methods=['POST'])
+@swag_from({
+    'responses': {
+        201: {
+            'description': 'Добавил комментарий'
+        },
+        400: {
+            'description': 'Данные комментария не прошли проверку или неверный формат uuid'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку'
+        },
+        404: {
+            'description': 'Если тура с таким id нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        },
+        {
+            'name': 'tour_id',
+            'description': 'ID тура',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'reply',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'reply_text': {
+                        'type': 'string',
+                        'description': 'Текст комментария, обязательно для заполнения'
+                    },
+                    'parent_reply_id': {
+                        'type': 'string',
+                        'format': 'uuid',
+                        'description': 'ID родительского комментария, необязательно для заполнения - '
+                                       'если комментарий корневой'
+                    }
+                },
+                'required': ['reply_text']
+            }
+        }
+    ]
+})
+@jwt_required()
+def add_reply(tour_id: str):
+    """
+        Оставляет комментарий
+        ---
+        """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None:
+        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
+
+    try:
+        valid_tour_uuid = UUID(tour_id)
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у тура'}), 400
+
+    tour = Tour.query.filter_by(tour_id=valid_tour_uuid).first()
+
+    if not tour:
+        return jsonify({"success": False,
+                        "message": "Тур не найден"}), 404
+
+    json_data = request.get_json()
+    json_data['author_id'] = current_user.user_id
+    json_data['tour_id'] = tour_id
+    reply_schema = ReplySchema(unknown=EXCLUDE)
+
+    try:
+        reply = reply_schema.load(json_data)
+    except ValidationError as err:
+        return jsonify({"success": False,
+                        "errors": err.messages}), 400
+
+    if reply.parent_reply_id:
+        parent_reply = Reply.query.filter_by(reply_id=json_data.get("parent_reply_id")).first()
+        if not parent_reply:
+            return jsonify({"success": False,
+                            "message": "Родительский комментарий не найден"}), 404
+        else:
+            if current_user.role != "moderator":
+                return jsonify({"success": False,
+                                "message": "Только модераторы могут отвечать на чужие вопросы"}), 401
+            if parent_reply.replies:
+                return jsonify({"success": False,
+                                "message": "На данный комментарий уже дан ответ"}), 400
+
+    db.session.add(reply)
+    db.session.commit()
+
+    return jsonify({"success": True,
+                    "message": "Комментарий успешно сохранён!",
+                    "reply": reply_schema.dump(reply)}), 201
+
+
+@tours_bp.route("/replies/<string:reply_id>/delete", methods=["DELETE"])
+@swag_from({
+    'responses': {
+        200: {
+            'description': 'Комментарий успешно удалён'
+        },
+        400: {
+            'description': 'Неверный формат UUID комментария'
+        },
+        401: {
+            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
+        },
+        404: {
+            'description': 'Если комментария с таким ID нет'
+        }
+    },
+    'parameters': [
+        {
+            'name': 'reply_id',
+            'description': 'ID комментария',
+            'in': 'path',
+            'type': 'string',
+            'required': True
+        },
+        {
+            'name': 'Authorization',
+            'in': 'header',
+            'required': True,
+            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
+            'schema': {
+                'type': 'string'
+            }
+        }
+    ]
+})
+@jwt_required()
+def delete_reply(reply_id: str):
+    """
+       Удаляет выбранный комментарий
+       ---
+       """
+
+    user_login = get_jwt_identity()
+    current_user = User.query.filter_by(login=user_login).first()
+
+    if current_user is None or current_user.role != 'moderator':
+        return jsonify({"success": False,
+                        "message": "Неизвестный пользователь!"}), 401
+
+    try:
+        valid_reply_uuid = UUID(reply_id)
+    except ValueError:
+        return jsonify({"success": False,
+            'error': 'Неверный формат ID у комментария'}), 400
+
+    reply = Reply.query.filter_by(reply_id=valid_reply_uuid).first()
+
+    if not reply:
+        return jsonify({"success": False,
+            "message": "Комментарий с таким ID не найден"}), 404
+
+    db.session.delete(reply)
+    db.session.commit()
+
+    return jsonify({"success": True,
+                    "message": "Комментарий успешно удалён!"}), 200

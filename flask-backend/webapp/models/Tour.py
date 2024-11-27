@@ -6,6 +6,7 @@ from sqlalchemy import Date, UniqueConstraint
 from webapp import db
 from sqlalchemy.dialects.postgresql import UUID, NUMERIC
 from webapp.models.SpecialOffer import SpecialOffer
+from webapp.models.Reply import Reply
 from webapp.models.Review import Review
 from webapp.models.FavTour import fav_tours
 from webapp.models.OffersAndTours import offers_tours
@@ -24,6 +25,7 @@ class Tour(db.Model):
     category_id = db.Column(UUID(as_uuid=True), db.ForeignKey('categories.category_id'), nullable=False)
     country_id = db.Column(UUID(as_uuid=True), db.ForeignKey('countries.country_id'), nullable=False)
 
+    replies  = db.relationship('Reply', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
     reviews = db.relationship('Review', backref='tour', lazy='dynamic', cascade='all, delete-orphan')
 
     offers = db.relationship('SpecialOffer', secondary=offers_tours, backref='offer_on', lazy='dynamic')
@@ -31,6 +33,10 @@ class Tour(db.Model):
     __table_args__ = (
         UniqueConstraint('tour_title', 'category_id', name='uq_tour_title_category_id'),
     )
+
+    @property
+    def tour_replies(self):
+        return self.replies.filter(Reply.parent_reply_id.is_(None)).all()
 
     def __repr__(self):
         return f"<Tour(title={self.tour_title}, price={self.tour_price})>"
