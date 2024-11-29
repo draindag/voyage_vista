@@ -1,3 +1,4 @@
+import os
 from uuid import UUID
 
 from flasgger import swag_from
@@ -47,22 +48,35 @@ def show_categories():
 @swag_from({
     'responses': {
         200: {
-            'description': 'Вернул все туры с акциями'
+            'description': 'Вернул все туры с акциями постранично'
         }
-    }
+    },
+    'parameters': [
+        {
+            'name': 'page',
+            'type': 'integer',
+            'required': False,
+            'description': 'Номер страницы для пагинации (по умолчанию 1)',
+            'in': 'query'
+        }
+    ]
 })
 def show_tours_with_discounts():
     """
-       Возвращает все туры, у которых есть какие-нибудь акции
+       Возвращает все туры, у которых есть какие-нибудь акции постранично
        ---
        """
 
-    tours_with_discounts = db.session.query(Tour).filter(Tour.offers.any()).all()
-    tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
+    page = request.args.get('page', 1, type=int)
+    tours_with_discounts = db.session.query(Tour).filter(Tour.offers.any()).paginate(
+        page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
+    tours_schema = TourSchema(many=True, exclude=("tour_text",))
     discounts_tours_data = tours_schema.dump(tours_with_discounts)
 
     return jsonify({"success": True,
-                    "tours": discounts_tours_data}), 200
+                    "tours": discounts_tours_data,
+                    "prev_page": tours_with_discounts.has_prev,
+                    "next_page": tours_with_discounts.has_next}), 200
 
 
 @tours_bp.route("/popular", methods=["GET"])
@@ -79,20 +93,34 @@ def show_most_popular_tours():
        ---
        """
 
-    popular_tours = db.session.query(Tour).outerjoin(Tour.reviews).group_by(Tour.tour_id).order_by(
-        func.coalesce(func.avg(Review.review_value), 0).desc()).limit(30).all()
-    tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
-    popular_tours_data = tours_schema.dump(popular_tours)
+    page = request.args.get('page', 1, type=int)
+    page_size = int(os.getenv("TOURS_PER_PAGE"))
+    popular_tours = (
+        db.session.query(Tour)
+        .outerjoin(Tour.reviews)
+        .group_by(Tour.tour_id)
+        .order_by(func.coalesce(func.avg(Review.review_value), 0).desc())
+        .limit(20)
+        .all()
+    )
+    offset = (page - 1) * page_size
+    has_prev = page > 1
+    has_next = (page * page_size) < len(popular_tours)
+    paginated_tours = popular_tours[offset:offset + page_size]
+    tours_schema = TourSchema(many=True, exclude=("tour_text",))
+    popular_tours_data = tours_schema.dump(paginated_tours)
 
     return jsonify({"success": True,
-                    "tours": popular_tours_data}), 200
+                    "tours": popular_tours_data,
+                    "prev_page": has_prev,
+                    "next_page": has_next}), 200
 
 
 @tours_bp.route("/categories/<string:category_id>", methods=["GET"])
 @swag_from({
     'responses': {
         200: {
-            'description': 'Вернул все туры для этой категории'
+            'description': 'Вернул все туры для этой категории постранично'
         },
         400: {
             'description': 'Неверный формат uuid'
@@ -108,12 +136,19 @@ def show_most_popular_tours():
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'page',
+            'type': 'integer',
+            'required': False,
+            'description': 'Номер страницы для пагинации (по умолчанию 1)',
+            'in': 'query'
         }
     ]
 })
 def show_category_page(category_id: str):
     """
-           Возвращает все туры, относящиеся к данной категории
+           Возвращает все туры, относящиеся к данной категории постранично
            ---
            """
 
@@ -125,32 +160,36 @@ def show_category_page(category_id: str):
             return jsonify({"success": False,
                 "message": "Категория не найдена"}), 404
 
-        tours_for_category = category.tours
-        tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
+        page = request.args.get('page', 1, type=int)
+        tours_for_category = category.tours.paginate(
+        page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
+        tours_schema = TourSchema(many=True, exclude=("tour_text",))
         tours_for_category_data = tours_schema.dump(tours_for_category)
 
         return jsonify({"success": True,
-                        "tours": tours_for_category_data}), 200
+                        "tours": tours_for_category_data,
+                        "prev_page": tours_for_category.has_prev,
+                        "next_page": tours_for_category.has_next}), 200
 
     except ValueError:
         return jsonify({"success": False,
                         'error': 'Неверный формат ID у категории'}), 400
 
 
-@tours_bp.route("/categories/<string:category_id>/<string:tour_id>", methods=["GET"])
+@tours_bp.route("/<string:tour_id>", methods=["GET"])
 @swag_from({
     'responses': {
         200: {
-            'description': 'Вернул информацию по этому туру'
+            'description': 'Вернул информацию по этому туру, комментарии - постранично'
         },
         400: {
-            'description': 'Неверный формат uuid у одного из параметров'
+            'description': 'Неверный формат uuid'
         },
         401: {
             'description': 'JWT токен с данными пользователя не прошел проверку'
         },
         404: {
-            'description': 'Если категории или тура с таким id нет'
+            'description': 'Если тура с таким id нет'
         }
     },
     'parameters': [
@@ -164,27 +203,28 @@ def show_category_page(category_id: str):
             }
         },
         {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
             'name': 'tour_id',
             'description': 'ID тура',
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'page',
+            'type': 'integer',
+            'required': False,
+            'description': 'Номер страницы для пагинации (по умолчанию 1)',
+            'in': 'query'
         }
     ]
 })
 @jwt_required()
-def show_tour_page_from_category(category_id: str, tour_id: str):
+def show_tour_page(tour_id: str):
     """
-       Возвращает всю информацию про конкретный тур
+       Возвращает всю информацию про конкретный тур, комментарии - постранично
        ---
        """
+
     user_login = get_jwt_identity()
     current_user = User.query.filter_by(login=user_login).first()
 
@@ -192,36 +232,36 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
         return jsonify({"success": False, "message": "Пользователь не найден"}), 401
 
     try:
-        valid_category_uuid = UUID(category_id)
         valid_tour_uuid = UUID(tour_id)
-        category = Category.query.filter_by(category_id=valid_category_uuid).first()
-
-        if not category:
-            return jsonify({"success": False,
-                            "message": "Категория не найдена"}), 404
-
-        tour = category.tours.filter_by(tour_id=valid_tour_uuid).first()
-
-        if not tour:
-            return jsonify({"success": False,
-                "message": "Тур не найден"}), 404
-
-        tour_schema = TourSchema()
-        tour_data = tour_schema.dump(tour)
-
-        return jsonify({"success": True,
-            "tour": tour_data}), 200
-
     except ValueError:
         return jsonify({"success": False,
-                        'error': 'Неверный формат ID у категории или тура'}), 400
+                        'error': 'Неверный формат ID у тура'}), 400
+
+    tour = Tour.query.filter_by(tour_id=valid_tour_uuid).first()
+
+    if not tour:
+        return jsonify({"success": False,
+            "message": "Тур не найден"}), 404
+
+    page = request.args.get('page', 1, type=int)
+    tour_schema = TourSchema()
+    replies_schema = ReplySchema(many=True)
+    tour_data = tour_schema.dump(tour)
+    replies= tour.tour_replies.paginate(
+        page=page, per_page=int(os.getenv("REPLIES_PER_PAGE")), error_out=False)
+
+    return jsonify({"success": True,
+                    "tour": tour_data,
+                    "tour_replies": replies_schema.dump(replies),
+                    "prev_page": replies.has_prev,
+                    "next_page": replies.has_next}), 200
 
 
 @tours_bp.route("/countries/<string:country_id>", methods=["GET"])
 @swag_from({
     'responses': {
         200: {
-            'description': 'Вернул все туры для этой страны'
+            'description': 'Вернул все туры для этой страны постранично'
         },
         400: {
             'description': 'Неверный формат uuid'
@@ -237,12 +277,19 @@ def show_tour_page_from_category(category_id: str, tour_id: str):
             'in': 'path',
             'type': 'string',
             'required': True
+        },
+        {
+            'name': 'page',
+            'type': 'integer',
+            'required': False,
+            'description': 'Номер страницы для пагинации (по умолчанию 1)',
+            'in': 'query'
         }
     ]
 })
 def show_country_page(country_id: str):
     """
-        Возвращает все туры, относящиеся к данной стране
+        Возвращает все туры, относящиеся к данной стране постранично
        ---
        """
 
@@ -254,96 +301,20 @@ def show_country_page(country_id: str):
             return jsonify({"success": False,
                     "message": "Страна не найдена"}), 404
 
-        tours_for_country = country.tours
-        tours_schema = TourSchema(many=True, exclude=("tour_replies","tour_text"))
+        page = request.args.get('page', 1, type=int)
+        tours_for_country = country.tours.paginate(
+        page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
+        tours_schema = TourSchema(many=True, exclude=("tour_text",))
         tours_for_country_data = tours_schema.dump(tours_for_country)
 
         return jsonify({"success": True,
-                        "tours": tours_for_country_data}), 200
+                        "tours": tours_for_country_data,
+                        "prev_page": tours_for_country.has_prev,
+                        "next_page": tours_for_country.has_next}), 200
 
     except ValueError:
         return jsonify({"success": False,
                         'error': 'Неверный формат ID у страны'}), 400
-
-@tours_bp.route("/countries/<string:country_id>/<string:tour_id>", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этому туру'
-        },
-        400: {
-            'description': 'Неверный формат uuid у одного из параметров'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если страны или тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        }
-    ]
-})
-@jwt_required()
-def show_tour_page_from_country(country_id: str, tour_id: str):
-    """
-       Возвращает всю информацию про конкретный тур
-       ---
-       """
-
-    user_login = get_jwt_identity()
-    current_user = User.query.filter_by(login=user_login).first()
-
-    if current_user is None:
-        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
-
-    try:
-        valid_country_uuid = UUID(country_id)
-        valid_tour_uuid = UUID(tour_id)
-        country = Country.query.filter_by(country_id=valid_country_uuid).first()
-
-        if not country:
-            return jsonify({"success": False,
-                    "message": "Страна не найдена"}), 404
-
-        tour = country.tours.filter_by(tour_id=valid_tour_uuid).first()
-
-        if not tour:
-            return jsonify({"success": False,
-                            "message": "Тур не найден"}), 404
-
-        tour_schema = TourSchema()
-        tour_data = tour_schema.dump(tour)
-
-        return jsonify({"success": True,
-                        "tour": tour_data}), 200
-
-    except ValueError:
-        return jsonify({"success": False,
-                        'error': 'Неверный формат ID у страны или тура'}), 400
 
 
 @tours_bp.route('/<string:tour_id>/to_favourite', methods=['POST'])
@@ -540,7 +511,7 @@ def show_tour_payment_info(tour_id: str):
         return jsonify({"success": False,
                         "message": "Тур не найден"}), 404
 
-    tour_schema = TourSchema(exclude=("tour_replies","tour_text"))
+    tour_schema = TourSchema(exclude=("tour_text", "tour_image"))
     tour_data = tour_schema.dump(tour)
 
     return jsonify({"success": True,
@@ -549,6 +520,7 @@ def show_tour_payment_info(tour_id: str):
 
 @tours_bp.route('/<string:tour_id>/payment', methods=['POST'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         200: {
             'description': 'Сохранил информацию об оплате тура пользователем'
@@ -636,6 +608,7 @@ def add_transaction(tour_id: str):
 
 @tours_bp.route('/<string:tour_id>/add_review', methods=['POST'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         201: {
             'description': 'Добавил отзыв на тур'
@@ -735,6 +708,7 @@ def add_review_to_tour(tour_id: str):
 
 @tours_bp.route('/<string:tour_id>/add_reply', methods=['POST'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         201: {
             'description': 'Добавил комментарий'

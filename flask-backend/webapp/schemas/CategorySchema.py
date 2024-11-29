@@ -7,9 +7,13 @@ from webapp.models.Category import Category
 class CategorySchema(ma.Schema):
     category_id = fields.UUID(dump_only=True)
     category_title = fields.String(required=True,
-                                   error_messages={"required": "Название категории обязательно для заполнения"})
+                                   error_messages={"required": "Название категории обязательно для заполнения",
+                                                   "null": "Название категории обязательно для заполнения"})
     category_description = fields.String(required=True,
-                                         error_messages={"required": "Описание категории обязательно для заполнения"})
+                                         error_messages={"required": "Описание категории обязательно для заполнения",
+                                                         "null": "Описание категории обязательно для заполнения"})
+
+    category_image = fields.String(dump_only=True)
 
     @validates('category_title')
     def validate_title(self, value):

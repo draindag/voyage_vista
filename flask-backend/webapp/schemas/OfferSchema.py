@@ -7,13 +7,16 @@ from webapp.models.SpecialOffer import SpecialOffer
 class OfferSchema(ma.Schema):
     offer_id = fields.UUID(dump_only=True)
     offer_title = fields.String(required=True,
-                                   error_messages={"required": "Название категории обязательно для заполнения"})
+                                   error_messages={"required": "Название акции обязательно для заполнения",
+                                                   "null": "Название акции обязательно для заполнения"})
     discount_size = fields.Float(required=True,
-                                         error_messages={"required": "Описание категории обязательно для заполнения",
-                                                         "invalid": "Размер скидки должен быть корректным числом"})
+                                         error_messages={"required": "Процент скидки обязателен для заполнения",
+                                                         "invalid": "Размер скидки должен быть корректным числом",
+                                                         "null": "Процент скидки обязателен для заполнения"})
     end_date = fields.Date(required=True,
                                 error_messages={"required": "Дата окончания скидки обязательна для заполнения",
-                                                "invalid": "Дата окончания должна быть корректной"})
+                                                "invalid": "Дата окончания должна быть корректной",
+                                                "null": "Дата окончания скидки обязательна для заполнения"})
 
     @validates('offer_title')
     def validate_title(self, value):

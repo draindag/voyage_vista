@@ -1,3 +1,4 @@
+import os
 import uuid
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -10,6 +11,9 @@ from webapp.models.Reply import Reply
 from webapp.models.Review import Review
 from webapp.models.FavTour import fav_tours
 from webapp.models.OffersAndTours import offers_tours
+
+upload_folder = os.getenv("UPLOADED_PHOTOS_DEST")
+file_ext = os.getenv("COVER_IMAGES_EXT")
 
 
 class Tour(db.Model):
@@ -36,16 +40,14 @@ class Tour(db.Model):
 
     @property
     def tour_replies(self):
-        return self.replies.filter(Reply.parent_reply_id.is_(None)).all()
+        return self.replies.filter(Reply.parent_reply_id.is_(None))
+
+    @property
+    def tour_image(self):
+        return f"{upload_folder}{self.tour_id}{file_ext}"
 
     def __repr__(self):
         return f"<Tour(title={self.tour_title}, price={self.tour_price})>"
-
-
-    def get_rating(self):
-        all_reviews = [review.review_value for review in self.reviews]
-        rating = sum(all_reviews) / len(all_reviews) if len(all_reviews) != 0 else 0
-        return rating
 
     def get_price_with_discount(self):
         offer = self.offers.first()

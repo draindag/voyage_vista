@@ -5,9 +5,11 @@ from datetime import timedelta
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_jwt_extended.exceptions import JWTDecodeError, NoAuthorizationError
+from flask_uploads import IMAGES, configure_uploads
+
 from jwt import ExpiredSignatureError, InvalidTokenError
 
-from webapp import db, migrate, ma, swagger, jwt
+from webapp import db, migrate, ma, swagger, jwt, photos
 from webapp.routes import main_bp
 from webapp.routes.accounting import accounting_bp
 from webapp.routes.admin_panel import admin_bp
@@ -25,7 +27,11 @@ def create_app(config: dict = None):
         SECRET_KEY=os.getenv("SECRET_KEY"),
         JWT_SECRET_KEY=os.getenv("JWT_SECRET_KEY"),
         JWT_ACCESS_TOKEN_EXPIRES=timedelta(minutes=int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES"))),
-        JWT_REFRESH_TOKEN_EXPIRES=timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES")))
+        JWT_REFRESH_TOKEN_EXPIRES=timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_EXPIRES"))),
+        UPLOADED_PHOTOS_DEST=os.getenv("UPLOADED_PHOTOS_DEST"),
+        UPLOADED_PHOTOS_URL=os.getenv("UPLOADED_PHOTOS_URL"),
+        UPLOADED_PHOTOS_ALLOW= IMAGES,
+        TOURS_PER_PAGE=os.getenv("TOURS_PER_PAGE"),
     )
     app.json.ensure_ascii = False
 
@@ -40,6 +46,7 @@ def create_app(config: dict = None):
     ma.init_app(app)
     jwt.init_app(app)
     swagger.init_app(app)
+    configure_uploads(app, photos)
 
     @app.errorhandler(404)
     def not_found(error):

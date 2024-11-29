@@ -69,6 +69,7 @@ def refresh():
 
 @accounting_bp.route('/registration', methods=['POST'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         201: {
             'description': 'Пользователь зарегистрирован'
@@ -162,6 +163,7 @@ def registration():
 
 @accounting_bp.route('/login', methods=['POST'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         200: {
             'description': 'Пользователь успешно вошёл'
@@ -256,14 +258,17 @@ def show_profile():
     current_user = User.query.filter_by(login=user_login).first()
 
     if current_user is None:
-        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
+        return jsonify({"success": False,
+                        "message": "Пользователь не найден"}), 401
 
     user_schema = UserSchema(unknown=EXCLUDE)
-    return jsonify({"user": user_schema.dump(current_user)}), 200
+    return jsonify({"success": True,
+                    "user": user_schema.dump(current_user)}), 200
 
 
 @accounting_bp.route('/edit_email', methods=['PUT'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         200: {
             'description': 'Email успешно изменён'
@@ -351,6 +356,7 @@ def edit_email():
 
 @accounting_bp.route('/edit_login', methods=['PUT'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         200: {
             'description': 'Логин успешно изменён'
@@ -444,6 +450,7 @@ def edit_login():
 
 @accounting_bp.route('/edit_password', methods=['PUT'])
 @swag_from({
+    'consumes': ['application/json'],
     'responses': {
         200: {
             'description': 'Пароль успешно изменён'

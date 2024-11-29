@@ -28,7 +28,7 @@ def index():
     categories_data = categories_schema.dump(categories)
 
     countries = Country.query.all()
-    country_schema = CountrySchema(many=True)
+    country_schema = CountrySchema(many=True, exclude=("country_image",))
     countries_data = country_schema.dump(countries)
 
     return jsonify({"success": True,
