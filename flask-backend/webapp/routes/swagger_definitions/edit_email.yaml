@@ -1,0 +1,76 @@
+Изменение email пользователя
+---
+parameters:
+  - name: user_data
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Новый email пользователя
+        password:
+          type: string
+          description: Введенный пароль
+      required:
+        - email
+        - password
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Email успешно изменён
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение об успешном изменении email
+    examples:
+      application/json:
+        success: true
+        message: "Email успешно изменён!"
+
+  400:
+    description: Неверные данные для изменения email
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        errors:
+          type: object
+          description: Ошибки валидации
+    examples:
+      application/json:
+        success: false
+        errors:
+          email: [ "Некорректный email" ]
+          password: [ "Поле обязательно для заполнения" ]
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь не найден"

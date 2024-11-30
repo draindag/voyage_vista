@@ -1,3 +1,10 @@
+"""
+Модуль приложения Flask для Voyage Vista.
+
+Этот модуль отвечает за создание и настройку приложения,
+инициализацию необходимых компонентов и регистрацию маршрутов.
+"""
+
 import os
 import sys
 from datetime import timedelta
@@ -19,6 +26,10 @@ load_dotenv()
 
 
 def create_app(config: dict = None):
+    """
+    Создает экземпляр Flask-приложения с заданной конфигурацией.
+        """
+
     app = Flask("voyage_vista")
     app.config.from_mapping(
         SQLALCHEMY_DATABASE_URI=os.getenv("DATABASE_URL"),
@@ -35,9 +46,9 @@ def create_app(config: dict = None):
     )
     app.json.ensure_ascii = False
 
-    if (os.getenv("AUTH_SALT") is None or os.getenv("FLASK_RUN_PORT") is None or os.getenv("SECRET_KEY") is None
-            or os.getenv("JWT_SECRET_KEY") is None):
-        sys.exit("!!!!!!\nProgram needs a specified web_port/salt/secret/jwt_secret in settings\n!!!!!!")
+    if (os.getenv("AUTH_SALT") is None or os.getenv("FLASK_RUN_PORT") is None
+            or os.getenv("SECRET_KEY") is None or os.getenv("JWT_SECRET_KEY") is None):
+        sys.exit("!!!\nProgram needs a specified web_port/salt/secret/jwt_secret in settings\n!!!")
 
     if config is not None:
         app.config.update(config)

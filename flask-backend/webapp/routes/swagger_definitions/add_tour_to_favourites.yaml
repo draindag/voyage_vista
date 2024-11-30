@@ -1,0 +1,79 @@
+Добавляет тур в избранное пользователя
+---
+parameters:
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+  - name: tour_id
+    description: ID тура
+    in: path
+    type: string
+    required: true
+
+responses:
+  201:
+    description: Добавил тур в избранное пользователя
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение с результатом операции
+    examples:
+      application/json:
+        success: true
+        message: "Тур успешно добавлен в избранное"
+
+  400:
+    description: Неверный формат uuid
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции (false)
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у тура"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции (false)
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь не найден"
+
+  404:
+    description: Если тура с таким id нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции (false)
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Тур не найден"

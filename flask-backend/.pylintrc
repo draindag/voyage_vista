@@ -441,7 +441,8 @@ disable=raw-checker-failed,
         use-implicit-booleaness-not-comparison-to-zero,
         unused-variable,  # Отключение предупреждения о неиспользуемых переменных
         unused-import,      # Отключение предупреждения о неиспользуемых импортируемых модулях
-        unused-argument  # Отключение предупреждения о неиспользуемых аргументах
+        unused-argument,  # Отключение предупреждения о неиспользуемых аргументах
+        import-error, # Отключение предупреждения об ошибках импортируемых модулей
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

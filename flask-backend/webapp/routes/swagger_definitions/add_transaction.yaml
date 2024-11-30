@@ -1,0 +1,85 @@
+Фиксирует проведение оплаты за тур
+---
+parameters:
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+  - name: tour_id
+    description: ID тура
+    in: path
+    type: string
+    required: true
+  - name: acceptance
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        acceptance:
+          type: boolean
+          description: Принятие условий оплаты
+
+responses:
+  200:
+    description: Сохранил информацию об оплате тура пользователем
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение об успешном завершении операции
+    examples:
+      application/json:
+        success: true
+        message: "Оплата прошла успешно!"
+  400:
+    description: Неверный формат uuid
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у тура"
+  401:
+    description: JWT токен с данными пользователя не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь не найден"
+  404:
+    description: Если тура с таким id нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Тур не найден"

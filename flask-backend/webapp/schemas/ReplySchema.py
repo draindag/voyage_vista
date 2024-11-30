@@ -1,4 +1,4 @@
-from marshmallow import fields, post_load
+from marshmallow import fields, post_load, validates, ValidationError
 
 from webapp import ma
 from webapp.models.Reply import Reply
@@ -18,6 +18,11 @@ class ReplySchema(ma.Schema):
 
     author = fields.Nested("UserSchema", dump_only=True, exclude=("fav_tours","transactions", "email"))
     replies = fields.Nested("ReplySchema", dump_only=True, many=True)
+
+    @validates('reply_text')
+    def validate_text(self, value):
+        if not value.strip():
+            raise ValidationError("Текст комментария не должен быть пустым")
 
     @post_load
     def create_review(self, data, **kwargs):

@@ -1,8 +1,8 @@
 import os
 import uuid
 
-from webapp import db
 from sqlalchemy.dialects.postgresql import UUID
+from webapp import db
 
 upload_folder = os.getenv("UPLOADED_PHOTOS_DEST")
 file_ext = os.getenv("COVER_IMAGES_EXT")
@@ -14,7 +14,8 @@ class Category(db.Model):
     category_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     category_title = db.Column(db.String(30), index=True, unique=True, nullable=False)
     category_description = db.Column(db.Text, nullable=False)
-    tours = db.relationship('Tour', backref='category', lazy='dynamic', cascade='all, delete-orphan')
+    tours = db.relationship('Tour', backref='category', lazy='dynamic',
+                            cascade='all, delete-orphan')
 
     @property
     def category_image(self):

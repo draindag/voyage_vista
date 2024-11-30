@@ -1,0 +1,253 @@
+Возвращает все туры, относящиеся к данной стране постранично
+---
+parameters:
+  - name: country_id
+    type: string
+    description: ID страны
+    in: path
+    required: true
+  - name: page
+    type: integer
+    required: false
+    description: Номер страницы для пагинации (по умолчанию 1)
+    in: query
+
+responses:
+  200:
+    description: Вернул все туры для этой страны постранично
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        tours:
+          type: array
+          items:
+            $ref: '#/definitions/Tour'
+        prev_page:
+          type: boolean
+          description: Признак наличия предыдущей страницы
+        next_page:
+          type: boolean
+          description: Признак наличия следующей страницы
+    examples:
+      application/json:
+        success: true
+        tours:
+          - tour_id: "d4c7c4e2-a239-4b46-bc09-efc6c1a7e6b7"
+            tour_title: "Тур по Риму"
+            tour_description: "Погружение в атмосферу вечного города"
+            tour_price: 1500.00
+            price_with_discount: 1300.00
+            tour_start_date: "2024-05-10"
+            tour_end_date: "2024-05-20"
+            tour_image: "flask-backend/webapp/tour_images/d4c7c4e2-a239-4b46-bc09-efc6c1a7e6b7.png"
+            category:
+              category_id: "123e4567-e89b-12d3-a456-426614174000"
+              category_title: "Культурные поездки"
+              category_description: "Описание культурных поездок"
+            country:
+              country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
+              country_name: "Италия"
+              country_description: "Страна с прекрасной культурой"
+            offers:
+              - offer_id: "e1c3f112-c3b1-4e52-9d67-c73c2bff88a3"
+                offer_title: "Скидка 15%"
+                discount_size: 15.0
+                end_date: "2024-04-30"
+        prev_page: false
+        next_page: true
+
+  400:
+    description: Неверный формат uuid
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у страны"
+
+  404:
+    description: Если страны с таким id нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Страна не найдена"
+
+definitions:
+  Review:
+    type: object
+    properties:
+      review_id:
+        type: string
+        format: uuid
+        description: UUID отзыва
+      review_text:
+        type: string
+        description: Текст отзыва
+      review_value:
+        type: number
+        format: float
+        description: Оценка отзыва(от 1 до 5)
+      author:
+        $ref: '#/definitions/User'
+      tour:
+        $ref: '#/definitions/Tour'
+
+  Tour:
+    type: object
+    properties:
+      tour_id:
+        type: string
+        format: uuid
+        description: UUID тура
+      tour_title:
+        type: string
+        description: Название тура(не более 40 символов)
+      tour_description:
+        type: string
+        description: Описание тура(не более 50 символов)
+      tour_text:
+        type: string
+        description: Текст тура
+      tour_price:
+        type: number
+        format: decimal
+        description: Цена тура(положительное число)
+      price_with_discount:
+        type: number
+        format: decimal
+        description: Цена тура со скидкой
+      tour_start_date:
+        type: string
+        format: date
+        description: Дата начала тура
+      tour_end_date:
+        type: string
+        format: date
+        description: Дата окончания тура
+      tour_image:
+        type: string
+        description: URL изображения тура
+      category:
+        $ref: '#/definitions/Category'
+      country:
+        $ref: '#/definitions/Country'
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+
+  Reply:
+    type: object
+    properties:
+      reply_id:
+        type: string
+        format: uuid
+        description: UUID комментария
+      reply_text:
+        type: string
+        description: Текст комментария
+      parent_reply_id:
+        type: string
+        format: uuid
+        description: ID родительского комментария (если имеется)
+      author:
+        $ref: '#/definitions/User'
+      replies:
+        type: array
+        items:
+          $ref: '#/definitions/Reply'
+
+  User:
+    type: object
+    properties:
+      user_id:
+        type: string
+        format: uuid
+        description: UUID пользователя
+      login:
+        type: string
+        description: Логин пользователя
+      email:
+        type: string
+        format: email
+        description: Email пользователя
+      fav_tours:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+
+  Category:
+    type: object
+    properties:
+      category_id:
+        type: string
+        format: uuid
+        description: UUID категории
+      category_title:
+        type: string
+        description: Название категории(не более 30 символов)
+      category_description:
+        type: string
+        description: Описание категории
+      category_image:
+        type: string
+        description: URL изображения категории
+
+  Country:
+    type: object
+    properties:
+      country_id:
+        type: string
+        format: uuid
+        description: UUID страны
+      country_name:
+        type: string
+        description: Название страны(не более 30 символов)
+      country_description:
+        type: string
+        description: Описание страны
+      country_image:
+        type: string
+        description: URL изображения страны
+
+  Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+        format: uuid
+        description: UUID акции
+      offer_title:
+        type: string
+        description: Название акции(не более 50 символов)
+      discount_size:
+        type: number
+        format: float
+        description: Процент скидки
+      end_date:
+        type: string
+        format: date
+        description: Дата окончания скидки

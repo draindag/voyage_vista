@@ -33,28 +33,8 @@ def anonymous_required(fn):
 
 
 @accounting_bp.route('/refresh', methods=['POST'])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Обновил и вернул access токен'
-        },
-        401: {
-            'description': 'refresh токен не прошел проверку'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT refresh токен для обновления access токена. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required(refresh=True)
+@swag_from("swagger_definitions/refresh.yaml")
 def refresh():
     """
         Обновляет access токен
@@ -68,52 +48,8 @@ def refresh():
 
 
 @accounting_bp.route('/registration', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        201: {
-            'description': 'Пользователь зарегистрирован'
-        },
-        400: {
-            'description': 'Данные для регистрации не прошли проверку'
-        },
-        403: {
-            'description': 'Авторизованный пользователь пытается получить доступ'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'user_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'login': {
-                        'type': 'string',
-                        'maxLength': 30,
-                        'description': 'Логин пользователя, не более 30 символов'
-                    },
-                    'email': {
-                        'type': 'string',
-                        'format': 'email',
-                        'description': 'Email пользователя'
-                    },
-                    'password': {
-                        'type': 'string',
-                        'description': 'Введенный пароль'
-                    },
-                    'password_repeat': {
-                        'type': 'string',
-                        'description': 'Повторный ввод пароля'
-                    },
-                },
-                'required': ['login', 'email', 'password', 'password_repeat']
-            }
-        }
-    ]
-})
 @anonymous_required
+@swag_from("swagger_definitions/registration.yaml")
 def registration():
     """
        Регистрация пользователя
@@ -162,43 +98,8 @@ def registration():
 
 
 @accounting_bp.route('/login', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Пользователь успешно вошёл'
-        },
-        400: {
-            'description': 'Данные для авторизации не прошли проверку'
-        },
-        403: {
-            'description': 'Авторизованный пользователь пытается получить доступ'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'user_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'email': {
-                        'type': 'string',
-                        'format': 'email',
-                        'description': 'Email пользователя'
-                    },
-                    'password': {
-                        'type': 'string',
-                        'description': 'Введенный пароль'
-                    }
-                },
-                'required': ['email', 'password']
-            }
-        }
-    ]
-})
 @anonymous_required
+@swag_from("swagger_definitions/login.yaml")
 def login():
     """
        Вход в аккаунт
@@ -231,29 +132,14 @@ def login():
 
 
 @accounting_bp.route('/profile', methods=['GET'])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все данные пользователя'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_profile.yaml")
 def show_profile():
+    """
+        Возвращает все данные пользователя для личного кабинета
+        ---
+        """
+
     user_login = get_jwt_identity()
     current_user = User.query.filter_by(login=user_login).first()
 
@@ -267,52 +153,8 @@ def show_profile():
 
 
 @accounting_bp.route('/edit_email', methods=['PUT'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Email успешно изменён'
-        },
-        400: {
-            'description': 'Неверные данные для изменения email'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'user_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'email': {
-                        'type': 'string',
-                        'format': 'email',
-                        'description': 'Новый email пользователя'
-                    },
-                    'password': {
-                        'type': 'string',
-                        'description': 'Введенный пароль'
-                    }
-                },
-                'required': ['email', 'password']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_email.yaml")
 def edit_email():
     """
        Изменение email пользователя
@@ -355,52 +197,8 @@ def edit_email():
 
 
 @accounting_bp.route('/edit_login', methods=['PUT'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Логин успешно изменён'
-        },
-        400: {
-            'description': 'Неверные данные для изменения логина'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'user_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'new_login': {
-                        'type': 'string',
-                        'maxLength': 30,
-                        'description': 'Новый логин пользователя, не более 30 символов'
-                    },
-                    'password': {
-                        'type': 'string',
-                        'description': 'Введенный пароль'
-                    }
-                },
-                'required': ['new_login']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_login.yaml")
 def edit_login():
     """
        Изменение логина пользователя
@@ -449,51 +247,8 @@ def edit_login():
 
 
 @accounting_bp.route('/edit_password', methods=['PUT'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Пароль успешно изменён'
-        },
-        400: {
-            'description': 'Неверные данные для изменения пароля'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'user_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'old_password': {
-                        'type': 'string',
-                        'description': 'Старый пароль'
-                    },
-                    'new_password': {
-                        'type': 'string',
-                        'description': 'Новый пароль'
-                    }
-                },
-                'required': ['old_password', 'new_password']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_password.yaml")
 def edit_password():
     """
        Изменение пароля пользователя

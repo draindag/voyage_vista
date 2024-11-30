@@ -1,0 +1,74 @@
+Вход в аккаунт
+---
+parameters:
+  - name: user_data
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email пользователя
+        password:
+          type: string
+          description: Введенный пароль
+      required:
+        - email
+        - password
+
+responses:
+  200:
+    description: Пользователь успешно вошёл
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        access_token:
+          type: string
+          description: Токен доступа
+        refresh_token:
+          type: string
+          description: Токен обновления
+    examples:
+      application/json:
+        success: true
+        access_token: "eyJhbGciOiJIUzI1NiIs..."
+        refresh_token: "eyJhbGciOiJIUzI1NiIs..."
+
+  400:
+    description: Данные для авторизации не прошли проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        errors:
+          type: object
+          description: Сообщения об ошибках валидации
+    examples:
+      application/json:
+        success: false
+        errors:
+          email: ["Некорректный email"]
+          password: ["Поле обязательно для заполнения"]
+
+  403:
+    description: Авторизованный пользователь пытается получить доступ
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь уже авторизован"

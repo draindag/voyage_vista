@@ -10,13 +10,7 @@ main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route("/api", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все категории'
-        }
-    }
-})
+@swag_from("swagger_definitions/index.yaml")
 def index():
     """
        Возвращает все категории туров для слайдера и страны для выпадающего списка на главной

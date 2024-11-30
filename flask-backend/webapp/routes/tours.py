@@ -23,13 +23,7 @@ tours_bp = Blueprint("tours", __name__)
 
 
 @tours_bp.route("/categories", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все категории'
-        }
-    }
-})
+@swag_from("swagger_definitions/show_categories.yaml")
 def show_categories():
     """
        Возвращает все категории для туров
@@ -45,22 +39,7 @@ def show_categories():
 
 
 @tours_bp.route("/special_offers", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все туры с акциями постранично'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
+@swag_from("swagger_definitions/show_tours_with_discounts.yaml")
 def show_tours_with_discounts():
     """
        Возвращает все туры, у которых есть какие-нибудь акции постранично
@@ -80,16 +59,10 @@ def show_tours_with_discounts():
 
 
 @tours_bp.route("/popular", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул 30 туров с высокой оценкой'
-        }
-    }
-})
+@swag_from("swagger_definitions/show_most_popular_tours.yaml")
 def show_most_popular_tours():
     """
-       Возвращает первые 30 туров с самой высокой оценкой
+       Возвращает первые 20 туров с самой высокой оценкой
        ---
        """
 
@@ -117,35 +90,7 @@ def show_most_popular_tours():
 
 
 @tours_bp.route("/categories/<string:category_id>", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все туры для этой категории постранично'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        404: {
-            'description': 'Если категории с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
+@swag_from("swagger_definitions/show_category_page.yaml")
 def show_category_page(category_id: str):
     """
            Возвращает все туры, относящиеся к данной категории постранично
@@ -155,70 +100,29 @@ def show_category_page(category_id: str):
     try:
         valid_category_uuid = UUID(category_id)
         category = Category.query.filter_by(category_id=valid_category_uuid).first()
-
-        if not category:
-            return jsonify({"success": False,
-                "message": "Категория не найдена"}), 404
-
-        page = request.args.get('page', 1, type=int)
-        tours_for_category = category.tours.paginate(
-        page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
-        tours_schema = TourSchema(many=True, exclude=("tour_text",))
-        tours_for_category_data = tours_schema.dump(tours_for_category)
-
-        return jsonify({"success": True,
-                        "tours": tours_for_category_data,
-                        "prev_page": tours_for_category.has_prev,
-                        "next_page": tours_for_category.has_next}), 200
-
     except ValueError:
         return jsonify({"success": False,
                         'error': 'Неверный формат ID у категории'}), 400
 
+    if not category:
+        return jsonify({"success": False,
+            "message": "Категория не найдена"}), 404
+
+    page = request.args.get('page', 1, type=int)
+    tours_for_category = category.tours.paginate(
+    page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
+    tours_schema = TourSchema(many=True, exclude=("tour_text",))
+    tours_for_category_data = tours_schema.dump(tours_for_category)
+
+    return jsonify({"success": True,
+                    "tours": tours_for_category_data,
+                    "prev_page": tours_for_category.has_prev,
+                    "next_page": tours_for_category.has_next}), 200
+
 
 @tours_bp.route("/<string:tour_id>", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этому туру, комментарии - постранично'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_tour_page.yaml")
 def show_tour_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур, комментарии - постранично
@@ -258,35 +162,7 @@ def show_tour_page(tour_id: str):
 
 
 @tours_bp.route("/countries/<string:country_id>", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все туры для этой страны постранично'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        404: {
-            'description': 'Если страны с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
+@swag_from("swagger_definitions/show_country_page.yaml")
 def show_country_page(country_id: str):
     """
         Возвращает все туры, относящиеся к данной стране постранично
@@ -296,63 +172,29 @@ def show_country_page(country_id: str):
     try:
         valid_country_uuid = UUID(country_id)
         country = Country.query.filter_by(country_id=valid_country_uuid).first()
-
-        if not country:
-            return jsonify({"success": False,
-                    "message": "Страна не найдена"}), 404
-
-        page = request.args.get('page', 1, type=int)
-        tours_for_country = country.tours.paginate(
-        page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
-        tours_schema = TourSchema(many=True, exclude=("tour_text",))
-        tours_for_country_data = tours_schema.dump(tours_for_country)
-
-        return jsonify({"success": True,
-                        "tours": tours_for_country_data,
-                        "prev_page": tours_for_country.has_prev,
-                        "next_page": tours_for_country.has_next}), 200
-
     except ValueError:
         return jsonify({"success": False,
                         'error': 'Неверный формат ID у страны'}), 400
 
+    if not country:
+        return jsonify({"success": False,
+                "message": "Страна не найдена"}), 404
+
+    page = request.args.get('page', 1, type=int)
+    tours_for_country = country.tours.paginate(
+    page=page, per_page=int(os.getenv("TOURS_PER_PAGE")), error_out=False)
+    tours_schema = TourSchema(many=True, exclude=("tour_text",))
+    tours_for_country_data = tours_schema.dump(tours_for_country)
+
+    return jsonify({"success": True,
+                    "tours": tours_for_country_data,
+                    "prev_page": tours_for_country.has_prev,
+                    "next_page": tours_for_country.has_next}), 200
+
 
 @tours_bp.route('/<string:tour_id>/to_favourite', methods=['POST'])
-@swag_from({
-    'responses': {
-        201: {
-            'description': 'Добавил тур в избранное пользователя'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_tour_to_favourites.yaml")
 def add_tour_to_favourites(tour_id: str):
     """
         Добавляет тур в избранное пользователя
@@ -385,41 +227,8 @@ def add_tour_to_favourites(tour_id: str):
 
 
 @tours_bp.route("/<string:tour_id>/out_of_favourite", methods=["DELETE"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Удалил тур из избранного пользователя'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/unfavourite_tour.yaml")
 def unfavourite_tour(tour_id: str):
     """
         Удаляет тур из избранного пользователя
@@ -452,41 +261,8 @@ def unfavourite_tour(tour_id: str):
 
 
 @tours_bp.route('/<string:tour_id>/payment', methods=['GET'])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по туру для совершения оплаты'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_tour_payment_info.yaml")
 def show_tour_payment_info(tour_id: str):
     """
         Возвращает данные тура для совершения оплаты
@@ -519,55 +295,8 @@ def show_tour_payment_info(tour_id: str):
 
 
 @tours_bp.route('/<string:tour_id>/payment', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Сохранил информацию об оплате тура пользователем'
-        },
-        400: {
-            'description': 'Неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'acceptance',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'acceptance': {
-                        'type': 'boolean'
-                    }
-                }
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_transaction.yaml")
 def add_transaction(tour_id: str):
     """
         Фиксирует проведение оплаты за тур
@@ -607,62 +336,8 @@ def add_transaction(tour_id: str):
 
 
 @tours_bp.route('/<string:tour_id>/add_review', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        201: {
-            'description': 'Добавил отзыв на тур'
-        },
-        400: {
-            'description': 'Данные тура не прошли проверку или неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'review',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'review_text': {
-                        'type': 'string',
-                        'description': 'Текст отзыва, обязательно для заполнения'
-                    },
-                    'review_value': {
-                        'type': 'number',
-                        'format': 'integer',
-                        'description': 'Оценка тура, обязательно для заполнения'
-                    }
-                },
-                'required': ['review_text', 'review_value']
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_review_to_tour.yaml")
 def add_review_to_tour(tour_id: str):
     """
         Оставляет отзыв на тур
@@ -707,63 +382,8 @@ def add_review_to_tour(tour_id: str):
 
 
 @tours_bp.route('/<string:tour_id>/add_reply', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        201: {
-            'description': 'Добавил комментарий'
-        },
-        400: {
-            'description': 'Данные комментария не прошли проверку или неверный формат uuid'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку'
-        },
-        404: {
-            'description': 'Если тура с таким id нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'reply',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'reply_text': {
-                        'type': 'string',
-                        'description': 'Текст комментария, обязательно для заполнения'
-                    },
-                    'parent_reply_id': {
-                        'type': 'string',
-                        'format': 'uuid',
-                        'description': 'ID родительского комментария, необязательно для заполнения - '
-                                       'если комментарий корневой'
-                    }
-                },
-                'required': ['reply_text']
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_reply.yaml")
 def add_reply(tour_id: str):
     """
         Оставляет комментарий
@@ -821,41 +441,8 @@ def add_reply(tour_id: str):
 
 
 @tours_bp.route("/replies/<string:reply_id>/delete", methods=["DELETE"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Комментарий успешно удалён'
-        },
-        400: {
-            'description': 'Неверный формат UUID комментария'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если комментария с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'reply_id',
-            'description': 'ID комментария',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/delete_reply.yaml")
 def delete_reply(reply_id: str):
     """
        Удаляет выбранный комментарий
