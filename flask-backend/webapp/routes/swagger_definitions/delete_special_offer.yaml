@@ -1,0 +1,87 @@
+Удаляет выбранную скидку
+---
+parameters:
+  - name: offer_id
+    in: path
+    type: string
+    required: true
+    description: ID скидки
+  - name: acceptance
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        acceptance:
+          type: boolean
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Скидка успешно удалена
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Сообщение об успешном удалении
+    examples:
+      application/json:
+        success: true
+        message: "Скидка успешно удалена!"
+
+  400:
+    description: Поле с согласием не отмечено или неверный формат UUID скидки
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у скидки"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"
+
+  404:
+    description: Если скидки с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Скидка с таким ID не найдена"

@@ -1,0 +1,250 @@
+Добавляет новую скидку
+---
+parameters:
+  - name: special_offer
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        offer_title:
+          type: string
+          maxLength: 50
+          description: Название скидки, не более 50 символов
+        discount_size:
+          type: number
+          format: integer
+          description: Процент скидки, обязательно для заполнения
+        end_date:
+          type: string
+          format: date
+          description: Дата окончания действия скидки, обязательно для заполнения
+      required:
+        - offer_title
+        - discount_size
+        - end_date
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  201:
+    description: Создана новая скидка
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха создания
+        message:
+          type: string
+          description: Сообщение об успешном создании
+        special_offer:
+          $ref: '#/definitions/Offer'
+    examples:
+      application/json:
+        success: true
+        message: "Скидка успешно создана!"
+        special_offer:
+          offer_id: "f1c5a1e2-34bc-4567-89ef-fedcba123456"
+          offer_title: "Скидка 15%"
+          discount_size: 15.0
+          end_date: "2024-12-31"
+
+  400:
+    description: Данные для создания новой скидки не прошли проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        errors:
+          type: object
+          description: Ошибки валидации входных данных
+    examples:
+      application/json:
+        success: false
+        errors:
+          offer_title: "Обязательное поле"
+          discount_size: "Должно быть целым числом"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"
+
+definitions:
+  Review:
+    type: object
+    properties:
+      review_id:
+        type: string
+        format: uuid
+        description: UUID отзыва
+      review_text:
+        type: string
+        description: Текст отзыва
+      review_value:
+        type: number
+        format: float
+        description: Оценка отзыва(от 1 до 5)
+      author:
+        $ref: '#/definitions/User'
+      tour:
+        $ref: '#/definitions/Tour'
+
+  Tour:
+    type: object
+    properties:
+      tour_id:
+        type: string
+        format: uuid
+        description: UUID тура
+      tour_title:
+        type: string
+        description: Название тура(не более 40 символов)
+      tour_description:
+        type: string
+        description: Описание тура(не более 50 символов)
+      tour_text:
+        type: string
+        description: Текст тура
+      tour_price:
+        type: number
+        format: decimal
+        description: Цена тура(положительное число)
+      price_with_discount:
+        type: number
+        format: decimal
+        description: Цена тура со скидкой
+      tour_start_date:
+        type: string
+        format: date
+        description: Дата начала тура
+      tour_end_date:
+        type: string
+        format: date
+        description: Дата окончания тура
+      tour_image:
+        type: string
+        description: URL изображения тура
+      category:
+        $ref: '#/definitions/Category'
+      country:
+        $ref: '#/definitions/Country'
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+
+  Reply:
+    type: object
+    properties:
+      reply_id:
+        type: string
+        format: uuid
+        description: UUID комментария
+      reply_text:
+        type: string
+        description: Текст комментария
+      parent_reply_id:
+        type: string
+        format: uuid
+        description: ID родительского комментария (если имеется)
+      author:
+        $ref: '#/definitions/User'
+      replies:
+        type: array
+        items:
+          $ref: '#/definitions/Reply'
+
+  User:
+    type: object
+    properties:
+      user_id:
+        type: string
+        format: uuid
+        description: UUID пользователя
+      login:
+        type: string
+        description: Логин пользователя
+      email:
+        type: string
+        format: email
+        description: Email пользователя
+      fav_tours:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+
+  Category:
+    type: object
+    properties:
+      category_id:
+        type: string
+        format: uuid
+        description: UUID категории
+      category_title:
+        type: string
+        description: Название категории(не более 30 символов)
+      category_description:
+        type: string
+        description: Описание категории
+      category_image:
+        type: string
+        description: URL изображения категории
+
+  Country:
+    type: object
+    properties:
+      country_id:
+        type: string
+        format: uuid
+        description: UUID страны
+      country_name:
+        type: string
+        description: Название страны(не более 30 символов)
+      country_description:
+        type: string
+        description: Описание страны
+      country_image:
+        type: string
+        description: URL изображения страны
+
+  Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+        format: uuid
+        description: UUID акции
+      offer_title:
+        type: string
+        description: Название акции(не более 50 символов)
+      discount_size:
+        type: number
+        format: float
+        description: Процент скидки
+      end_date:
+        type: string
+        format: date
+        description: Дата окончания скидки

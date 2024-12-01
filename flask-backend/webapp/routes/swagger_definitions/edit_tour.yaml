@@ -1,0 +1,322 @@
+Обновляет данные тура
+---
+parameters:
+  - name: tour_id
+    in: path
+    type: string
+    required: true
+    description: ID тура
+  - name: tour_title
+    in: formData
+    required: true
+    type: string
+    maxLength: 40
+    description: Название тура, не более 40 символов. Пример - `string`
+  - name: tour_description
+    in: formData
+    required: true
+    type: string
+    maxLength: 50
+    description: Описание тура, не более 50 символов. Пример - `string`
+  - name: tour_text
+    in: formData
+    required: true
+    type: string
+    description: Текст тура, обязательно для заполнения. Пример - `string`
+  - name: tour_price
+    in: formData
+    required: true
+    type: number
+    description: Цена тура, обязательно для заполнения. Пример - `100`
+  - name: tour_start_date
+    in: formData
+    required: true
+    type: string
+    format: date
+    description: Дата начала тура, обязательно для заполнения. Пример - `2024-11-29`
+  - name: tour_end_date
+    in: formData
+    required: true
+    type: string
+    format: date
+    description: Дата окончания тура, обязательно для заполнения. Пример - `2024-11-29`
+  - name: category_id
+    in: formData
+    required: true
+    type: string
+    format: uuid
+    description: ID категории тура, обязательно для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: country_id
+    in: formData
+    required: true
+    type: string
+    format: uuid
+    description: ID страны тура, обязательно для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: offer_id
+    in: formData
+    required: false
+    type: string
+    format: uuid
+    description: ID акции на тур, `необязательно` для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: cover_image
+    in: formData
+    required: false
+    type: file
+    description: Изображение обложки тура. Если не надо изменять на новую, то ничего не присылать.
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Данные тура обновлены
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание результата
+        tour:
+          $ref: '#/definitions/Tour'
+    examples:
+      application/json:
+        success: true
+        message: "Данные тура успешно изменены!"
+        tour:
+          tour_id: "a1b2c3d4-e56f-78g9-h0i1-j234k567l890"
+          tour_title: "Семейный отдых"
+          tour_description: "Отличный тур для всей семьи"
+          tour_text: "Текст тура, он может быть очень большим"
+          tour_price: 850.00
+          tour_start_date: "2024-08-01"
+          tour_end_date: "2024-08-15"
+          tour_image: "flask-backend/webapp/tour_images/a1b2c3d4-e56f-78g9-h0i1-j234k567l890.png"
+          price_with_discount: 765.00
+          category:
+            category_id: "123e4567-e89b-12d3-a456-426614174000"
+            category_title: "Семейные туры"
+            category_description: "Туры, подходящие для семейного отдыха"
+          country:
+            country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
+            country_name: "Италия"
+            country_description: "Страна с богатой культурой"
+          offers:
+            - offer_id: "f1c5a1e2-34bc-4567-89ef-fedcba123456"
+              offer_title: "Скидка 10%"
+              discount_size: 10.0
+              end_date: "2024-07-30"
+
+  400:
+    description: Данные для обновления тура не прошли проверку или неверный формат UUID тура
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у тура"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"
+
+  404:
+    description: Если тура с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Тур с таким ID не найден"
+
+definitions:
+  Review:
+    type: object
+    properties:
+      review_id:
+        type: string
+        format: uuid
+        description: UUID отзыва
+      review_text:
+        type: string
+        description: Текст отзыва
+      review_value:
+        type: number
+        format: float
+        description: Оценка отзыва(от 1 до 5)
+      author:
+        $ref: '#/definitions/User'
+      tour:
+        $ref: '#/definitions/Tour'
+
+  Tour:
+    type: object
+    properties:
+      tour_id:
+        type: string
+        format: uuid
+        description: UUID тура
+      tour_title:
+        type: string
+        description: Название тура(не более 40 символов)
+      tour_description:
+        type: string
+        description: Описание тура(не более 50 символов)
+      tour_text:
+        type: string
+        description: Текст тура
+      tour_price:
+        type: number
+        format: decimal
+        description: Цена тура(положительное число)
+      price_with_discount:
+        type: number
+        format: decimal
+        description: Цена тура со скидкой
+      tour_start_date:
+        type: string
+        format: date
+        description: Дата начала тура
+      tour_end_date:
+        type: string
+        format: date
+        description: Дата окончания тура
+      tour_image:
+        type: string
+        description: URL изображения тура
+      category:
+        $ref: '#/definitions/Category'
+      country:
+        $ref: '#/definitions/Country'
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+
+  Reply:
+    type: object
+    properties:
+      reply_id:
+        type: string
+        format: uuid
+        description: UUID комментария
+      reply_text:
+        type: string
+        description: Текст комментария
+      parent_reply_id:
+        type: string
+        format: uuid
+        description: ID родительского комментария (если имеется)
+      author:
+        $ref: '#/definitions/User'
+      replies:
+        type: array
+        items:
+          $ref: '#/definitions/Reply'
+
+  User:
+    type: object
+    properties:
+      user_id:
+        type: string
+        format: uuid
+        description: UUID пользователя
+      login:
+        type: string
+        description: Логин пользователя
+      email:
+        type: string
+        format: email
+        description: Email пользователя
+      fav_tours:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+
+  Category:
+    type: object
+    properties:
+      category_id:
+        type: string
+        format: uuid
+        description: UUID категории
+      category_title:
+        type: string
+        description: Название категории(не более 30 символов)
+      category_description:
+        type: string
+        description: Описание категории
+      category_image:
+        type: string
+        description: URL изображения категории
+
+  Country:
+    type: object
+    properties:
+      country_id:
+        type: string
+        format: uuid
+        description: UUID страны
+      country_name:
+        type: string
+        description: Название страны(не более 30 символов)
+      country_description:
+        type: string
+        description: Описание страны
+      country_image:
+        type: string
+        description: URL изображения страны
+
+  Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+        format: uuid
+        description: UUID акции
+      offer_title:
+        type: string
+        description: Название акции(не более 50 символов)
+      discount_size:
+        type: number
+        format: float
+        description: Процент скидки
+      end_date:
+        type: string
+        format: date
+        description: Дата окончания скидки

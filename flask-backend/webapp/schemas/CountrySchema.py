@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для стран с помощью библиотеки Marshmallow.
+
+Схема CountrySchema описывает поля категории, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, validates, ValidationError, post_load
 
 from webapp import ma
@@ -7,9 +15,13 @@ from webapp.models.Country import Country
 class CountrySchema(ma.Schema):
     country_id = fields.UUID(dump_only=True)
     country_name = fields.String(required=True,
-                                   error_messages={"required": "Название страны обязательно для заполнения"})
+                                   error_messages={"required": "Название страны обязательно для заполнения",
+                                                   "null": "Название страны обязательно для заполнения"})
     country_description = fields.String(required=True,
-                                         error_messages={"required": "Описание страны обязательно для заполнения"})
+                                         error_messages={"required": "Описание страны обязательно для заполнения",
+                                                         "null": "Описание страны обязательно для заполнения"})
+
+    country_image = fields.String(dump_only=True)
 
     @validates('country_name')
     def validate_name(self, value):

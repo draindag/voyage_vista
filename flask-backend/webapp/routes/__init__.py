@@ -1,23 +1,27 @@
+"""
+Этот модуль определяет основной маршрут API для извлечения категорий туров
+и стран.
+
+Он возвращает данные для слайдера категорий и выпадающего списка стран
+на главной странице приложения.
+"""
+
 from flasgger import swag_from
 from flask import Blueprint, jsonify
 
 from webapp.models.Category import Category
+from webapp.models.Country import Country
 from webapp.schemas.CategorySchema import CategorySchema
+from webapp.schemas.CountrySchema import CountrySchema
 
 main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route("/api", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все категории'
-        }
-    }
-})
+@swag_from("swagger_definitions/index.yaml")
 def index():
     """
-       Возвращает все категории туров для слайдера на главной
+       Возвращает все категории туров для слайдера и страны для выпадающего списка на главной
        ---
        """
 
@@ -25,5 +29,10 @@ def index():
     categories_schema = CategorySchema(many=True)
     categories_data = categories_schema.dump(categories)
 
+    countries = Country.query.all()
+    country_schema = CountrySchema(many=True, exclude=("country_image",))
+    countries_data = country_schema.dump(countries)
+
     return jsonify({"success": True,
-                    "categories": categories_data}), 200
+                    "categories": categories_data,
+                    "countries": countries_data}), 200

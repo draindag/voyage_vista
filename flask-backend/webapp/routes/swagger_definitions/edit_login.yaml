@@ -1,0 +1,83 @@
+Изменение логина пользователя
+---
+parameters:
+  - name: user_data
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        new_login:
+          type: string
+          maxLength: 30
+          description: Новый логин пользователя, не более 30 символов
+        password:
+          type: string
+          description: Введенный пароль
+      required:
+        - new_login
+        - password
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Логин успешно изменён
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Описание результата операции
+        access_token:
+          type: string
+          description: Новый access токен
+        refresh_token:
+          type: string
+          description: Новый refresh токен
+    examples:
+      application/json:
+        success: true
+        message: "Логин успешно изменён!"
+        access_token: "eyJhbGciOiJIUzI1NiIsInR..."
+        refresh_token: "eyJhbGciOiJIUzI1NiIsInR..."
+
+  400:
+    description: Неверные данные для изменения логина
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        errors:
+          type: object
+          description: Ошибки валидации
+    examples:
+      application/json:
+        success: false
+        errors:
+          new_login: "Невозможно использовать данный логин!"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь не найден"

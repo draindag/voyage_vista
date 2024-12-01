@@ -1,0 +1,79 @@
+Удаляет выбранный комментарий
+---
+parameters:
+  - name: reply_id
+    type: string
+    required: true
+    description: ID комментария
+    in: path
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Комментарий успешно удалён
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение об успешном удалении
+    examples:
+      application/json:
+        success: true
+        message: "Комментарий успешно удалён!"
+
+  400:
+    description: Неверный формат UUID комментария
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у комментария"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        message:
+          type: string
+          description: Описание причины ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"
+
+  404:
+    description: Комментария с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель неуспеха операции
+        message:
+          type: string
+          description: Описание причины ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Комментарий с таким ID не найден"

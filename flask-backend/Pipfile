@@ -11,7 +11,6 @@ click = "==8.1.7"
 colorama = "==0.4.6"
 flasgger = "==0.9.7.1"
 flask = "==3.0.3"
-flask-login = "==0.6.3"
 flask-migrate = "==4.0.7"
 flask-sqlalchemy = "==3.1.1"
 greenlet = "==3.1.1"
@@ -37,6 +36,9 @@ zipp = "==3.20.2"
 marshmallow = "==3.23.1"
 flask-marshmallow = "==1.2.1"
 marshmallow-sqlalchemy = "==1.1.0"
+flask-jwt-extended = "==4.7.0"
+pylint = "==3.3.1"
+flask-reuploaded = "==1.4.0"
 
 [dev-packages]
 

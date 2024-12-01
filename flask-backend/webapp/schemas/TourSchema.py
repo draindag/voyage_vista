@@ -1,4 +1,11 @@
-import uuid
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для туров с помощью библиотеки Marshmallow.
+
+Схема TourSchema описывает поля тура, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from decimal import Decimal
 
 from marshmallow import fields, validates, ValidationError, post_load
@@ -7,46 +14,41 @@ from webapp import ma
 from webapp.models.Tour import Tour
 
 
-class _CustomUUID(fields.UUID):
-    def _deserialize(self, value, attr, obj, **kwargs):
-        try:
-            return super()._deserialize(value, attr, obj, **kwargs)
-        except ValidationError:
-            raise ValidationError("ID должен быть корректным UUID", field_names=[attr])
-
-class _CustomDate(fields.Date):
-    def _deserialize(self, value, attr, obj, **kwargs):
-        try:
-            return super()._deserialize(value, attr, obj, **kwargs)
-        except ValidationError:
-            raise ValidationError("Даты тура должны быть корректными", field_names=[attr])
-
-class _CustomDecimal(fields.Decimal):
-    def _deserialize(self, value, attr, obj, **kwargs):
-        try:
-            return super()._deserialize(value, attr, obj, **kwargs)
-        except ValidationError:
-            raise ValidationError("Цена тура должна быть корректным числом", field_names=[attr])
-
-
 class TourSchema(ma.Schema):
     tour_id = fields.UUID(dump_only=True)
-    tour_title = fields.String(required=True, error_messages={"required": "Название тура обязательно для заполнения"})
+    tour_title = fields.String(required=True, error_messages={"required": "Название тура обязательно для заполнения",
+                                                              "null": "Название тура обязательно для заполнения"})
     tour_description = fields.String(required=True,
-                                     error_messages={"required": "Описание тура обязательно для заполнения"})
-    tour_text = fields.String(required=True, error_messages={"required": "Текст тура обязателен для заполнения"})
-    tour_price = _CustomDecimal(required=True, error_messages={"required": "Цена тура обязательна для заполнения"})
-    tour_start_date = _CustomDate(required=True,
-                                  error_messages={"required": "Дата начала тура обязательна для заполнения"})
-    tour_end_date = _CustomDate(required=True,
-                                error_messages={"required": "Дата окончания тура обязательна для заполнения"})
-    category_id = _CustomUUID(required=True, load_only=True,
-                                error_messages={"required": "Категория тура обязательна для указания"})
-    country_id = _CustomUUID(required=True, load_only=True,
-                                error_messages={"required": "Страна тура обязательна для указания"})
-    category = fields.Nested("CategorySchema", dump_only=True)
-    country = fields.Nested("CountrySchema", dump_only=True)
-    rating = fields.Function(lambda tour: tour.get_rating(), dump_only=True)
+                                     error_messages={"required": "Описание тура обязательно для заполнения",
+                                                     "null": "Описание тура обязательно для заполнения"})
+    tour_text = fields.String(required=True, error_messages={"required": "Текст тура обязателен для заполнения",
+                                                             "null": "Текст тура обязателен для заполнения"})
+    tour_price = fields.Decimal(required=True, error_messages={"required": "Цена тура обязательна для заполнения",
+                                                               "invalid": "Цена тура должна быть корректным числом",
+                                                               "null": "Цена тура обязательна для заполнения"})
+    tour_start_date = fields.Date(required=True,
+                                  error_messages={"required": "Дата начала тура обязательна для заполнения",
+                                                  "invalid": "Даты тура должны быть корректными",
+                                                  "null": "Дата начала тура обязательна для заполнения"})
+    tour_end_date = fields.Date(required=True,
+                                error_messages={"required": "Дата окончания тура обязательна для заполнения",
+                                                "invalid": "Даты тура должны быть корректными",
+                                                "null": "Дата окончания тура обязательна для заполнения"})
+    category_id = fields.UUID(required=True, load_only=True,
+                                error_messages={"required": "Категория тура обязательна для указания",
+                                                "invalid": "ID должен быть корректным UUID",
+                                                "null": "Категория тура обязательна для указания"})
+    country_id = fields.UUID(required=True, load_only=True,
+                                error_messages={"required": "Страна тура обязательна для указания",
+                                                "invalid": "ID должен быть корректным UUID",
+                                                "null": "Страна тура обязательна для указания"})
+
+    category = fields.Nested("CategorySchema", dump_only=True, exclude=("category_image",))
+    country = fields.Nested("CountrySchema", dump_only=True, exclude=("country_image",))
+    offers = fields.Nested("OfferSchema", dump_only=True, many=True)
+
+    tour_image = fields.String(dump_only=True)
+    price_with_discount = fields.Function(lambda tour: tour.get_price_with_discount(), dump_only=True)
 
     @validates('tour_title')
     def validate_title(self, value):

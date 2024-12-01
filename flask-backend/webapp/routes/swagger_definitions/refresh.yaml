@@ -1,0 +1,42 @@
+Обновляет access токен
+---
+parameters:
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT refresh токен для обновления access токена. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Обновил и вернул access токен
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        access_token:
+          type: string
+          description: Новый access токен
+    examples:
+      application/json:
+        success: true
+        access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+  401:
+    description: refresh токен не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Invalid refresh token"

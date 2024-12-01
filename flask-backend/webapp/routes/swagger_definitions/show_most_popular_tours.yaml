@@ -1,0 +1,233 @@
+ Возвращает первые 20 туров с самой высокой оценкой
+---
+parameters:
+  - name: page
+    type: integer
+    required: false
+    description: Номер страницы для пагинации (по умолчанию 1)
+    in: query
+
+responses:
+  200:
+    description: Вернул 20 туров с высокой оценкой
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        tours:
+          type: array
+          items:
+            $ref: '#/definitions/Tour'
+        prev_page:
+          type: boolean
+          description: Признак наличия предыдущей страницы
+        next_page:
+          type: boolean
+          description: Признак наличия следующей страницы
+    examples:
+      application/json:
+        success: true
+        tours:
+          - tour_id: "e8c7c3d4-e23a-4b91-b770-1b884bfc3fda"
+            tour_title: "Приключенческий тур"
+            tour_description: "Описание приключенческого тура"
+            tour_price: 1200.50
+            tour_start_date: "2024-06-01"
+            tour_end_date: "2024-06-10"
+            tour_image: "flask-backend/webapp/tour_images/e8c7c3d4-e23a-4b91-b770-1b884bfc3fda.png"
+            price_with_discount: 960.40
+            category:
+              category_id: "123e4567-e89b-12d3-a456-426614174000"
+              category_title: "Приключения"
+              category_description: "Описание приключений"
+            country:
+              country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
+              country_name: "Италия"
+              country_description: "Страна с богатой культурой"
+            offers:
+              - offer_id: "f1c5a1e2-34bc-4567-89ef-fedcba123456"
+                offer_title: "Скидка 20%"
+                discount_size: 20.0
+                end_date: "2024-05-31"
+          - tour_id: "c9d5e4a3-b1b2-3b4f-b5c9-3a2b4f3d4b5a"
+            tour_title: "Экскурсия по Италии"
+            tour_description: "Описание экскурсии по Италии"
+            tour_price: 1500.00
+            tour_start_date: "2024-07-15"
+            tour_end_date: "2024-07-20"
+            tour_image: "flask-backend/webapp/tour_images/c9d5e4a3-b1b2-3b4f-b5c9-3a2b4f3d4b5a.png"
+            price_with_discount: null
+            category:
+              category_id: "123e4567-e89b-12d3-a456-426614174001"
+              category_title: "Культурные поездки"
+              category_description: "Описание культурных поездок"
+            country:
+              country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
+              country_name: "Италия"
+              country_description: "Страна с богатой культурой"
+            offers:
+        prev_page: false
+        next_page: true
+
+definitions:
+  Review:
+    type: object
+    properties:
+      review_id:
+        type: string
+        format: uuid
+        description: UUID отзыва
+      review_text:
+        type: string
+        description: Текст отзыва
+      review_value:
+        type: number
+        format: float
+        description: Оценка отзыва(от 1 до 5)
+      author:
+        $ref: '#/definitions/User'
+      tour:
+        $ref: '#/definitions/Tour'
+
+  Tour:
+    type: object
+    properties:
+      tour_id:
+        type: string
+        format: uuid
+        description: UUID тура
+      tour_title:
+        type: string
+        description: Название тура(не более 40 символов)
+      tour_description:
+        type: string
+        description: Описание тура(не более 50 символов)
+      tour_text:
+        type: string
+        description: Текст тура
+      tour_price:
+        type: number
+        format: decimal
+        description: Цена тура(положительное число)
+      price_with_discount:
+        type: number
+        format: decimal
+        description: Цена тура со скидкой
+      tour_start_date:
+        type: string
+        format: date
+        description: Дата начала тура
+      tour_end_date:
+        type: string
+        format: date
+        description: Дата окончания тура
+      tour_image:
+        type: string
+        description: URL изображения тура
+      category:
+        $ref: '#/definitions/Category'
+      country:
+        $ref: '#/definitions/Country'
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+
+  Reply:
+    type: object
+    properties:
+      reply_id:
+        type: string
+        format: uuid
+        description: UUID комментария
+      reply_text:
+        type: string
+        description: Текст комментария
+      parent_reply_id:
+        type: string
+        format: uuid
+        description: ID родительского комментария (если имеется)
+      author:
+        $ref: '#/definitions/User'
+      replies:
+        type: array
+        items:
+          $ref: '#/definitions/Reply'
+
+  User:
+    type: object
+    properties:
+      user_id:
+        type: string
+        format: uuid
+        description: UUID пользователя
+      login:
+        type: string
+        description: Логин пользователя
+      email:
+        type: string
+        format: email
+        description: Email пользователя
+      fav_tours:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Tour'
+
+  Category:
+    type: object
+    properties:
+      category_id:
+        type: string
+        format: uuid
+        description: UUID категории
+      category_title:
+        type: string
+        description: Название категории(не более 30 символов)
+      category_description:
+        type: string
+        description: Описание категории
+      category_image:
+        type: string
+        description: URL изображения категории
+
+  Country:
+    type: object
+    properties:
+      country_id:
+        type: string
+        format: uuid
+        description: UUID страны
+      country_name:
+        type: string
+        description: Название страны(не более 30 символов)
+      country_description:
+        type: string
+        description: Описание страны
+      country_image:
+        type: string
+        description: URL изображения страны
+
+  Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+        format: uuid
+        description: UUID акции
+      offer_title:
+        type: string
+        description: Название акции(не более 50 символов)
+      discount_size:
+        type: number
+        format: float
+        description: Процент скидки
+      end_date:
+        type: string
+        format: date
+        description: Дата окончания скидки
