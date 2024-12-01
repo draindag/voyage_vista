@@ -1,70 +1,119 @@
-Возвращает все туры, относящиеся к данной стране постранично(и обложку страны)
+Обновляет данные тура
 ---
 parameters:
-  - name: country_id
-    type: string
-    description: ID страны
+  - name: tour_id
     in: path
+    type: string
     required: true
-  - name: page
-    type: integer
+    description: ID тура
+  - name: tour_title
+    in: formData
+    required: true
+    type: string
+    maxLength: 40
+    description: Название тура, не более 40 символов. Пример - `string`
+  - name: tour_description
+    in: formData
+    required: true
+    type: string
+    maxLength: 50
+    description: Описание тура, не более 50 символов. Пример - `string`
+  - name: tour_text
+    in: formData
+    required: true
+    type: string
+    description: Текст тура, обязательно для заполнения. Пример - `string`
+  - name: tour_price
+    in: formData
+    required: true
+    type: number
+    description: Цена тура, обязательно для заполнения. Пример - `100`
+  - name: tour_start_date
+    in: formData
+    required: true
+    type: string
+    format: date
+    description: Дата начала тура, обязательно для заполнения. Пример - `2024-11-29`
+  - name: tour_end_date
+    in: formData
+    required: true
+    type: string
+    format: date
+    description: Дата окончания тура, обязательно для заполнения. Пример - `2024-11-29`
+  - name: category_id
+    in: formData
+    required: true
+    type: string
+    format: uuid
+    description: ID категории тура, обязательно для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: country_id
+    in: formData
+    required: true
+    type: string
+    format: uuid
+    description: ID страны тура, обязательно для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: offer_id
+    in: formData
     required: false
-    description: Номер страницы для пагинации (по умолчанию 1)
-    in: query
+    type: string
+    format: uuid
+    description: ID акции на тур, `необязательно` для заполнения. Пример - `3fa85f64-5717-4562-b3fc-2c963f66afa6`
+  - name: cover_image
+    in: formData
+    required: false
+    type: file
+    description: Изображение обложки тура. Если не надо изменять на новую, то ничего не присылать.
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
 
 responses:
   200:
-    description: Вернул все туры для этой страны постранично
+    description: Данные тура обновлены
     schema:
       type: object
       properties:
         success:
           type: boolean
           description: Показатель успеха/неуспеха
-        tours:
-          type: array
-          items:
-            $ref: '#/definitions/Tour'
-        country_image:
+        message:
           type: string
-          description: URL изображения страны
-        prev_page:
-          type: boolean
-          description: Признак наличия предыдущей страницы
-        next_page:
-          type: boolean
-          description: Признак наличия следующей страницы
+          description: Описание результата
+        tour:
+          $ref: '#/definitions/Tour'
     examples:
       application/json:
         success: true
-        tours:
-          - tour_id: "d4c7c4e2-a239-4b46-bc09-efc6c1a7e6b7"
-            tour_title: "Тур по Риму"
-            tour_description: "Погружение в атмосферу вечного города"
-            tour_price: 1500.00
-            price_with_discount: 1300.00
-            tour_start_date: "2024-05-10"
-            tour_end_date: "2024-05-20"
-            tour_image: "flask-backend/webapp/tour_images/d4c7c4e2-a239-4b46-bc09-efc6c1a7e6b7.png"
-            category:
-              category_id: "123e4567-e89b-12d3-a456-426614174000"
-              category_title: "Культурные поездки"
-              category_description: "Описание культурных поездок"
-            country:
-              country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
-              country_name: "Италия"
-              country_description: "Страна с прекрасной культурой"
-            offers:
-              - offer_id: "e1c3f112-c3b1-4e52-9d67-c73c2bff88a3"
-                offer_title: "Скидка 15%"
-                discount_size: 15.0
-                end_date: "2024-04-30"
-        country_image: "flask-backend/webapp/tour_images/b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62.png"
-        prev_page: false
-        next_page: true
+        message: "Данные тура успешно изменены!"
+        tour:
+          tour_id: "a1b2c3d4-e56f-78g9-h0i1-j234k567l890"
+          tour_title: "Семейный отдых"
+          tour_description: "Отличный тур для всей семьи"
+          tour_text: "Текст тура, он может быть очень большим"
+          tour_price: 850.00
+          tour_start_date: "2024-08-01"
+          tour_end_date: "2024-08-15"
+          tour_image: "flask-backend/webapp/tour_images/a1b2c3d4-e56f-78g9-h0i1-j234k567l890.png"
+          price_with_discount: 765.00
+          category:
+            category_id: "123e4567-e89b-12d3-a456-426614174000"
+            category_title: "Семейные туры"
+            category_description: "Туры, подходящие для семейного отдыха"
+          country:
+            country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
+            country_name: "Италия"
+            country_description: "Страна с богатой культурой"
+          offers:
+            - offer_id: "f1c5a1e2-34bc-4567-89ef-fedcba123456"
+              offer_title: "Скидка 10%"
+              discount_size: 10.0
+              end_date: "2024-07-30"
 
   400:
-    description: Неверный формат uuid
+    description: Данные для обновления тура не прошли проверку или неверный формат UUID тура
     schema:
       type: object
       properties:
@@ -77,10 +126,10 @@ responses:
     examples:
       application/json:
         success: false
-        error: "Неверный формат ID у страны"
+        error: "Неверный формат ID у тура"
 
-  404:
-    description: Если страны с таким id нет
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
     schema:
       type: object
       properties:
@@ -93,7 +142,23 @@ responses:
     examples:
       application/json:
         success: false
-        message: "Страна не найдена"
+        message: "Неизвестный пользователь!"
+
+  404:
+    description: Если тура с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Тур с таким ID не найден"
 
 definitions:
   Review:

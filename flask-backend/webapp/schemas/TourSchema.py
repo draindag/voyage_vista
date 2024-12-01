@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для туров с помощью библиотеки Marshmallow.
+
+Схема TourSchema описывает поля тура, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from decimal import Decimal
 
 from marshmallow import fields, validates, ValidationError, post_load

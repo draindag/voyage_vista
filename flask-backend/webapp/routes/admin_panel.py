@@ -1,3 +1,8 @@
+"""
+Этот модуль определяет маршруты API, связанные с работой администратора:
+добавление, изменение и удаление ключевых объектов веб-сайта
+"""
+
 import os
 from uuid import UUID
 
@@ -25,35 +30,8 @@ upload_folder = os.getenv("UPLOADED_PHOTOS_DEST")
 file_ext = os.getenv("COVER_IMAGES_EXT")
 
 @admin_bp.route("/categories", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все имеющиеся категории постранично'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_categories_for_admin.yaml")
 def show_categories_for_admin():
     """
        Возвращает все категории для панели админа постранично
@@ -80,35 +58,8 @@ def show_categories_for_admin():
 
 
 @admin_bp.route("/countries", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все имеющиеся туры постранично'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_countries_for_admin.yaml")
 def show_countries_for_admin():
     """
        Возвращает все страны для панели админа постранично
@@ -134,35 +85,8 @@ def show_countries_for_admin():
 
 
 @admin_bp.route("/tours", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все имеющиеся туры постранично'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_tours_for_admin.yaml")
 def show_tours_for_admin():
     """
        Возвращает все туры для панели админа постранично
@@ -190,35 +114,8 @@ def show_tours_for_admin():
 
 
 @admin_bp.route("/offers", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул все имеющиеся акции постранично'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        },
-        {
-            'name': 'page',
-            'type': 'integer',
-            'required': False,
-            'description': 'Номер страницы для пагинации (по умолчанию 1)',
-            'in': 'query'
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_offers_for_admin.yaml")
 def show_offers_for_admin():
     """
        Возвращает все акции для панели админа постранично
@@ -244,54 +141,8 @@ def show_offers_for_admin():
 
 
 @admin_bp.route("/categories/new", methods=["POST"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        201: {
-            'description': 'Создана новая категория'
-        },
-        400: {
-            'description': 'Данные для создания новой категории не прошли проверку'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_title',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 30,
-            'description': 'Название категории, не более 30 символов. Пример: `string`'
-        },
-        {
-            'name': 'category_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание категории. Пример: `string`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': True,
-            'type': 'file',
-            'description': 'Изображение обложки категории'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_category.yaml")
 def add_category():
     """
        Добавляет новую категорию
@@ -357,41 +208,8 @@ def add_category():
 
 
 @admin_bp.route("/categories/<string:category_id>/edit", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этой категории'
-        },
-        400: {
-            'description': 'Неверный формат UUID категории'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если категории с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_category_edit_page.yaml")
 def show_category_edit_page(category_id: str):
     """
        Возвращает всю информацию про конкретную категорию для формы редактирования
@@ -427,64 +245,8 @@ def show_category_edit_page(category_id: str):
 
 
 @admin_bp.route("/categories/<string:category_id>/edit", methods=["PUT"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        200: {
-            'description': 'Данные категории обновлены'
-        },
-        400: {
-            'description': 'Данные для обновления категории не прошли проверку или неверный формат UUID категории'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если категории с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'category_title',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 30,
-            'description': 'Название категории, не более 30 символов. Пример: `string`'
-        },
-        {
-            'name': 'category_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание категории. Пример: `string`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': False,
-            'type': 'file',
-            'description': 'Изображение обложки категории. Если не надо изменять на новую, то ничего не присылать'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_category.yaml")
 def edit_category(category_id: str):
     """
        Обновляет данные категории
@@ -568,41 +330,8 @@ def edit_category(category_id: str):
 
 
 @admin_bp.route("/categories/<string:category_id>/delete", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этой категории'
-        },
-        400: {
-            'description': 'Неверный формат UUID категории'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если категории с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_category_delete_page.yaml")
 def show_category_delete_page(category_id: str):
     """
        Возвращает всю информацию про конкретную категорию для страницы удаления
@@ -638,55 +367,8 @@ def show_category_delete_page(category_id: str):
 
 
 @admin_bp.route("/categories/<string:category_id>/delete", methods=["DELETE"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Категория успешно удалена'
-        },
-        400: {
-            'description': 'Поле с согласием не отмечено или неверный формат UUID категории'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если категории с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'category_id',
-            'description': 'ID категории',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'acceptance',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'acceptance': {
-                        'type': 'boolean'
-                    }
-                }
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/delete_category.yaml")
 def delete_category(category_id: str):
     """
        Удаляет выбранную категорию
@@ -733,54 +415,8 @@ def delete_category(category_id: str):
 
 
 @admin_bp.route("/countries/new", methods=["POST"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        201: {
-            'description': 'Добавлена новая страна'
-        },
-        400: {
-            'description': 'Данные для добавления новой страны не прошли проверку'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_name',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 30,
-            'description': 'Название страны, не более 30 символов. Пример: `string`'
-        },
-        {
-            'name': 'country_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание страны. Пример: `string`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': True,
-            'type': 'file',
-            'description': 'Изображение обложки страны'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_country.yaml")
 def add_country():
     """
        Добавляет новую страну
@@ -844,41 +480,8 @@ def add_country():
 
 
 @admin_bp.route("/countries/<string:country_id>/edit", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по данной стране'
-        },
-        400: {
-            'description': 'Неверный формат UUID страны'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если страны с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_country_edit_page.yaml")
 def show_country_edit_page(country_id: str):
     """
        Возвращает всю информацию про конкретную страну для формы редактирования
@@ -914,64 +517,8 @@ def show_country_edit_page(country_id: str):
 
 
 @admin_bp.route("/countries/<string:country_id>/edit", methods=["PUT"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        200: {
-            'description': 'Данные страны обновлены'
-        },
-        400: {
-            'description': 'Данные для обновления страны не прошли проверку или неверный формат UUID страны'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если страны с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'country_name',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 30,
-            'description': 'Название страны, не более 30 символов. Пример: `string`'
-        },
-        {
-            'name': 'country_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание страны. Пример: `string`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': False,
-            'type': 'file',
-            'description': 'Изображение обложки страны. Если не надо изменять на новую, то ничего не присылать'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_country.yaml")
 def edit_country(country_id: str):
     """
        Обновляет данные страны
@@ -1055,41 +602,8 @@ def edit_country(country_id: str):
 
 
 @admin_bp.route("/countries/<string:country_id>/delete", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по данной стране'
-        },
-        400: {
-            'description': 'Неверный формат UUID страны'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если страны с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_country_delete_page.yaml")
 def show_country_delete_page(country_id: str):
     """
        Возвращает всю информацию про конкретную страну для страницы удаления
@@ -1125,55 +639,8 @@ def show_country_delete_page(country_id: str):
 
 
 @admin_bp.route("/countries/<string:country_id>/delete", methods=["DELETE"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Страна успешно удалена'
-        },
-        400: {
-            'description': 'Поле с согласием не отмечено или неверный формат UUID страны'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если страны с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'country_id',
-            'description': 'ID страны',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'acceptance',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'acceptance': {
-                        'type': 'boolean'
-                    }
-                }
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/delete_country.yaml")
 def delete_country(country_id: str):
     """
        Удаляет выбранную страну
@@ -1220,110 +687,8 @@ def delete_country(country_id: str):
 
 
 @admin_bp.route("/tours/new", methods=["POST"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        201: {
-            'description': 'Добавлен новый тур'
-        },
-        400: {
-            'description': 'Данные для добавления нового тура не прошли проверку'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'tour_title',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 40,
-            'description': 'Название тура, не более 40 символов. Пример: `string`'
-        },
-        {
-            'name': 'tour_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание тура, не более 50 символов. Пример: `string`'
-        },
-        {
-            'name': 'tour_text',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Текст тура, обязательно для заполнения. Пример: `string`'
-        },
-        {
-            'name': 'tour_price',
-            'in': 'formData',
-            'required': True,
-            'type': 'number',
-            'description': 'Цена тура, обязательно для заполнения. Пример: `100`'
-        },
-        {
-            'name': 'tour_start_date',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'date',
-            'description': 'Дата начала тура, обязательно для заполнения. Пример: `2024-11-29`'
-        },
-        {
-            'name': 'tour_end_date',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'date',
-            'description': 'Дата окончания тура, обязательно для заполнения. Пример: `2024-11-29`'
-        },
-        {
-            'name': 'category_id',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID категории тура, обязательно для заполнения. '
-                           'Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'country_id',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID страны тура, обязательно для заполнения. Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'offer_id',
-            'in': 'formData',
-            'required': False,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID акции на тур, необязательно для заполнения. '
-                           'Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': True,
-            'type': 'file',
-            'description': 'Изображение обложки тура'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_tour.yaml")
 def add_tour():
     """
        Добавляет новый тур
@@ -1426,41 +791,8 @@ def add_tour():
 
 
 @admin_bp.route("/tours/<string:tour_id>/edit", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по данному туру'
-        },
-        400: {
-            'description': 'Неверный формат UUID тура'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если тура с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_tour_edit_page.yaml")
 def show_tour_edit_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур для формы редактирования
@@ -1496,120 +828,8 @@ def show_tour_edit_page(tour_id: str):
 
 
 @admin_bp.route("/tours/<string:tour_id>/edit", methods=["PUT"])
-@swag_from({
-    'consumes': ['multipart/form-data'],
-    'responses': {
-        200: {
-            'description': 'Данные тура обновлены'
-        },
-        400: {
-            'description': 'Данные для обновления тура не прошли проверку или неверный формат UUID тура'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если тура с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'tour_title',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'maxLength': 40,
-            'description': 'Название тура, не более 40 символов. Пример: `string`'
-        },
-        {
-            'name': 'tour_description',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Описание тура, не более 50 символов. Пример: `string`'
-        },
-        {
-            'name': 'tour_text',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'description': 'Текст тура, обязательно для заполнения. Пример: `string`'
-        },
-        {
-            'name': 'tour_price',
-            'in': 'formData',
-            'required': True,
-            'type': 'number',
-            'description': 'Цена тура, обязательно для заполнения. Пример: `100`'
-        },
-        {
-            'name': 'tour_start_date',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'date',
-            'description': 'Дата начала тура, обязательно для заполнения. Пример: `2024-11-29`'
-        },
-        {
-            'name': 'tour_end_date',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'date',
-            'description': 'Дата окончания тура, обязательно для заполнения. Пример: `2024-11-29`'
-        },
-        {
-            'name': 'category_id',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID категории тура, обязательно для заполнения. '
-                           'Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'country_id',
-            'in': 'formData',
-            'required': True,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID страны тура, обязательно для заполнения. Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'offer_id',
-            'in': 'formData',
-            'required': False,
-            'type': 'string',
-            'format': 'uuid',
-            'description': 'ID акции на тур, необязательно для заполнения. '
-                           'Пример: `3fa85f64-5717-4562-b3fc-2c963f66afa6`'
-        },
-        {
-            'name': 'cover_image',
-            'in': 'formData',
-            'required': False,
-            'type': 'file',
-            'description': 'Изображение обложки тура. Если не надо изменять на новую, то ничего не присылать'
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_tour.yaml")
 def edit_tour(tour_id: str):
     """
        Обновляет данные тура
@@ -1674,7 +894,7 @@ def edit_tour(tour_id: str):
 
     if not tour:
         return jsonify({"success": False,
-            "message": "Страна с таким ID не найдена"}), 404
+            "message": "Тур с таким ID не найден"}), 404
 
     tour_schema = TourSchema(unknown=EXCLUDE)
 
@@ -1735,41 +955,8 @@ def edit_tour(tour_id: str):
 
 
 @admin_bp.route("/tours/<string:tour_id>/delete", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по данному туру'
-        },
-        400: {
-            'description': 'Неверный формат UUID тура'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если тура с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_tour_delete_page.yaml")
 def show_tour_delete_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур для страницы удаления
@@ -1805,55 +992,8 @@ def show_tour_delete_page(tour_id: str):
 
 
 @admin_bp.route("/tours/<string:tour_id>/delete", methods=["DELETE"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Тур успешно удалён'
-        },
-        400: {
-            'description': 'Поле с согласием не отмечено или неверный формат UUID тура'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если тура с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'tour_id',
-            'description': 'ID тура',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'acceptance',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'acceptance': {
-                        'type': 'boolean'
-                    }
-                }
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/delete_tour.yaml")
 def delete_tour(tour_id: str):
     """
        Удаляет выбранный тур
@@ -1900,58 +1040,8 @@ def delete_tour(tour_id: str):
 
 
 @admin_bp.route("/offers/new", methods=["POST"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        201: {
-            'description': 'Создана новая скидка'
-        },
-        400: {
-            'description': 'Данные для создания новой скидки не прошли проверку'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'special_offer',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'offer_title': {
-                        'type': 'string',
-                        'maxLength': 50,
-                        'description': 'Название скидки, не более 50 символов'
-                    },
-                    'discount_size': {
-                        'type': 'number',
-                        'format': 'integer',
-                        'description': 'Процент скидки, обязательно для заполнения'
-                    },
-                    'end_date': {
-                        'type': 'string',
-                        'format': 'date',
-                        'description': 'Дата окончания действия скидки, обязательно для заполнения'
-                    },
-                },
-                'required': ['offer_title', 'discount_size', 'end_date']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/add_special_offer.yaml")
 def add_special_offer():
     """
        Добавляет новую скидку
@@ -1986,41 +1076,8 @@ def add_special_offer():
 
 
 @admin_bp.route("/offers/<string:offer_id>/edit", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этой скидке'
-        },
-        400: {
-            'description': 'Неверный формат UUID скидки'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если скидки с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'offer_id',
-            'description': 'ID скидки',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_special_offer_edit_page.yaml")
 def show_special_offer_edit_page(offer_id: str):
     """
        Возвращает всю информацию про конкретную скидку для формы редактирования
@@ -2056,68 +1113,8 @@ def show_special_offer_edit_page(offer_id: str):
 
 
 @admin_bp.route("/offers/<string:offer_id>/edit", methods=["PUT"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Данные скидки обновлены'
-        },
-        400: {
-            'description': 'Данные для обновления скидки не прошли проверку или неверный формат UUID скидки'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если скидки с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'offer_id',
-            'description': 'ID скидки',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'special_offer',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'offer_title': {
-                        'type': 'string',
-                        'maxLength': 50,
-                        'description': 'Название скидки, не более 50 символов'
-                    },
-                    'discount_size': {
-                        'type': 'number',
-                        'format': 'integer',
-                        'description': 'Процент скидки, обязательно для заполнения'
-                    },
-                    'end_date': {
-                        'type': 'string',
-                        'format': 'date',
-                        'description': 'Дата окончания действия скидки, обязательно для заполнения'
-                    },
-                },
-                'required': ['offer_title', 'discount_size', 'end_date']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/edit_special_offer.yaml")
 def edit_special_offer(offer_id: str):
     """
        Обновляет данные скидки
@@ -2166,41 +1163,8 @@ def edit_special_offer(offer_id: str):
 
 
 @admin_bp.route("/offers/<string:offer_id>/delete", methods=["GET"])
-@swag_from({
-    'responses': {
-        200: {
-            'description': 'Вернул информацию по этой скидке'
-        },
-        400: {
-            'description': 'Неверный формат UUID скидки'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если скидки с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'offer_id',
-            'description': 'ID скидки',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/show_special_offer_delete_page.yaml")
 def show_special_offer_delete_page(offer_id: str):
     """
        Возвращает всю информацию про конкретную скидку для страницы удаления
@@ -2236,55 +1200,8 @@ def show_special_offer_delete_page(offer_id: str):
 
 
 @admin_bp.route("/offers/<string:offer_id>/delete", methods=["DELETE"])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        200: {
-            'description': 'Скидка успешно удалена'
-        },
-        400: {
-            'description': 'Поле с согласием не отмечено или неверный формат UUID скидки'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        },
-        404: {
-            'description': 'Если скидки с таким ID нет'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'offer_id',
-            'description': 'ID скидки',
-            'in': 'path',
-            'type': 'string',
-            'required': True
-        },
-        {
-            'name': 'acceptance',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'acceptance': {
-                        'type': 'boolean'
-                    }
-                }
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/delete_special_offer.yaml")
 def delete_special_offer(offer_id: str):
     """
        Удаляет выбранную скидку
@@ -2326,61 +1243,8 @@ def delete_special_offer(offer_id: str):
 
 
 @admin_bp.route('/moderator_registration', methods=['POST'])
-@swag_from({
-    'consumes': ['application/json'],
-    'responses': {
-        201: {
-            'description': 'Аккаунт модератора создан'
-        },
-        400: {
-            'description': 'Данные для регистрации не прошли проверку'
-        },
-        401: {
-            'description': 'JWT токен с данными пользователя не прошел проверку или у него недостаточно прав'
-        }
-    },
-    'parameters': [
-        {
-            'name': 'moderator_data',
-            'in': 'body',
-            'required': True,
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'login': {
-                        'type': 'string',
-                        'maxLength': 30,
-                        'description': 'Логин пользователя, не более 30 символов'
-                    },
-                    'email': {
-                        'type': 'string',
-                        'format': 'email',
-                        'description': 'Email пользователя'
-                    },
-                    'password': {
-                        'type': 'string',
-                        'description': 'Введенный пароль'
-                    },
-                    'password_repeat': {
-                        'type': 'string',
-                        'description': 'Повторный ввод пароля'
-                    },
-                },
-                'required': ['login', 'email', 'password', 'password_repeat']
-            }
-        },
-        {
-            'name': 'Authorization',
-            'in': 'header',
-            'required': True,
-            'description': 'JWT access токен для доступа. Пример: `Bearer <token>`',
-            'schema': {
-                'type': 'string'
-            }
-        }
-    ]
-})
 @jwt_required()
+@swag_from("swagger_definitions/registrate_moderator.yaml")
 def registrate_moderator():
     """
        Создание аккаунтов для модераторов

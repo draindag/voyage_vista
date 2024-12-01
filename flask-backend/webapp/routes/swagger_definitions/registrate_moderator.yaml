@@ -1,0 +1,82 @@
+Создание аккаунтов для модераторов
+---
+parameters:
+  - name: moderator_data
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        login:
+          type: string
+          maxLength: 30
+          description: Логин пользователя, не более 30 символов
+        email:
+          type: string
+          format: email
+          description: Email пользователя
+        password:
+          type: string
+          description: Введенный пароль
+        password_repeat:
+          type: string
+          description: Повторный ввод пароля
+      required:
+        - login
+        - email
+        - password
+        - password_repeat
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  201:
+    description: Аккаунт модератора создан
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание результата операции
+    examples:
+      application/json:
+        success: true
+        message: "Аккаунт модератора успешно зарегистрирован!"
+
+  400:
+    description: Данные для регистрации не прошли проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Пользователь с таким логином или email уже зарегистрирован!"
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"

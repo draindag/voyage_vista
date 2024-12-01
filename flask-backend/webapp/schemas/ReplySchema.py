@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для комментариев с помощью библиотеки Marshmallow.
+
+Схема ReplySchema описывает поля комментария, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, post_load, validates, ValidationError
 
 from webapp import ma
@@ -25,5 +33,5 @@ class ReplySchema(ma.Schema):
             raise ValidationError("Текст комментария не должен быть пустым")
 
     @post_load
-    def create_review(self, data, **kwargs):
+    def create_reply(self, data, **kwargs):
         return Reply(**data)

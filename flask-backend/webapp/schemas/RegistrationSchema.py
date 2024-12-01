@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы валидации для формы регистрации
+с помощью библиотеки Marshmallow.
+
+Схема RegistrationSchema описывает поля формы, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, validates, ValidationError, validates_schema
 
 from webapp import ma

@@ -1,3 +1,8 @@
+"""
+Этот модуль определяет маршруты API, связанные с ключевыми объектами
+веб-сайта - турами, категориями, странами и так далее
+"""
+
 import os
 from uuid import UUID
 
@@ -188,6 +193,7 @@ def show_country_page(country_id: str):
 
     return jsonify({"success": True,
                     "tours": tours_for_country_data,
+                    "country_image": country.country_image,
                     "prev_page": tours_for_country.has_prev,
                     "next_page": tours_for_country.has_next}), 200
 

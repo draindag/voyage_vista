@@ -1,3 +1,8 @@
+"""
+Этот модуль определяет ассоциативную таблицу offers_tours для связи
+туров со специальными предложениями
+"""
+
 from sqlalchemy import UniqueConstraint
 
 from webapp import db

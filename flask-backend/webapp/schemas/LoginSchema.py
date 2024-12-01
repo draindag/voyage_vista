@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы валидации для формы входа в аккаунт
+с помощью библиотеки Marshmallow.
+
+Схема LoginSchema описывает поля формы, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, validates, ValidationError
 
 from webapp import ma

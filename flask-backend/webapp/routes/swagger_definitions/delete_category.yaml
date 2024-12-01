@@ -1,0 +1,72 @@
+Удаляет выбранную категорию
+---
+parameters:
+  - name: category_id
+    in: path
+    type: string
+    required: true
+    description: ID категории
+  - name: acceptance
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        acceptance:
+          type: boolean
+          description: Поле подтверждения удаления категории
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Категория успешно удалена
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Категория успешно удалена!"
+
+  400:
+    description: Поле с согласием не отмечено или неверный формат UUID категории
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "Неверный формат ID у категории"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Неизвестный пользователь!"
+
+  404:
+    description: Если категории с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Категория с таким ID не найдена"

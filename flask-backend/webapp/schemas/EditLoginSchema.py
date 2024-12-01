@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы валидации для формы изменения логина
+с помощью библиотеки Marshmallow.
+
+Схема EditLoginSchema описывает поля формы, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, ValidationError, validates
 
 from webapp import ma

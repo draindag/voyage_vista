@@ -1,0 +1,87 @@
+Удаляет выбранную страну
+---
+parameters:
+  - name: country_id
+    in: path
+    type: string
+    required: true
+    description: ID страны
+  - name: acceptance
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        acceptance:
+          type: boolean
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для доступа. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Страна успешно удалена
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Сообщение об успешном удалении
+    examples:
+      application/json:
+        success: true
+        message: "Страна успешно удалена!"
+
+  400:
+    description: Поле с согласием не отмечено или неверный формат UUID страны
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        error:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        error: "Неверный формат ID у страны"
+
+  401:
+    description: JWT токен с данными пользователя не прошел проверку или у него недостаточно прав
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Неизвестный пользователь!"
+
+  404:
+    description: Если страны с таким ID нет
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха/неуспеха
+        message:
+          type: string
+          description: Описание ошибки
+    examples:
+      application/json:
+        success: false
+        message: "Страна с таким ID не найдена"

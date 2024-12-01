@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для стран с помощью библиотеки Marshmallow.
+
+Схема CountrySchema описывает поля категории, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, validates, ValidationError, post_load
 
 from webapp import ma

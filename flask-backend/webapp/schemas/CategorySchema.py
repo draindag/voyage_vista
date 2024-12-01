@@ -1,3 +1,11 @@
+"""
+Этот модуль определяет схемы сериализации,десериализации и
+валидации для категорий с помощью библиотеки Marshmallow.
+
+Схема CategorySchema описывает поля категории, включая их валидацию
+и обработку ошибок при неправильном вводе.
+"""
+
 from marshmallow import fields, validates, ValidationError, post_load
 
 from webapp import ma

@@ -1,3 +1,10 @@
+"""
+Этот модуль определяет схемы сериализации и десериализации
+для пользовательской информации с помощью библиотеки Marshmallow.
+
+Схема UserSchema описывает поля данных пользователя для их сериализации
+"""
+
 from marshmallow import fields, post_load
 
 from webapp import ma
@@ -12,5 +19,5 @@ class UserSchema(ma.Schema):
                                  exclude=("offers","tour_text", "tour_image"))
 
     @post_load
-    def create_review(self, data, **kwargs):
+    def create_user(self, data, **kwargs):
         return User(**data)
