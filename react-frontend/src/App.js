@@ -1,11 +1,11 @@
 import './App.css';
+import MainPage from './components/mainPage/MainPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-    </div>
+    <>
+      <MainPage></MainPage>
+    </>
   );
 }
 

@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+yarn.lock
+
+eslint.config.js
+eslint.config.mjs
