@@ -5,6 +5,7 @@ import buttonImg from '../../resources/MainPage/Images/arrow_tour.png';
 import man from '../../resources/MainPage/Images/man.png';
 import girl from '../../resources/MainPage/Images/girl.png';
 import train from '../../resources/MainPage/Images/Bottom_map.png';
+import SimpleSlider from '../slider/Slider';
 
 export default function MainPage() {
     return (
@@ -31,6 +32,7 @@ export default function MainPage() {
                     <img src={man} alt="" />
                 </div>
 
+                <SimpleSlider />
 
                 <h1>Почему стоит выбрать нас?</h1>
                 <div className='container'>

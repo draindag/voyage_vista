@@ -1,0 +1,37 @@
+.card {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    flex-flow: column;
+    width: 350px;
+    height: 450px;
+    border: 1px solid black;
+  }
+
+  .card img {
+    width: 100%;
+  }
+
+  .card-container {
+    margin: auto;
+  }
+
+
+  .slick-slide > div {
+    margin: 0 10px;
+  }
+  .slick-list {
+    margin: 0 -10px;
+  }
+
+
+  .slick-slide {
+    transition: all 0.3s ease; /* Плавный переход для всех изменений */
+    transform: scale(0.9); /* Уменьшение размера всех слайдов */
+  }
+
+
+  .Slider {
+    margin: auto;
+    width: 80%;
+  }
