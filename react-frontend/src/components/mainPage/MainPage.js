@@ -10,13 +10,13 @@ export default function MainPage() {
     return (
         <>
             <div className="header-main">
-                <div className='container'>
-                    <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                    <div className="choose-country-button">
-                        <span>Выбрать страну</span>
-                        <img src={buttonImg} alt="" />
-                    </div>
+
+                <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
+                <div className="choose-country-button">
+                    <span>Выбрать страну</span>
+                    <img src={buttonImg} alt="" />
                 </div>
+
             </div>
 
             <div className='container'>
