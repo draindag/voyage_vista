@@ -68,9 +68,13 @@ sudo apt install libpq-dev
 ```bash
 sudo docker load -i voyage-vista-database.tar
 ```
-Запуск контейнера:
+Создание и запуск контейнера:
 ```bash
 sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 voyage-vista-database
+```
+Для последующих запусков контейнера:
+```bash
+sudo docker start voyage-vista-db
 ```
 Подключение к консоли Postgresql сервера:
 ```bash
