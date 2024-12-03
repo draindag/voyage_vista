@@ -1,3 +1,5 @@
+@import url("../../resources/constants.css");
+
 h1 {
     font-weight: 400;
     font-size: 55px;
@@ -106,6 +108,8 @@ h1 {
 .container {
     padding-left: 76px;
     padding-right: 76px;
+    max-width: 1920px;
+    margin: auto;
 }
 
 .reasons {
@@ -114,12 +118,17 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-around;
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+    
 }
 
 .reason-div {
     flex-basis: 50%;
     margin-bottom: 120px;
+    display: flex;
+    justify-content: center;
 
 }
 
