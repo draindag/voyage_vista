@@ -62,15 +62,15 @@ sudo apt install libpq-dev
 
 ## Работа с контейнером БД проекта
 
-Для данного проекта создан архив "voyage-vista-database.tar" с пустой базой данных Postgre
+Для данного проекта создан репозиторий на Docker Hub с настроенной базой данных и сервером Postgre
 
-Для загрузки образа из архива необходимо прописать:
+Для загрузки образа из хаба необходимо прописать:
 ```bash
-sudo docker load -i voyage-vista-database.tar
+sudo docker pull nordraven/voyage-vista:latest
 ```
 Создание и запуск контейнера:
 ```bash
-sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 voyage-vista-database
+sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest
 ```
 Для последующих запусков контейнера:
 ```bash
