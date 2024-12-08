@@ -1,0 +1,13 @@
+.profile-manager{
+    position: fixed;
+    top: 150px;
+    right: 20px;
+    width: 200px;
+    height: 300px;
+    border: 1px solid #000000;
+    border-radius: 30px;
+    background: #5f5e5a;
+    /* opacity: 0; */
+    /* transform: translateY(-10px); */
+    /* transition: opacity 1.3s ease, transform 1.3s ease; */
+}

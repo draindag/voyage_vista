@@ -55,7 +55,7 @@
     text-wrap: wrap;
 }
 
-.navbar-content a {
+.navbar-content a, button{
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -63,7 +63,15 @@
     transition: 0.1s ease;
 }
 
-.navbar-content a:hover {
+.navbar-content button {
+    background: none;
+    border: none;
+    font: inherit; /* Наследует шрифт от родителя */
+    cursor: pointer; /* Указывает, что это кнопка */
+}
+
+
+.navbar-content a:hover, button:hover{
     color: #c9c9c9;
 }
 

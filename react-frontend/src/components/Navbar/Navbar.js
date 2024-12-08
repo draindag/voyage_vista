@@ -2,6 +2,7 @@ import './Navbar.css';
 import '../../resources/constants.css';
 
 import React, { useState, useEffect } from 'react';
+import ProfileManager from '../ProfileManager/ProfileManager';
 
 
 import home from '../../resources/Navbar/Images/home.svg';
@@ -14,6 +15,7 @@ import logo from '../../resources/Navbar/Images/logo.svg';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
+    const [showProfileManager, setShowProfileManager] = useState(false);
     const [paddingTop, setPaddingTop] = useState(30);
     const handleScroll = () => {
         const scrollTop = window.scrollY;
@@ -45,16 +47,17 @@ export default function Navbar() {
                     <img src={logo} alt="" />
                     <span style={{maxWidth: "188px", textWrap: "wrap"}}>Voyage vista</span>
                 </div>
-                <div class="header-navbar" id="header-navbar" style={{background: scrolled ? 'none' : 'var(--navbar-background)'}}>
-                    <div class="navbar-content">
+                <div className="header-navbar" id="header-navbar" style={{background: scrolled ? 'none' : 'var(--navbar-background)'}}>
+                    <div className="navbar-content">
                         <a href="/"><img src={home} alt="" /><span>Главная</span></a>
                         <a href="/countryes"><img src={country} alt="" /><span>Страны</span></a>
                         <a href="/tourist"><img src={tourist} alt=""/><span>Туристам</span></a>
                         <a href="/contacts"><img src={contacts} alt="" /><span>Контактная информация</span></a>
-                        <a href="/profile"><img src={personalAccount} alt="" /><span>Мой кабинет</span></a>
+                        <button onClick={() => setShowProfileManager(!showProfileManager)}><img src={personalAccount} alt="" /><span>Мой кабинет</span></button>
                     </div>
                 </div>
             </div>
+            {showProfileManager ? <ProfileManager jwt={null}/> : null}
     </>
 }
 

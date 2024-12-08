@@ -5,7 +5,7 @@ import buttonImg from '../../resources/MainPage/Images/arrow_tour.png';
 import man from '../../resources/MainPage/Images/man.png';
 import girl from '../../resources/MainPage/Images/girl.png';
 import train from '../../resources/MainPage/Images/Bottom_map.png';
-import SimpleSlider from '../slider/Slider';
+import SimpleSlider from '../Slider/Slider';
 import SlideImage from '../../resources/Slider/Images/slideImg.png'
 
 
