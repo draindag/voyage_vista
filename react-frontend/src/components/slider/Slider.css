@@ -1,37 +1,69 @@
 .card {
-    display: flex;
-    align-items: center;
-    /* justify-content: center; */
-    flex-flow: column;
-    width: 350px;
-    height: 450px;
-    border: 1px solid black;
-  }
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  flex-flow: column;
+  width: 350px;
+  height: 450px;
+  border: 1px solid black;
+}
 
-  .card img {
-    width: 100%;
-  }
+.card img {
+  width: 100%;
+}
 
-  .card-container {
-    margin: auto;
-  }
-
-
-  .slick-slide > div {
-    margin: 0 10px;
-  }
-  .slick-list {
-    margin: 0 -10px;
-  }
+.card-container {
+  margin: auto;
+}
 
 
-  .slick-slide {
-    transition: all 0.3s ease; /* Плавный переход для всех изменений */
-    transform: scale(0.9); /* Уменьшение размера всех слайдов */
-  }
+/* .slick-slide>div {
+  margin: 0 10px;
+}
+
+.slick-list {
+  margin: 0 -10px;
+} */
 
 
-  .Slider {
-    margin: auto;
-    width: 80%;
-  }
+.slick-slide {
+  transition: all 0.3s ease;
+  /* Плавный переход для всех изменений */
+  transform: scale(0.9);
+  /* Уменьшение размера всех слайдов */
+}
+
+
+.Slider {
+  margin: auto;
+  width: 80%;
+}
+
+.Centered-slider{
+  width: 1660px !important;
+}
+
+
+.slick-list {
+  margin-top: 100px;
+}
+
+
+.Centered-slider .slick-list {
+  margin-left: 10%;
+}
+
+
+.SampleNextArrow {
+  display: inline;
+  position: "relative";
+  top: '-40%';
+  left: "105%";
+}
+
+.SamplePrevArrow {
+  display: inline;
+  position: "relative";
+  top: '50%';
+  left: "-4%";
+}

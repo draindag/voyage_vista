@@ -6,18 +6,70 @@ import man from '../../resources/MainPage/Images/man.png';
 import girl from '../../resources/MainPage/Images/girl.png';
 import train from '../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../slider/Slider';
+import SlideImage from '../../resources/Slider/Images/slideImg.png'
+
+
+const imageArr = [
+    SlideImage,
+    SlideImage,
+    SlideImage,
+    SlideImage,
+    SlideImage,
+    SlideImage
+]
+
+const settings = {
+    // className: "center",
+    // centerMode: true,
+    // infinite: true,
+    centerPadding: "0px",
+    slidesToShow: 4,
+    speed: 500,
+    responsive: [
+        {
+            breakpoint: 1890,
+            settings: {
+                slidesToShow: 3,
+            },
+        },
+        {
+            breakpoint: 1430,
+            settings: {
+                slidesToShow: 2,
+            },
+        },
+    ],
+};
+
 
 export default function MainPage() {
+
+    let sliderObjects = []
+    imageArr.forEach(item => {
+        sliderObjects.push(<>
+            <div>
+                <div className='card'>
+                    <div>
+                        <img src={item} alt="" />
+                    </div>
+                    <div className='card-container'>
+                        <p>Text</p>
+                    </div>
+                </div>
+            </div>
+        </>)
+    })
     return (
         <>
             <div className="header-main">
 
                 <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                <div className="choose-country-button">
-                    <span>Выбрать страну</span>
-                    <img src={buttonImg} alt="" />
-                </div>
-
+                <a style={{ textDecoration: 'none' }} href='/tours'>
+                    <div className="choose-country-button">
+                        <span>Выбрать страну</span>
+                        <img src={buttonImg} alt="" />
+                    </div>
+                </a>
             </div>
 
             <div className='container'>
@@ -31,8 +83,8 @@ export default function MainPage() {
                     </p>
                     <img src={man} alt="" />
                 </div>
-
-                <SimpleSlider />
+                {/* {sliderObjects} */}
+                <SimpleSlider sliderObjects={sliderObjects} settings={settings} main={true}/>
 
                 <h1>Почему стоит выбрать нас?</h1>
                 <div className='container'>

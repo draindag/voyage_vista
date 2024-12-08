@@ -47,7 +47,7 @@ export default function Navbar() {
                 </div>
                 <div class="header-navbar" id="header-navbar" style={{background: scrolled ? 'none' : 'var(--navbar-background)'}}>
                     <div class="navbar-content">
-                        <a href="/home"><img src={home} alt="" /><span>Главная</span></a>
+                        <a href="/"><img src={home} alt="" /><span>Главная</span></a>
                         <a href="/countryes"><img src={country} alt="" /><span>Страны</span></a>
                         <a href="/tourist"><img src={tourist} alt=""/><span>Туристам</span></a>
                         <a href="/contacts"><img src={contacts} alt="" /><span>Контактная информация</span></a>
