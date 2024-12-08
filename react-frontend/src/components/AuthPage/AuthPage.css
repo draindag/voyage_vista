@@ -1,0 +1,17 @@
+.auth-back{
+    width: 100%;
+    height: 100%;
+    background-image: url("../../resources/MainPage/Images/background.png");
+}
+
+.auth-form{
+    width: 637px;
+    /* height: 568px; */
+    border-radius: 30px;
+    background: #FFFFFF;
+    
+}
+
+.auth-form label, input{
+    display: block;
+}
