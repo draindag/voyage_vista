@@ -1,0 +1,239 @@
+@import url("../../resources/constants.css");
+
+h1 {
+    font-weight: 400;
+    font-size: 55px;
+}
+
+
+.header-main {
+    background-image: url("../../resources/MainPage/Images/background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 1215px;
+}
+
+.desc-p {
+    display: inline-block;
+    max-width: 800px;
+    font-family: Bebas Neue;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 80px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+
+.span-desc {
+    font-family: Lucida Calligraphy;
+    font-size: 64px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 80px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+
+.main-desc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 140px;
+    margin-bottom: 180px;
+}
+
+
+.choose-country-button {
+    position: relative;
+    top: 540px;
+    left: 58px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 80px;
+    text-align: left;
+    color: #4873A1;
+    width: 444px;
+    height: 97px;
+    top: 715px;
+    left: 34px;
+    gap: 0px;
+    opacity: 0px;
+    border: 3px solid #FFFFFF;
+    border-radius: 50px;
+    background: #285785F2;
+}
+
+
+.first-header-text {
+    position: absolute;
+    max-width: 1065px;
+    text-align: left;
+    top: 140px;
+    left: 41px;
+    font-family: Bebas Neue;
+    font-size: 90.3px;
+    font-weight: 400;
+    line-height: 115px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #E6E6E8;
+    ;
+
+}
+
+.second-header-text {
+    position: absolute;
+    max-width: 619px;
+    text-align: right;
+    top: 584px;
+    right: 65px;
+    font-size: 36px;
+    line-height: 60px;
+}
+
+
+.container {
+    padding-left: 76px;
+    padding-right: 76px;
+    max-width: 1920px;
+    margin: auto;
+}
+
+.reasons {
+    margin-top: 120px;
+    margin-bottom: 120px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.reason-div {
+    flex-basis: 50%;
+    margin-bottom: 120px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.reason {
+    width: 670px;
+    height: 370px;
+    box-shadow: 53px -50px #28578580;
+    background: #EBE1E1;
+    border: 0px solid #FFFFFF;
+    border-radius: 50px;
+    position: relative;
+}
+
+
+.reason-content {
+    box-sizing: border-box;
+    padding: 10px 44px;
+}
+
+.reason-content p {
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 38.73px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.reason-content h3 {
+    font-family: Inter;
+    font-size: 35px;
+    font-weight: 400;
+    line-height: 48.41px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.reason h2 {
+    margin: 0;
+    position: relative;
+    font-family: Inter;
+    left: -305px;
+    font-size: 96px;
+    font-weight: 400;
+    line-height: 116.18px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+
+.comments {
+    margin-bottom: 160px;
+}
+
+.comment-container {
+    padding: 56px 114px;
+    /* box-sizing: border-box; */
+}
+
+
+.comment {
+    width: 100%;
+    background: #CDC1A566;
+}
+
+
+.comment-content {
+    background: #F3EEDF;
+    /* box-sizing: border-box; */
+    /* background: #F3EEDF; */
+    border: 0px solid #FFFFFF;
+    border-radius: 0px 30px 30px 30px;
+    margin-left: 215px;
+    margin-right: 47px;
+    padding: 10px;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 50px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-left: 49px;
+    padding-top: 31px;
+}
+
+.comment-header img {
+    width: 140px;
+    height: 135px;
+    border-radius: 80px;
+    margin-right: 40px;
+}
+
+.comment-header h3 {
+    font-family: Bebas Neue;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 80px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}

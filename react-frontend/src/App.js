@@ -4,6 +4,7 @@ import Navbar from './components/Navbar/Navbar';
 import ToursCategoryesPage from './components/ToursCategoryesPage/ToursCategoryesPage';
 import {Route, Routes, BrowserRouter} from 'react-router';
 
+
 function App() {
   return (
     <>
@@ -14,6 +15,7 @@ function App() {
             <Route path='/tours' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
           </Routes>
         </BrowserRouter>
+
     </>
   );
 }

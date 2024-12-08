@@ -5,13 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 
 import './Slider.css';
 
-
-
 import arrowLeft from '../../resources/Slider/Images/arrow_left.png';
 import arrowRight from '../../resources/Slider/Images/arrow_right.png';
-
-
-
 
 
 function SampleNextArrow(props) {
@@ -63,8 +58,6 @@ function SamplePrevArrow(props) {
         </div>
     );
 }
-
-
 
 export default function SimpleSlider(props) {
     // const [defaultImage, setDefaultImage] = useState({});
