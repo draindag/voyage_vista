@@ -43,7 +43,7 @@ export default function Navbar() {
     let navClasses = `${scrolled? 'scrolled': ''} navbar`
     return <>
             <div className={navClasses} id="navbar" style={{ paddingTop: `${paddingTop}px` }}>
-                <div class="header-logo">
+                <div className="header-logo">
                     <img src={logo} alt="" />
                     <span style={{maxWidth: "188px", textWrap: "wrap"}}>Voyage vista</span>
                 </div>
