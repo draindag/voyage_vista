@@ -1,23 +1,17 @@
 import './App.css';
-import MainPage from './components/MainPage/MainPage';
-import Navbar from './components/Navbar/Navbar';
-import ToursCategoryesPage from './components/ToursCategoryesPage/ToursCategoryesPage';
 import {Route, Routes, BrowserRouter} from 'react-router';
-import AuthPage from './components/AuthPage/AuthPage';
+import ClientApp from './components/client/ClientApp';
+import AdminApp from './components/admin/AdminApp';
 
 function App() {
   return (
     <>
-      <Navbar></Navbar>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<MainPage></MainPage>}></Route>
-            <Route path='/login' element={<AuthPage/>}></Route>
-            <Route path='/reg' element={<AuthPage/>}></Route>
-            <Route path='/tours' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
+            <Route path='/*' element={<ClientApp></ClientApp>}></Route>
+            <Route path='/admin/*' element={<AdminApp></AdminApp>}></Route>
           </Routes>
         </BrowserRouter>
-
     </>
   );
 }

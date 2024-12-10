@@ -1,0 +1,32 @@
+// import './App.css';
+import Navbar from './Navbar/Navbar';
+import { Route, Routes } from 'react-router';
+
+import EntityList from './List/EntityList';
+
+function AdminApp() {
+    return (
+        <>
+            <Navbar></Navbar>
+
+            <div style={{ width: '100%', height: '100%', backgroundColor: '#D9D9D9' }}>
+                <div style={{ height: '110px' }}></div>
+                <Routes>
+                    <Route path='/' element={<>
+                        <div className='container'>
+                            <h2>Вы находитесь в панели управления сайтом.</h2>
+                            <p>Всякая справочная информация, краткая инструкция, размеры картинок для редактирования и т.п.</p>
+                            <p>Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Вдали от всех живут они в буквенных домах на берегу Семантика большого языкового океана. Маленький ручеек Даль журчит по всей стране и обеспечивает ее всеми необходимыми правилами. Эта парадигматическая страна, в которой жаренные члены предложения залетают прямо в рот. Даже всемогущая пунктуация не имеет власти над рыбными текстами, ведущими безорфографичный образ жизни. Однажды одна маленькая строчка рыбного текста по имени Lorem ipsum решила выйти в большой мир грамматики. Великий Оксмокс предупреждал ее о злых запятых, диких знаках вопроса и коварных точках с запятой, но текст не дал сбить</p>
+                        </div>
+                    </>}></Route>
+                    <Route path='/entitylist' element={<EntityList/>}></Route>
+                    <Route path='/categories/:id/delete' element={<>У</>}></Route>
+                    <Route path='/categories/:id/edit' element={<>И</>}></Route>
+                </Routes>
+            </div>
+
+        </>
+    );
+}
+
+export default AdminApp;

@@ -1,4 +1,4 @@
-@import url("../../resources/constants.css");
+@import url("../../../resources/constants.css");
 
 h1 {
     font-weight: 400;
@@ -7,7 +7,7 @@ h1 {
 
 
 .header-main {
-    background-image: url("../../resources/MainPage/Images/background.png");
+    background-image: url("../../../resources/MainPage/Images/background.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

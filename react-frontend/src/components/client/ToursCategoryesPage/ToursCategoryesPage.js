@@ -1,9 +1,9 @@
-import '../../resources/constants.css';
+import '../../../resources/constants.css';
 import './ToursCategoryesPage.css';
 import React from 'react';
 import SimpleSlider from '../Slider/Slider';
 
-import SlideImage from '../../resources/Slider/Images/slideImg.png'
+import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 const imageArr = [
     SlideImage,
     SlideImage,

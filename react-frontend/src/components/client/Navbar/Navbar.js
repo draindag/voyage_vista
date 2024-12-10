@@ -1,16 +1,16 @@
 import './Navbar.css';
-import '../../resources/constants.css';
+import '../../../resources/constants.css';
 
 import React, { useState, useEffect } from 'react';
 import ProfileManager from '../ProfileManager/ProfileManager';
 
 
-import home from '../../resources/Navbar/Images/home.svg';
-import contacts from '../../resources/Navbar/Images/contacts.svg';
-import tourist from '../../resources/Navbar/Images/tourist.svg';
-import personalAccount from '../../resources/Navbar/Images/personalAccount.svg';
-import country from '../../resources/Navbar/Images/country.svg';
-import logo from '../../resources/Navbar/Images/logo.svg';
+import home from '../../../resources/Navbar/Images/home.svg';
+import contacts from '../../../resources/Navbar/Images/contacts.svg';
+import tourist from '../../../resources/Navbar/Images/tourist.svg';
+import personalAccount from '../../../resources/Navbar/Images/personalAccount.svg';
+import country from '../../../resources/Navbar/Images/country.svg';
+import logo from '../../../resources/Navbar/Images/logo.svg';
 
 
 export default function Navbar() {

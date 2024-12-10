@@ -1,12 +1,13 @@
-import '../../resources/constants.css';
+import '../../../resources/constants.css';
+
 import './MainPage.css';
 import React from 'react';
-import buttonImg from '../../resources/MainPage/Images/arrow_tour.png';
-import man from '../../resources/MainPage/Images/man.png';
-import girl from '../../resources/MainPage/Images/girl.png';
-import train from '../../resources/MainPage/Images/Bottom_map.png';
+import buttonImg from '../../../resources/MainPage/Images/arrow_tour.png';
+import man from '../../../resources/MainPage/Images/man.png';
+import girl from '../../../resources/MainPage/Images/girl.png';
+import train from '../../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../Slider/Slider';
-import SlideImage from '../../resources/Slider/Images/slideImg.png'
+import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 
 
 const imageArr = [
@@ -66,7 +67,7 @@ export default function MainPage() {
                 <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
                 <a style={{ textDecoration: 'none' }} href='/tours'>
                     <div className="choose-country-button">
-                        <span>Выбрать страну</span>
+                        <span>Выбрать тур</span>
                         <img src={buttonImg} alt="" />
                     </div>
                 </a>

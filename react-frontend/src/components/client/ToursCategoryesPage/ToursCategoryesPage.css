@@ -1,7 +1,7 @@
-@import url("../../resources/constants.css");
+@import url("../../../resources/constants.css");
 
 .tours-categoryes-bgpage {
-    background-image: url("../../resources/ToursCategoryesPage/Images/image.png");
+    background-image: url("../../../resources/ToursCategoryesPage/Images/image.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
