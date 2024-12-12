@@ -39,9 +39,9 @@ export default function AddCountryOrCategory() {
             <form>
                 <div className='form-container'>
                     <div>
-                        <label>Название категории</label>
+                        <label>Название {headerText}</label>
                         <input className='wide-input no-file-input' type='text' placeholder={`Введите название ${headerText}`}></input>
-                        <label>Описание категории</label>
+                        <label>Описание {headerText}</label>
                         <textarea className='wide-input hight-input no-file-input' placeholder={`Введите описание ${headerText}`}></textarea>
                     </div>
                     <div>

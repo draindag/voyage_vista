@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router';
 
 import EntityList from './List/EntityList';
 import AddCategory from './AddCountryOrCategory/AddCountryOrCategory';
+import AddTour from './AddTour/AddTour';
 
 function AdminApp() {
     return (
@@ -23,6 +24,15 @@ function AdminApp() {
                     <Route path='/categories/add' element={<AddCategory/>}></Route>
                     <Route path='/categories/:id/delete' element={<>У</>}></Route>
                     <Route path='/categories/:id/edit' element={<>И</>}></Route>
+                    <Route path='/countries/add' element={<AddCategory/>}></Route>
+                    <Route path='/countries/:id/delete' element={<>У</>}></Route>
+                    <Route path='/countries/:id/edit' element={<>И</>}></Route>
+                    <Route path='/tours/add' element={<AddTour/>}></Route>
+                    <Route path='/tours/:id/delete' element={<>У</>}></Route>
+                    <Route path='/tours/:id/edit' element={<>И</>}></Route>
+                    <Route path='/offers/add' element={<>D</>}></Route>
+                    <Route path='/offers/:id/delete' element={<>У</>}></Route>
+                    <Route path='/offers/:id/edit' element={<>И</>}></Route>
                 </Routes>
             </div>
 

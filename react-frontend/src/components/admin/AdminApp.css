@@ -15,7 +15,6 @@
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-
 }
 
 .primary-btn {
@@ -37,15 +36,6 @@
 textarea {
     resize: none;
 }
-
-
-
-
-
-
-
-
-
 
 .image-preview {
     width: 593px;
@@ -73,13 +63,13 @@ textarea {
     padding: 2px;
 }
 
-.form-container .no-file-input {
+.no-file-input {
     box-sizing: border-box;
     min-height: 70px;
     border: 0px solid;
     border-radius: 20px;
     background-color: #d9d9d9;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 
     text-align: start;
     vertical-align: top;
@@ -108,11 +98,11 @@ textarea {
 
 }
 
-.file-input button, p{
+.file-input button, .file-input p{
     font-family: Roboto;
     font-size: 24px;
     font-weight: 400;
-    line-height: 32px;
+    line-height: 0px;
     text-align: center;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
@@ -127,15 +117,22 @@ textarea {
 
 .add-image-input-block label {
     text-align: end;
-    display: block;
     flex-basis: 100%;
+    margin-bottom: 6px;
+}
+
+.add-left-block {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 
 
 .file-choice-btn {
-    padding: 10px 40px 10px 40px;
-
+    padding: 0px 40px 0px 40px;
     margin-right: 10px;
     color: black;
     display: inline-block;
