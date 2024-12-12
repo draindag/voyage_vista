@@ -1,15 +1,15 @@
-// import './App.css';
+import './AdminApp.css';
 import Navbar from './Navbar/Navbar';
 import { Route, Routes } from 'react-router';
 
 import EntityList from './List/EntityList';
+import AddCategory from './AddCountryOrCategory/AddCountryOrCategory';
 
 function AdminApp() {
     return (
         <>
             <Navbar></Navbar>
-
-            <div style={{ width: '100%', height: '100%', backgroundColor: '#D9D9D9' }}>
+            <div style={{ width: '100%', height: '100%'}}>
                 <div style={{ height: '110px' }}></div>
                 <Routes>
                     <Route path='/' element={<>
@@ -20,6 +20,7 @@ function AdminApp() {
                         </div>
                     </>}></Route>
                     <Route path='/entitylist' element={<EntityList/>}></Route>
+                    <Route path='/categories/add' element={<AddCategory/>}></Route>
                     <Route path='/categories/:id/delete' element={<>У</>}></Route>
                     <Route path='/categories/:id/edit' element={<>И</>}></Route>
                 </Routes>

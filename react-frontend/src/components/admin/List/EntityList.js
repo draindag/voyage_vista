@@ -29,8 +29,11 @@ export default function EntityList() {
     }
 
     return <>
-        <div className='entity-container'>
-            <h2>Список {headerName}</h2>
+        <div className='entity-container' style={{backgroundColor: '#D9D9D9'}}>
+            <div style={{display: 'flex', justifyContent:"space-between", alignItems: 'center'}}>
+                <h2>Список {headerName}</h2>
+                <div style={{paddingRight: '50px'}}><a href={`/admin/${apiPath}/add`} className='element-btn'>Добавить</a></div>
+            </div>
             <div className='entity-list'>
                 <div className='entity-list-element'>
                     <div className='entity-name'>Наименование сущности</div>

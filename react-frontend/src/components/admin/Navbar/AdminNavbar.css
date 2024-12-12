@@ -12,39 +12,28 @@
     width: 100%;
     display: flex;
     align-items: center;
-    background-color: #285785c4;
+    background-color: #6990b6;
 }
 
 .admnavbar-content {
     display: flex;
     height: 100%;
     align-items: center;
-    font-family: var(--nav-link-font);
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 29.05px;
+    
     text-align: left;
     text-wrap: wrap;
 }
 
-.admnavbar-content a, button{
+.admnavbar-content a{
     text-decoration: none;
     margin-right: 40px;
-    display: block;
+    /* display: block; */
     align-items: center;
     color: var(--nav-link-color);
     transition: 0.1s ease;
 }
 
-.admnavbar-content button {
-    background: none;
-    border: none;
-    font: inherit; /* Наследует шрифт от родителя */
-    cursor: pointer; /* Указывает, что это кнопка */
-}
-
-
-.admnavbar-content a:hover, button:hover{
+.admnavbar-content a:hover{
     color: #c9c9c9;
 }
 

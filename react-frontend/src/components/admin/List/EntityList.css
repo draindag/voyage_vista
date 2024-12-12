@@ -1,6 +1,7 @@
 .entity-container {
     padding-left: 50px;
     padding-right: 50px;
+    height: calc(100% - 110px);
 }
 
 .entity-list {
