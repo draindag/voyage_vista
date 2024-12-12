@@ -33,11 +33,15 @@ responses:
         refresh_token:
           type: string
           description: Токен обновления
+        role:
+          type: string
+          description: Роль авторизовавшегося пользователя
     examples:
       application/json:
         success: true
         access_token: "eyJhbGciOiJIUzI1NiIs..."
         refresh_token: "eyJhbGciOiJIUzI1NiIs..."
+        role: "visitor"
 
   400:
     description: Данные для авторизации не прошли проверку
