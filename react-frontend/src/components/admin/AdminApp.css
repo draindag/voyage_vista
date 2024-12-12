@@ -55,7 +55,7 @@ textarea {
 
 .form-container {
     display: flex;
-
+    /* flex-wrap: wrap; */
 }
 
 .form-container div {
@@ -141,4 +141,10 @@ textarea {
 .file-choice-btn:hover {
     color: rgb(46, 46, 46) !important;
 
+}
+
+.submit-button-block{
+    flex-basis: 100%;
+    display: flex;
+    justify-content: end;
 }

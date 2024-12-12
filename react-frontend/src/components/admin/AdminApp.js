@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router';
 import EntityList from './List/EntityList';
 import AddCategory from './AddCountryOrCategory/AddCountryOrCategory';
 import AddTour from './AddTour/AddTour';
+import AddSale from './AddSale/AddSale';
 
 function AdminApp() {
     return (
@@ -30,7 +31,7 @@ function AdminApp() {
                     <Route path='/tours/add' element={<AddTour/>}></Route>
                     <Route path='/tours/:id/delete' element={<>У</>}></Route>
                     <Route path='/tours/:id/edit' element={<>И</>}></Route>
-                    <Route path='/offers/add' element={<>D</>}></Route>
+                    <Route path='/offers/add' element={<AddSale/>}></Route>
                     <Route path='/offers/:id/delete' element={<>У</>}></Route>
                     <Route path='/offers/:id/edit' element={<>И</>}></Route>
                 </Routes>

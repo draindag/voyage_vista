@@ -77,19 +77,21 @@ export default function AddTour() {
                         <div style={{ marginBottom: '6px' }}><label>Описание {headerText}</label></div>
                         <textarea className='wide-input hight-input no-file-input' placeholder={`Введите описание ${headerText}`}></textarea>
                     </div>
-                    <div className='add-left-block' style={{width: '595px'}}><label>Выберите категорию</label>
-                            <select style={{ width: "300px", height: "50px", textAlign: "center" }}>
-                                <option value='val1'>Val1</option>
-                                <option value='val2'>Val2</option>
-                            </select>
-                        </div>
+                    <div className='add-left-block' style={{ width: '595px' }}><label>Выберите категорию</label>
+                        <select style={{ width: "300px", height: "50px", textAlign: "center" }}>
+                            <option value='val1'>Val1</option>
+                            <option value='val2'>Val2</option>
+                        </select>
+                    </div>
                 </div>
             </form>
-
-
-            <div>
-                <button className='primary-btn'>Добавить</button>
+            <div className='form-container' style={{ justifyContent: "end" }}>
+                <div className='submit-button-block'>
+                    <button className='primary-btn'>Добавить</button>
+                </div>
             </div>
+
+
         </div>
     </>
 

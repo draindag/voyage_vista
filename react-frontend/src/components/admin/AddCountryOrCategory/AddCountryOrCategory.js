@@ -39,9 +39,9 @@ export default function AddCountryOrCategory() {
             <form>
                 <div className='form-container'>
                     <div>
-                        <label>Название {headerText}</label>
+                        <div style={{ marginBottom: '6px' }}><label>Название {headerText}</label></div>
                         <input className='wide-input no-file-input' type='text' placeholder={`Введите название ${headerText}`}></input>
-                        <label>Описание {headerText}</label>
+                        <div style={{ marginBottom: '6px' }}><label>Описание {headerText}</label></div>
                         <textarea className='wide-input hight-input no-file-input' placeholder={`Введите описание ${headerText}`}></textarea>
                     </div>
                     <div>
@@ -50,17 +50,19 @@ export default function AddCountryOrCategory() {
                         </div>
                         <div className='add-image-input-block'>
                             <label>Загрузить картинку с компьютера:</label>
-                            <div style={{flexBasis: "100%"}} className='file-input'><button type='button' className='file-choice-btn' onClick={() => fileInputRef.current.click()}>Выберите файл</button><p>{imageName}</p></div>
-                            <input 
-                            ref={fileInputRef} 
-                            style={{display: 'none'}} 
-                            type="file" accept="image/*" onChange={handleImageChange} />
+                            <div style={{ flexBasis: "100%" }} className='file-input'><button type='button' className='file-choice-btn' onClick={() => fileInputRef.current.click()}>Выберите файл</button><p>{imageName}</p></div>
+                            <input
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                type="file" accept="image/*" onChange={handleImageChange} />
                         </div>
                     </div>
                 </div>
             </form>
-            <div>
-                <button className='primary-btn'>Добавить</button>
+            <div className='form-container' style={{ justifyContent: "end" }}>
+                <div className='submit-button-block'>
+                    <button className='primary-btn'>Добавить</button>
+                </div>
             </div>
         </div>
     </>
