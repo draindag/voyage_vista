@@ -10,7 +10,7 @@ export default function AddSale() {
     return (<>
         <div className='add-container'>
             <h2>Добавление {headerText}</h2>
-            <form>
+            <form method='post' action=''>
                 <div className='form-container' style={{ justifyContent: "center" }}>
                     <div style={{ width: "600px" }}>
                         <div style={{ marginBottom: '6px' }}><label>Название {headerText}</label></div>
@@ -38,16 +38,12 @@ export default function AddSale() {
                         </div>
                     </div>
                 </div>
-            </form>
-
-            <div className='form-container' style={{ justifyContent: "center" }}>
-                <div className='submit-button-block'>
-                    <button className='primary-btn'>Добавить</button>
+                <div className='form-container' style={{ justifyContent: "center" }}>
+                    <div className='submit-button-block'>
+                        <button className='primary-btn'>Добавить</button>
+                    </div>
                 </div>
-            </div>
-
-
-
+            </form>
         </div>
     </>
 

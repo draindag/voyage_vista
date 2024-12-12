@@ -27,7 +27,7 @@ export default function AddTour() {
     return (<>
         <div className='add-container'>
             <h2>Добавление {headerText}</h2>
-            <form>
+            <form method='post' action=''>
                 <div className='form-container'>
                     <div>
                         <div style={{ marginBottom: '6px' }}><label>Название {headerText}</label></div>
@@ -84,14 +84,12 @@ export default function AddTour() {
                         </select>
                     </div>
                 </div>
-            </form>
-            <div className='form-container' style={{ justifyContent: "end" }}>
-                <div className='submit-button-block'>
-                    <button className='primary-btn'>Добавить</button>
+                <div className='form-container' style={{ justifyContent: "end" }}>
+                    <div className='submit-button-block'>
+                        <button type='submit' className='primary-btn'>Добавить</button>
+                    </div>
                 </div>
-            </div>
-
-
+            </form>
         </div>
     </>
 
