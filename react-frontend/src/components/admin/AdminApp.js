@@ -1,13 +1,19 @@
 import './AdminApp.css';
 import Navbar from './Navbar/Navbar';
 import { Route, Routes } from 'react-router';
-
+import { useAuthContext } from '../general/AuthContext/AuthContext';
 import EntityList from './List/EntityList';
 import AddCategory from './AddCountryOrCategory/AddCountryOrCategory';
 import AddTour from './AddTour/AddTour';
 import AddSale from './AddSale/AddSale';
 
 function AdminApp() {
+
+    const {userData} = useAuthContext();
+
+
+
+    if(userData.role === "admin"){
     return (
         <>
             <Navbar></Navbar>
@@ -36,9 +42,13 @@ function AdminApp() {
                     <Route path='/offers/:id/edit' element={<>И</>}></Route>
                 </Routes>
             </div>
-
+            
         </>
     );
+    }
+    else{
+        return(<></>)
+    }
 }
 
 export default AdminApp;

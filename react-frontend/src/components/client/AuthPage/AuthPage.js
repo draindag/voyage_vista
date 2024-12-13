@@ -1,6 +1,8 @@
 import './AuthPage.css';
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuthContext } from '../../general/AuthContext/AuthContext';
+import Cookies from 'js-cookie';
 
 export default function AuthPage(props) {
     const location = useLocation();
@@ -14,6 +16,8 @@ export default function AuthPage(props) {
     const [validEmail, setValidEmail] = useState(true);
     const [passwordAgain, setPasswordAgain] = useState("");
     const [validPassAgain, setPassAgain,] = useState(true);
+
+    const {setUserData} = useAuthContext();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,6 +41,15 @@ export default function AuthPage(props) {
         setPassAgain(password === passwordAgain)
     }
 
+    // -----------------------
+    const handleEnter = () => {
+        let newUserData = {role: login, name: login}
+        Cookies.set("userData", JSON.stringify(newUserData), {expires: 7, sameSite: 'strict'})
+        setUserData(newUserData);
+    }
+
+
+
     if (location.pathname === '/login') {
         headerText = "Вход";
         buttonText = "Войти";
@@ -47,13 +60,11 @@ export default function AuthPage(props) {
                 title={validLogin ? '' : 'Логин должен иметь не менее 4-х символов'}
                 type='text' placeholder='Введите логин'
                 onChange={(value) => setLogin(value.target.value)}
-                onBlur={handleLoginBlur}
             ></input>
             <label>Пароль</label>
             <input className={validPassword ? '' : 'invalid-input'}
                 title={validPassword ? '' : 'Пароль должен содержать не менее 5-ти символов'}
                 onChange={(value) => setPassword(value.target.value)}
-                onBlur={handlePassBlur}
                 type='password' placeholder='Введите пароль'></input>
         </>
     }
@@ -101,11 +112,11 @@ export default function AuthPage(props) {
                 <h2>{headerText}</h2>
                 <div className='auth-form'>
                     <form>
-                       {formContent}
+                        {formContent}
                     </form>
                 </div>
                 <div className='button-block'>
-                    <button className='auth-button'>{buttonText}</button>
+                    <button className='auth-button' onClick={handleEnter}>{buttonText}</button>
                 </div>
             </div>
 
