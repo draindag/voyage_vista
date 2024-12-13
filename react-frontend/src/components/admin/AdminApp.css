@@ -1,0 +1,150 @@
+.add-container {
+    margin: auto;
+    width: 1206px;
+}
+
+.add-container h2 {
+    text-align: center;
+}
+
+.add-container label {
+    font-family: Inter;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 36.31px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.primary-btn {
+    /* height: 60px; */
+    padding-left: 30px;
+    padding-right: 30px;
+    padding: 10px 30px 10px 30px;
+    color: #FFFFFF;
+    background-color: #285785;
+    border-radius: 20px;
+    vertical-align: middle;
+
+    font-family: var(--nav-link-font);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29.05px;
+}
+
+textarea {
+    resize: none;
+}
+
+.image-preview {
+    width: 593px;
+    height: 450px;
+    border: 2px solid;
+    border-radius: 10px;
+    background-color: #d9d9d9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.form-container {
+    display: flex;
+    /* flex-wrap: wrap; */
+}
+
+.form-container div {
+    flex-basis: 50%;
+    padding: 2px;
+}
+
+.no-file-input {
+    box-sizing: border-box;
+    min-height: 70px;
+    border: 0px solid;
+    border-radius: 20px;
+    background-color: #d9d9d9;
+    /* margin-bottom: 20px; */
+
+    text-align: start;
+    vertical-align: top;
+
+    text-wrap: wrap;
+    padding-left: 20px;
+    padding-top: 20px;
+
+    font-size: 18px;
+    font-weight: 400;
+    color: #595959;
+}
+
+.wide-input {
+    width: 100%;
+}
+
+.hight-input {
+    height: 280px;
+}
+
+.file-input {
+    /* height: 100px; */
+    display: flex;
+    justify-content: end;
+
+}
+
+.file-input button, .file-input p{
+    font-family: Roboto;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 0px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+
+.add-image-input-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+}
+
+.add-image-input-block label {
+    text-align: end;
+    flex-basis: 100%;
+    margin-bottom: 6px;
+}
+
+.add-left-block {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+.file-choice-btn {
+    padding: 0px 40px 0px 40px;
+    margin-right: 10px;
+    color: black;
+    display: inline-block;
+}
+
+.file-choice-btn:hover {
+    color: rgb(46, 46, 46) !important;
+
+}
+
+.submit-button-block{
+    flex-basis: 100%;
+    display: flex;
+    justify-content: end;
+}

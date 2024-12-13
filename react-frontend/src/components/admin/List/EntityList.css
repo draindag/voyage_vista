@@ -1,0 +1,43 @@
+.entity-container {
+    padding-left: 50px;
+    padding-right: 50px;
+    height: calc(100% - 110px);
+}
+
+.entity-list {
+    width: 100%;
+}
+
+.entity-list-element {
+    width: 100%;
+    height: 80px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    margin-bottom: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.element-btn {
+    border-radius: 10px;
+    background-color: #285785CC;
+    margin-right: 12px;
+    height: 60px;
+    padding: 10px 34px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.entity-name {
+    margin-left: 10px;
+    font-family: Inter;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 48.41px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
