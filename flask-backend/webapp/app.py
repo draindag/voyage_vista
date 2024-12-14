@@ -67,6 +67,11 @@ def create_app(config: dict = None):
         return jsonify({"success": False,
             'message': 'Страница не найдена'}), 404
 
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({"success": False,
+                        'message': 'Что-то пошло не так, пожалуйста, повторите попытку позже'}), 500
+
     @app.errorhandler(NoAuthorizationError)
     def handle_missing_authorization_header(ex):
         return jsonify({"success": False,
