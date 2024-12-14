@@ -1,3 +1,11 @@
 **/__pycache__/
 venv
 .idea
+
+# Исключение файла покрытия
+.coverage
+
+# Исключение артефактов отчётов покрытия
+htmlcov/
+coverage.xml
+*.coverage.*

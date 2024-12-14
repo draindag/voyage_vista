@@ -39,6 +39,7 @@ marshmallow-sqlalchemy = "==1.1.0"
 flask-jwt-extended = "==4.7.0"
 pylint = "==3.3.1"
 flask-reuploaded = "==1.4.0"
+pytest = "*"
 
 [dev-packages]
 
