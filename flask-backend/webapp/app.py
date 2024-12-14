@@ -17,6 +17,7 @@ from flask_uploads import IMAGES, configure_uploads
 from jwt import ExpiredSignatureError, InvalidTokenError
 
 from webapp import db, migrate, ma, swagger, jwt, photos
+from webapp.bot import create_webhook
 from webapp.routes import main_bp
 from webapp.routes.accounting import accounting_bp
 from webapp.routes.admin_panel import admin_bp
@@ -58,6 +59,7 @@ def create_app(config: dict = None):
     jwt.init_app(app)
     swagger.init_app(app)
     configure_uploads(app, photos)
+    create_webhook(app)
 
     @app.errorhandler(404)
     def not_found(error):
