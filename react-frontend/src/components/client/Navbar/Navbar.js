@@ -57,7 +57,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </div>
-            {showProfileManager ? <ProfileManager jwt={null}/> : null}
+            {showProfileManager ? <ProfileManager onExit={() => {setShowProfileManager(!showProfileManager)}}/> : null}
     </>
 }
 

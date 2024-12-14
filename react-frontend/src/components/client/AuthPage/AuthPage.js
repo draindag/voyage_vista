@@ -2,9 +2,11 @@ import './AuthPage.css';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import Cookies from 'js-cookie';
 
-export default function AuthPage(props) {
+
+import { setCookieInfo } from '../../general/cookie_ops';
+
+export default function AuthPage() {
     const location = useLocation();
     let navigate = useNavigate();
 
@@ -18,7 +20,7 @@ export default function AuthPage(props) {
     const [passwordAgain, setPasswordAgain] = useState("");
     const [validPassAgain, setPassAgain,] = useState(true);
 
-    const { setUserData } = useAuthContext();
+    const { userData, setUserData } = useAuthContext();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -61,8 +63,9 @@ export default function AuthPage(props) {
             })
             if (response.status === 200) {
                 let responseData = await response.json()
-                Cookies.set("userData", JSON.stringify(responseData), { expires: 7, sameSite: 'strict' })
+                setCookieInfo(responseData);
                 setUserData(responseData);
+                console.log(responseData);
                 alert("Вы успешно авторизованы!");
                 navigate("/");
             } else {
@@ -109,8 +112,8 @@ export default function AuthPage(props) {
                 body: authDataStr
             })
             if (response.status === 201) {
-                let responseData = await response.json()
-                Cookies.set("userData", JSON.stringify(responseData), { expires: 7, sameSite: 'strict' })
+                let responseData = await response.json();
+                setCookieInfo(responseData);
                 setUserData(responseData);
                 alert("Вы успешно зарегестрированы!");
                 navigate("/");

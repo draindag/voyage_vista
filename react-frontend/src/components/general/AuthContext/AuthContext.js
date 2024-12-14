@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
 
-    const [userData, setUserData] = useState({role: "", name: "", token: null, refreshToken: null})
+    const [userData, setUserData] = useState(null)
 
     useEffect(() => {
         const userDataString = Cookies.get("userData");
