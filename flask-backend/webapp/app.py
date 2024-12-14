@@ -11,6 +11,7 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify
+from flask_cors import CORS
 from flask_jwt_extended.exceptions import JWTDecodeError, NoAuthorizationError
 from flask_uploads import IMAGES, configure_uploads
 
@@ -52,6 +53,8 @@ def create_app(config: dict = None):
 
     if config is not None:
         app.config.update(config)
+
+    CORS(app)
     db.init_app(app)
     migrate.init_app(app, db, compare_type=True)
     ma.init_app(app)
