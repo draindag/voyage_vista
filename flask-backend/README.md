@@ -99,6 +99,9 @@ flask --app run.py db downgrade
 ## Запуск проекта
 
 Файлом для запуска проекта является run.py
+```bash
+python run.py
+```
 
 
 ## Документация по backend части проекта

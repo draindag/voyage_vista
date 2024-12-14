@@ -1,0 +1,42 @@
+Проверяет истёк ли access токен
+---
+parameters:
+  - name: Authorization
+    in: header
+    required: true
+    description: JWT access токен для проверки. Пример - `Bearer <token>`
+    schema:
+      type: string
+
+responses:
+  200:
+    description: Токен ещё не истек
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение ответа
+    examples:
+      application/json:
+        success: true
+        access_token: "Токен ещё жив"
+
+  401:
+    description: Токен уже истек
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Показатель успеха операции
+        message:
+          type: string
+          description: Сообщение об ошибке
+    examples:
+      application/json:
+        success: false
+        message: "Срок действия токена истек"
