@@ -68,7 +68,6 @@ export default function ModeratorRegPage() {
         const authData = { login: login, email: email, password: password, password_repeat: passwordAgain }
         const authDataStr = JSON.stringify(authData)
         try {
-
             console.log(userData.access_token)
             console.log(authDataStr)
             let response = await tryReq(userData.access_token, authDataStr)
