@@ -11,9 +11,6 @@ import ModeratorRegPage from './ModeratorRegPage/ModeratorRegPage';
 function AdminApp() {
 
     const {userData} = useAuthContext();
-
-    console.log(userData);
-
     if(userData?.role === "admin"){
     return (
         <>

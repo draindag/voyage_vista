@@ -70,7 +70,6 @@ export default function ModeratorRegPage() {
         try {
             let check = await checkToken(userData?.access_token)
             if(!check){
-                console.log("refresh")
                 let refresh = await refreshToken(userData?.refresh_token)
                 if(!refresh){
                     deleteCookie();
@@ -102,7 +101,7 @@ export default function ModeratorRegPage() {
                 if (response.message) {
                     messages = messages.concat(`\n${response.message}`)
                 }
-                alert(`Произошла ошибка при регистрации. Данные фу`);
+                alert(`Произошла ошибка при регистрации. ${messages}`);
             }
         } catch (e) {
             alert(`Не удалось зарегестрировать. Попробуйте позже`);
