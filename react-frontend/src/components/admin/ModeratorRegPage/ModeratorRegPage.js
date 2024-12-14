@@ -2,7 +2,7 @@ import './ModeratorRegPage.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import { refreshToken } from '../../general/web_ops';
+import { refreshToken, checkToken } from '../../general/web_ops';
 
 import { deleteCookie, setCookieInfo } from '../../general/cookie_ops';
 
@@ -68,44 +68,22 @@ export default function ModeratorRegPage() {
         const authData = { login: login, email: email, password: password, password_repeat: passwordAgain }
         const authDataStr = JSON.stringify(authData)
         try {
-            console.log(userData.access_token)
-            console.log(authDataStr)
-            let response = await tryReq(userData.access_token, authDataStr)
-            if(response.status === 401){
+            let check = await checkToken(userData?.access_token)
+            if(!check){
+                console.log("refresh")
                 let refresh = await refreshToken(userData?.refresh_token)
-                if(refresh){
-                    response = await tryReq(refresh, authDataStr)
-                    if (response.status === 201) {
-                        let responseData = await response.json();
-                        setCookieInfo(responseData);
-                        setUserData(responseData);
-                        alert("Успешно!");
-                        navigate("/");
-                    } else {
-                        let responseData = await response.json()
-                        let messages = "";
-                        if (responseData.errors) {
-                            let errors = responseData.errors
-                            if (errors.email) {
-                                messages = messages.concat(`\n- ${errors.email[0]}`)
-                            }
-                            if (errors.password) {
-                                messages = messages.concat(`\n- ${errors.password[0]}`)
-                            }
-                        }
-                        if (response.message) {
-                            messages = messages.concat(`\n${response.message}`)
-                        }
-                        alert(`Произошла ошибка при регистрации.${messages}`);
-                    }
-                }
-                else{
+                if(!refresh){
                     deleteCookie();
                     setUserData(null);
-                    alert("Авторизируйтесь повторно")
-                    navigate("/login")
-                } 
+                    alert("Авторизируйтесь повторно");
+                    navigate("/login");
+                    return;
+                }
+                let newUserData = {access_token: refresh, refresh_token: userData.refresh_token, role: userData.role}
+                setCookieInfo(newUserData);
+                setUserData(newUserData);
             }
+            let response = await tryReq(userData.access_token, authDataStr)
             if (response.status === 201) {
                 alert("Успешно!");
                 navigate("/admin");

@@ -15,4 +15,19 @@ const refreshToken = async (token) => {
     return result;
 }
 
-export {refreshToken};
+const checkToken = async (token) => {
+    let response = await fetch("http://127.0.0.1:8000/api/check_token", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json;charset=utf-8',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    let result = false;
+    if(response.status === 200){result = true;}
+    return result;
+}
+
+
+export {refreshToken, checkToken};
