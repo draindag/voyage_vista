@@ -17,6 +17,8 @@ export default function AddSale() {
 
     let headerText = "акции";
 
+    console.log(`AddSale state: ${name} ${date} ${disc}`);
+
     const tryReq = async (token, data) => {
         let response = await fetch("http://127.0.0.1:8000/api/admin_panel/offers/new", {
             method: 'POST',

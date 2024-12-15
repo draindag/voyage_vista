@@ -42,3 +42,10 @@
     text-decoration-skip-ink: none;
 
 }
+
+.paginator{
+    display: flex;
+}
+.paginator button{
+    color: black;
+}

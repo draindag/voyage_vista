@@ -14,6 +14,11 @@ export default function EntityList() {
     const { userData, setUserData } = useAuthContext();
 
     const [entityes, setEnt] = useState(null);
+    const [curPage, setPage] = useState(1);
+    const [paginatorBtnsDisable, setPaginatorBtns] = useState({prev: true, next: true})
+
+    console.log(`AddSale state: ${curPage} ${paginatorBtnsDisable}`);
+    console.log(paginatorBtnsDisable)
 
     let apiPath;
     let headerName;
@@ -51,8 +56,28 @@ export default function EntityList() {
             nameField = 'category_title';
     }
 
+    const updatePage = (btn) => {
+        setEnt(null);
+        if(btn == 'prev'){
+            setPage(curPage -1)
+        }
+        else{
+            setPage(curPage +1)
+        }
+        const fetchData = async () => {
+            const result = await fetchEntList();
+            const entList = result[responseField];
+            const pageBtns = {prev: !result.prev_page, next: !result.next_page}
+            if (entList) {
+                setEnt(entList);
+                setPaginatorBtns(pageBtns);
+            }
+        };
+        fetchData();
+    }
+
     const tryReq = useCallback(async (token) => {
-        let response = await fetch(`http://127.0.0.1:8000/api/admin_panel/${apiPath}?page=1`, {
+        let response = await fetch(`http://127.0.0.1:8000/api/admin_panel/${apiPath}?page=${curPage}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -62,7 +87,7 @@ export default function EntityList() {
         });
         return response;
 
-    }, [apiPath]);
+    }, [apiPath, curPage]);
     const fetchEntList = useCallback(async () => {
 
         let result = [];
@@ -91,8 +116,6 @@ export default function EntityList() {
             console.log(result);
             if (response.status === 200) {
                 result = await response.json()
-                result = result[responseField]
-                console.log(response)
             } else {
                 alert(`Произошла ошибка при загрузке данных.`);
             }
@@ -106,9 +129,12 @@ export default function EntityList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const entList = await fetchEntList();
+            const result = await fetchEntList();
+            const entList = result[responseField];
+            const pageBtns = {prev: !result.prev_page, next: !result.next_page}
             if (entList) {
                 setEnt(entList);
+                setPaginatorBtns(pageBtns);
             }
         };
         fetchData();
@@ -137,6 +163,10 @@ export default function EntityList() {
             </div>
             <div className='entity-list'>
                 {listData}
+            </div>
+            <div className='paginator'>
+                <button disabled={paginatorBtnsDisable.prev} onClick={() => updatePage('prev')}>Prev</button>
+                <button disabled={paginatorBtnsDisable.next} onClick={() => updatePage('next')}>Next</button>
             </div>
         </div>
     </>
