@@ -98,8 +98,7 @@ def registration():
         "success": True,
         "message": "Пользователь успешно зарегистрирован!",
         "access_token": access_token,
-        "refresh_token": refresh_token,
-        "role": "visitor"
+        "refresh_token": refresh_token
     }), 201
 
 
@@ -130,8 +129,7 @@ def login():
         refresh_token = create_refresh_token(identity=user.login)
         return jsonify({"success": True,
                         "access_token": access_token,
-                        "refresh_token": refresh_token,
-                        "role": user.role
+                        "refresh_token": refresh_token
         }), 200
 
     return jsonify({"success": False,
@@ -155,8 +153,15 @@ def show_profile():
                         "message": "Пользователь не найден"}), 401
 
     user_schema = UserSchema(unknown=EXCLUDE)
+
+    verification_code = None
+
+    if current_user.role == "moderator":
+        verification_code = current_user.get_verification_code()
+
     return jsonify({"success": True,
-                    "user": user_schema.dump(current_user)}), 200
+                    "user": user_schema.dump(current_user),
+                    "verification_code": verification_code}), 200
 
 
 @accounting_bp.route('/edit_email', methods=['PUT'])

@@ -21,6 +21,7 @@ from webapp.bot import create_webhook
 from webapp.routes import main_bp
 from webapp.routes.accounting import accounting_bp
 from webapp.routes.admin_panel import admin_bp
+from webapp.routes.notifications import notifications_bp
 from webapp.routes.tours import tours_bp
 
 load_dotenv()
@@ -93,5 +94,7 @@ def create_app(config: dict = None):
     app.register_blueprint(accounting_bp, url_prefix="/api")
 
     app.register_blueprint(admin_bp, url_prefix="/api/admin_panel")
+
+    app.register_blueprint(notifications_bp)
 
     return app
