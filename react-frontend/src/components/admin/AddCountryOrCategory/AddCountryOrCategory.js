@@ -1,24 +1,101 @@
-import React, { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './AddCountryOrCategory.css';
+
+import { useAuthContext } from '../../general/AuthContext/AuthContext';
+import { refreshToken, checkToken, tryGetReq, fetchData } from '../../general/web_ops';
+import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
 
 import PlusImage from '../../../resources/admin/Images/cricle_plus.png'
 
-export default function AddCountryOrCategory() {
+export default function AddCountryOrCategory(props) {
+    const { id } = useParams();
     const fileInputRef = useRef(null);
     const [image, setImage] = useState(PlusImage);
+
+    let navigate = useNavigate();
+    const { userData, setUserData } = useAuthContext();
+
     const [imageName, setImageName] = useState('файл не выбран');
     const location = useLocation();
     let pathName = location.pathname.replace("/admin", "").replace("/add", "")
 
     let headerText;
+    let apiPath;
 
-    if (pathName === '/categories') {
+    if (pathName.includes("categories")) {
         headerText = "категории"
+        apiPath = "categories"
     }
     else {
         headerText = "страны"
+        apiPath = "countries"
     }
+
+    const fetchDataA = useCallback(async () => {
+        let result = null;
+        try {
+            let token = userData.access_token;
+            console.log("CHECK")
+            let check = await checkToken(userData?.access_token)
+            if (!check) {
+                console.log("Refresh")
+                let refresh = await refreshToken(userData?.refresh_token)
+                if (!refresh) {
+                    deleteCookie();
+                    setUserData(null);
+                    alert("Авторизируйтесь повторно");
+                    navigate("/login");
+                    return result;
+                }
+                let newUserData = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role }
+                setCookieInfo(newUserData);
+                setUserData(newUserData);
+                token = refresh;
+            }
+            console.log("SUCCESS to refresh")
+            let response = await tryGetReq(token, `/api/admin_panel${pathName}/${props.id}/edit`);
+            console.log(result);
+            if (response.status === 200) {
+                result = await response.json()
+            } else {
+                alert(`Произошла ошибка при загрузке данных.`);
+            }
+            return result;
+        } catch (e) {
+            alert(`Не удалось. Попробуйте позже`);
+            return result;
+        }
+
+    }, [userData, navigate, setUserData, pathName, props]); // зависимости, если есть
+
+    useEffect(() => {
+        if(props?.action === "upd"){
+            const callFetch = async () => {
+                const response = await fetchData(userData, `/api/admin_panel/${apiPath}/${id}/edit`);
+                if (response.data) {
+                    console.log(response)
+                    return response;
+                }
+                else {
+                    if (response.action === "unauth") {
+                        deleteCookie();
+                        setUserData(null);
+                        alert(response.message);
+                        navigate("/login");
+                        return null;
+                    }
+                    else {
+                        alert(response.message);
+                        return null;
+                    }
+                }
+
+            };
+            callFetch();
+        }
+    }, [props])
+
 
     const handleImageChange = (e) => {
         console.log("ОТСЛОВИЛ")

@@ -22,10 +22,15 @@
 }
 
 .element-btn {
+    display: inline;
+    cursor: pointer;
+    font: inherit;
+    line-height: normal; /* Стандартная высота строки */
+    border: 0px;
     border-radius: 10px;
     background-color: #285785CC;
     margin-right: 12px;
-    height: 60px;
+    height: 40px;
     padding: 10px 34px;
     color: #FFFFFF;
     text-decoration: none;

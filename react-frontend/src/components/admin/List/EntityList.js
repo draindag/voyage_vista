@@ -2,7 +2,7 @@ import './EntityList.css';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import { refreshToken, checkToken } from '../../general/web_ops';
+import { refreshToken, checkToken, sendData } from '../../general/web_ops';
 import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
 
 export default function EntityList() {
@@ -13,12 +13,9 @@ export default function EntityList() {
     let navigate = useNavigate();
     const { userData, setUserData } = useAuthContext();
 
-    const [entityes, setEnt] = useState(null);
-    const [curPage, setPage] = useState(1);
-    const [paginatorBtnsDisable, setPaginatorBtns] = useState({prev: true, next: true})
-
-    console.log(`AddSale state: ${curPage} ${paginatorBtnsDisable}`);
-    console.log(paginatorBtnsDisable)
+    const [state, setState] = useState({entityes: null, page: 1, paginatorBtnsDisable: {prev: true, next: true}})
+    
+    console.log(state)
 
     let apiPath;
     let headerName;
@@ -56,28 +53,52 @@ export default function EntityList() {
             nameField = 'category_title';
     }
 
-    const updatePage = (btn) => {
-        setEnt(null);
-        if(btn == 'prev'){
-            setPage(curPage -1)
-        }
-        else{
-            setPage(curPage +1)
-        }
+    const updatePage = (pageNum) => {
+        setState({...state, entityes: null})
         const fetchData = async () => {
-            const result = await fetchEntList();
+            const result = await fetchEntList(pageNum);
             const entList = result[responseField];
             const pageBtns = {prev: !result.prev_page, next: !result.next_page}
             if (entList) {
-                setEnt(entList);
-                setPaginatorBtns(pageBtns);
+                setState({...state, entityes: entList, paginatorBtnsDisable: pageBtns, page: pageNum})
+                // setEnt(entList);
+                // setPaginatorBtns(pageBtns);
             }
         };
         fetchData();
     }
 
-    const tryReq = useCallback(async (token) => {
-        let response = await fetch(`http://127.0.0.1:8000/api/admin_panel/${apiPath}?page=${curPage}`, {
+    const deleteItem = async (url) => {
+        let result; 
+        result = window.confirm("Вы уверены?");
+        if(!result){return};
+        const data = {"acceptance": true}
+        const response = await sendData(userData, url, JSON.stringify(data), "DELETE");
+        if (response.data) {
+            console.log(response)
+            alert("Успешно!");
+            if(state.entityes.length > 1){
+                updatePage(state.page)
+            }
+            else{
+                updatePage(state.page - 1)
+            }
+        }
+        else {
+            if (response.action === "unauth") {
+                deleteCookie();
+                setUserData(null);
+                alert(response.message);
+                navigate("/login");
+            }
+            else {
+                alert(response.message);
+            }
+        }
+    };
+
+    const tryReq = useCallback(async (token, page) => {
+        let response = await fetch(`http://127.0.0.1:8000/api/admin_panel/${apiPath}?page=${page}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -87,8 +108,8 @@ export default function EntityList() {
         });
         return response;
 
-    }, [apiPath, curPage]);
-    const fetchEntList = useCallback(async () => {
+    }, [apiPath]);
+    const fetchEntList = useCallback(async (page) => {
 
         let result = [];
         try {
@@ -111,7 +132,7 @@ export default function EntityList() {
                 token = refresh;
             }
             console.log("SUCCESS to refresh")
-            let response = await tryReq(token);
+            let response = await tryReq(token, page);
 
             console.log(result);
             if (response.status === 200) {
@@ -125,29 +146,30 @@ export default function EntityList() {
             return result;
         }
 
-    }, [userData, navigate, responseField, setUserData, tryReq]); // зависимости, если есть
+    }, [userData, navigate, setUserData, tryReq]); // зависимости, если есть
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await fetchEntList();
+            const result = await fetchEntList(state.page);
             const entList = result[responseField];
             const pageBtns = {prev: !result.prev_page, next: !result.next_page}
             if (entList) {
-                setEnt(entList);
-                setPaginatorBtns(pageBtns);
+                setState({...state, entityes: entList, paginatorBtnsDisable: pageBtns})
+                // setEnt(entList);
+                // setPaginatorBtns(pageBtns);
             }
         };
         fetchData();
-    }, [fetchEntList]);
+    }, []);
 
     let listData;
-    if (entityes) {
-        listData = entityes.map(item => 
+    if (state.entityes) {
+        listData = state.entityes.map(item => 
             <div key={item[`${shortName}_id`]} className='entity-list-element'>
                 <div className='entity-name'>{item[nameField]}</div>
                 <div style={{ paddingRight: '50px' }}>
-                    <a href={`/admin/${apiPath}/1/edit`} className='element-btn'>Изменить</a>
-                    <a href={`/admin/${apiPath}/1/delete`} className='element-btn'>Удалить</a>
+                    <a href={`/admin/${apiPath}/${item[`${shortName}_id`]}/edit`} className='element-btn'>Изменить</a>
+                    <button onClick={() => deleteItem(`/api/admin_panel/${apiPath}/${item[`${shortName}_id`]}/delete`)} className='element-btn'>Удалить</button>
                 </div>
             </div>
         )
@@ -165,8 +187,8 @@ export default function EntityList() {
                 {listData}
             </div>
             <div className='paginator'>
-                <button disabled={paginatorBtnsDisable.prev} onClick={() => updatePage('prev')}>Prev</button>
-                <button disabled={paginatorBtnsDisable.next} onClick={() => updatePage('next')}>Next</button>
+                <button disabled={state.paginatorBtnsDisable.prev} onClick={() => updatePage(state.page - 1)}>Prev</button>
+                <button disabled={state.paginatorBtnsDisable.next} onClick={() => updatePage(state.page + 1)}>Next</button>
             </div>
         </div>
     </>

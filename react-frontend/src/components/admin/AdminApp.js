@@ -28,17 +28,13 @@ function AdminApp() {
                     <Route path='/moderreg' element={<ModeratorRegPage/>}></Route>
                     <Route path='/entitylist' element={<EntityList/>}></Route>
                     <Route path='/categories/add' element={<AddCategory/>}></Route>
-                    <Route path='/categories/:id/delete' element={<>У</>}></Route>
-                    <Route path='/categories/:id/edit' element={<>И</>}></Route>
+                    <Route path='/categories/:id/edit' element={<AddCategory action="upd"/>}></Route>
                     <Route path='/countries/add' element={<AddCategory/>}></Route>
-                    <Route path='/countries/:id/delete' element={<>У</>}></Route>
                     <Route path='/countries/:id/edit' element={<>И</>}></Route>
                     <Route path='/tours/add' element={<AddTour/>}></Route>
-                    <Route path='/tours/:id/delete' element={<>У</>}></Route>
                     <Route path='/tours/:id/edit' element={<>И</>}></Route>
-                    <Route path='/offers/add' element={<AddSale/>}></Route>
-                    <Route path='/offers/:id/delete' element={<>У</>}></Route>
-                    <Route path='/offers/:id/edit' element={<>И</>}></Route>
+                    <Route path='/offers/add' element={<AddSale action="add"/>}></Route>
+                    <Route path='/offers/:id/edit' element={<AddSale action="upd"/>}></Route>
                 </Routes>
             </div>
             
