@@ -96,6 +96,7 @@ const sendData = async (userData, url, reqData, method, form = false) => {
             return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail" };
         }
     } catch (e) {
+        console.log(e)
         return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except" };
     }
 };

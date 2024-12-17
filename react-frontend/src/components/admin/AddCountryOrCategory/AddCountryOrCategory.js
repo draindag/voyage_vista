@@ -44,31 +44,16 @@ export default function AddCountryOrCategory(props) {
                 const response = await fetchData(userData, `/api/admin_panel/${apiPath}/${id}/edit`);
                 if (response.data) {
                     let responseData = response.data[nameField];
-                    let imagePath = responseData[`${nameField}_image`].replace("flask-backend/webapp", "")
                     console.log(response);
                     setState({
                         ...state,
                         title: responseData[`${nameField}_${titleOrName}`],
                         desc: responseData[`${nameField}_description`],
                         ent_id: responseData[`${nameField}_id`],
-                        // image: `/${responseData[`${nameField}_image`]}`
-                        image: imagePath,
-                        imageToShow: imagePath,
-                        prevImage: imagePath
+                        image: `/cover_images/${responseData[`${nameField}_image`]}`,
+                        imageToShow: `/cover_images/${responseData[`${nameField}_image`]}`,
+                        prevImage: `/cover_images/${responseData[`${nameField}_image`]}`
                     })
-                    // "country": {
-                    //     "country_id": "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62",
-                    //     "country_name": "Италия",
-                    //     "country_description": "Страна с богатой культурой",
-                    //     "country_image": "flask-backend/webapp/cover_images/b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62.png"
-                    //   }
-
-                    // "category": {
-                    //     "category_id": "123e4567-e89b-12d3-a456-426614174000",
-                    //     "category_title": "Семейные туры",
-                    //     "category_description": "Туры, подходящие для семейного отдыха",
-                    //     "category_image": "flask-backend/webapp/cover_images/123e4567-e89b-12d3-a456-426614174000.png"
-                    //   }
                 }
                 else {
                     if (response.action === "unauth") {
@@ -111,7 +96,7 @@ export default function AddCountryOrCategory(props) {
 
         // formData = "category_description=asfasfasfas&password=секрет"
         const response = await sendData(userData, url, formData, method, true);
-        if (response.data) {
+        if (response.action === "ok") {
             console.log(response)
             alert("Успешно!");
             navigate(`/admin/entitylist?name=${apiPath}`);
@@ -131,7 +116,6 @@ export default function AddCountryOrCategory(props) {
 
 
     const handleImageChange = (e) => {
-        console.log("ОТСЛОВИЛ")
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -174,7 +158,7 @@ export default function AddCountryOrCategory(props) {
             </form>
             <div className='form-container' style={{ justifyContent: "end" }}>
                 <div className='submit-button-block'>
-                    <button type='submit' className='primary-btn' onClick={() => sendForm()}>Добавить</button>
+                    <button type='submit' className='primary-btn' onClick={() => sendForm()}>{props.action === "upd" ? "Изменить" : "Добавить"}</button>
                 </div>
             </div>
         </div>
