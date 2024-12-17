@@ -70,7 +70,8 @@ sudo docker pull nordraven/voyage-vista:latest
 ```
 Создание и запуск контейнера:
 ```bash
-sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest
+sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest # Linux
+docker run --name voyage-vista-db -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest # Windows
 ```
 Для последующих запусков контейнера:
 ```bash
