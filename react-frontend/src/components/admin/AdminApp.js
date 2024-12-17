@@ -30,7 +30,7 @@ function AdminApp() {
                     <Route path='/categories/add' element={<AddCategory/>}></Route>
                     <Route path='/categories/:id/edit' element={<AddCategory action="upd"/>}></Route>
                     <Route path='/countries/add' element={<AddCategory/>}></Route>
-                    <Route path='/countries/:id/edit' element={<>И</>}></Route>
+                    <Route path='/countries/:id/edit' element={<AddCategory action="upd"/>}></Route>
                     <Route path='/tours/add' element={<AddTour/>}></Route>
                     <Route path='/tours/:id/edit' element={<>И</>}></Route>
                     <Route path='/offers/add' element={<AddSale action="add"/>}></Route>

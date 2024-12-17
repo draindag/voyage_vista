@@ -47,23 +47,31 @@ const tryGetReq = async (token, url) => {
 };
 
 
-const tryPostReq = async (token, url, reqData, method) => {
+const tryPostReq = async (token, url, reqData, method, form = false) => {
     console.log(`${method} запрос для`);
     console.log(reqData);
-    let response = await fetch(`http://127.0.0.1:8000${url}`, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
+
+    let headers = {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Accept': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    }
+    if(form){
+        headers = {
             'Accept': 'application/json;charset=utf-8',
             'Authorization': `Bearer ${token}`
-        },
+        }
+    }
+    let response = await fetch(`http://127.0.0.1:8000${url}`, {
+        method: method,
+        headers: headers,
         body: reqData
     });
     return response;
 };
 
 
-const sendData = async (userData, url, reqData, method) => {
+const sendData = async (userData, url, reqData, method, form = false) => {
     let result = null;
     let newUser = userData;
     try {
@@ -79,7 +87,7 @@ const sendData = async (userData, url, reqData, method) => {
             newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
         }
         console.log("SUCCESS to refresh")
-        let response = await tryPostReq(token, url, reqData, method);
+        let response = await tryPostReq(token, url, reqData, method, form);
         console.log(result);
         if (response.status === 201 || response.status === 200) {
             result = await response.json()
