@@ -160,6 +160,7 @@ export default function EntityList() {
             }
         };
         fetchData();
+    // eslint-disable-next-line
     }, []);
 
     let listData;

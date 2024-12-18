@@ -53,8 +53,10 @@ const tryPostReq = async (token, url, reqData, method, form = false) => {
     }
     if(form){
         headers = {
+            // 'Content-Type': 'multipart/form-data;charset=utf-8',
             'Accept': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            
         }
     }
     let response = await fetch(`http://127.0.0.1:8000${url}`, {
