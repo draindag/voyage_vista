@@ -30,13 +30,17 @@ const checkToken = async (token) => {
 }
 
 const tryGetReq = async (token, url) => {
+    let headers =  {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Accept': 'application/json;charset=utf-8',
+        'Authorization': `Bearer ${token}`
+    };
+    if(token){
+        headers = {...headers, 'Authorization': `Bearer ${token}`}
+    }
     let response = await fetch(`http://127.0.0.1:8000${url}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json;charset=utf-8',
-            'Authorization': `Bearer ${token}`
-        },
+        headers: headers
     });
     return response;
 };
@@ -105,10 +109,10 @@ const fetchData = async (userData, url, needCheck = true) => {
     let result = null;
     let newUser = userData;
     try {
-        let token = userData.access_token;
+        let token = userData?.access_token;
         // console.log("CHECK")
         if(needCheck){
-            let check = await checkToken(userData?.access_token)
+            let check = await checkToken(token)
             if (!check) {
                 console.log("Refresh")
                 let refresh = await refreshToken(userData?.refresh_token)
@@ -125,10 +129,10 @@ const fetchData = async (userData, url, needCheck = true) => {
             result = await response.json()
             return { data: result, userData: newUser, message: "OK", action: "ok" };
         } else {
-            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail" };
+            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail", ex: "" };
         }
     } catch (e) {
-        return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except" };
+        return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", ex: e };
     }
 };
 
