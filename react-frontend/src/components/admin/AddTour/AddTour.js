@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './AddTour.css';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import { refreshToken, checkToken, tryGetReq, fetchData, sendData } from '../../general/web_ops';
-import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
+import { fetchData, sendData } from '../../general/web_ops';
+import { deleteCookie } from '../../general/cookie_ops';
 
 import PlusImage from '../../../resources/admin/Images/cricle_plus.png'
 
@@ -14,26 +14,31 @@ export default function AddTour(props) {
     let navigate = useNavigate();
     const { userData, setUserData } = useAuthContext();
 
-    const [state, setState] = useState({ 
-        image: null, 
-        imageToShow: null, 
-        prevImage: null, 
-        imageName: "файл не выбран", 
+    const [state, setState] = useState({
+        image: null,
+        imageToShow: null,
+        prevImage: null,
+        imageName: "файл не выбран",
+
+        countriesList: [{}],
+        categoriesList: [{}],
+        offersList: [{}],
         
-        countriesList: null,
-        categoriesList: null,
         chosenCounty: "",
         chosenCategory: "",
-        
+        chosenOffer: "",
+
         title: "",
         dateStart: "",
         dateEnd: "",
         price: 0,
         shortDesc: "",
-        desc: "", 
+        desc: "",
         ent_id: null
-     })
+    })
     let headerText = "тура";
+
+    console.log(state)
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -46,43 +51,35 @@ export default function AddTour(props) {
         }
     };
 
-
-
-//     "tour": {
-//     "tour_id": "a1b2c3d4-e56f-78g9-h0i1-j234k567l890",
-//     "tour_title": "Семейный отдых",
-//     "tour_description": "Отличный тур для всей семьи",
-//     "tour_text": "Полное описание тура...",
-//     "tour_price": 850,
-//     "price_with_discount": 765,
-//     "tour_start_date": "2024-08-01",
-//     "tour_end_date": "2024-08-15",
-//     "tour_image": "flask-backend/webapp/tour_images/a1b2c3d4-e56f-78g9-h0i1-j234k567l890.png",
-//     "category": {
-//       "category_id": "123e4567-e89b-12d3-a456-426614174000",
-//       "category_title": "Семейные туры",
-//       "category_description": "Туры, подходящие для семейного отдыха"
-//     },
-//     "country": {
-//       "country_id": "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62",
-//       "country_name": "Италия",
-//       "country_description": "Страна с богатой культурой"
-//     },
-//     "offers": [
-//       {
-//         "offer_id": "f1c5a1e2-34bc-4567-89ef-fedcba123456",
-//         "offer_title": "Скидка 10%",
-//         "discount_size": 10,
-//         "end_date": "2024-07-30"
-//       }
-//     ]
-//   }
     useEffect(() => {
-        if (props?.action === "upd") {
-            const callFetch = async () => {
-                const response = await fetchData(userData, `/api/admin_panel/tours/${id}/edit`);
+        const callFetch = async () => {
+            let response;
+            let newState;
+            let categories = [{}];
+            let countries = [{}];
+            let offers = [{}];
+            // Загрузка данных категорий и стран
+            response = await fetchData(userData, `/api`, false);
+            if (response.data) {
+                categories = response.data.categories;
+                countries = response.data.countries;
+            }
+            if (props?.action === "upd") {
+                response = await fetchData(userData, `/api/admin_panel/tours/${id}/edit`);
                 if (response.data) {
-                    let responseData = response.data["asd"];
+                    let responseData = response.data.tour;
+                    newState = {
+                        ...state,
+                        image: `/cover_images/${responseData.tour_image}`,
+                        imageToShow: `/cover_images/${responseData.tour_image}`,
+                        title: responseData.tour_title,
+                        dateStart: responseData.tour_start_date,
+                        dateEnd: responseData.tour_start_date,
+                        price: responseData.tour_price,
+                        shortDesc: responseData.tour_description,
+                        desc: responseData.tour_text,
+                        ent_id: responseData.tour_id
+                    }
                 }
                 else {
                     if (response.action === "unauth") {
@@ -95,11 +92,49 @@ export default function AddTour(props) {
                         alert(response.message);
                     }
                 }
+            }
+            newState = {
+                ...newState,
+                countriesList: countries,
+                categoriesList: categories,
+                chosenCounty: { value: countries[0].country_name, id: countries[0].country_id },
+                chosenCategory: { value: categories[0].category_title, id: categories[0].category_id },
+            }
+            setState({ ...state, ...newState })
 
-            };
-            callFetch();
         }
+
+        callFetch();
+
+
+        // eslint-disable-next-line    
     }, [props]);
+
+
+    // state?.countriesList.map( (item)=>{<>
+    //     <option value={item.country_name}>{item.country_name}</option>
+    // </>
+    // });
+    let countriesOptions = [];
+    state?.countriesList.forEach(elem => {
+        countriesOptions.push(
+            <option value={elem.country_name}>{elem.country_name}</option>
+        );
+    });
+
+    let categoriesOptions = [];
+    state?.categoriesList.forEach(elem => {
+        categoriesOptions.push(
+            <option value={elem.category_title}>{elem.category_title}</option>
+        );
+    });
+
+    let offersOptions = [];
+    state?.offersList.forEach(elem => {
+        offersOptions.push(
+            <option value={elem.offer_title}>{elem.offer_title}</option>
+        );
+    });
 
 
     return (<>
@@ -109,27 +144,45 @@ export default function AddTour(props) {
                 <div className='form-container'>
                     <div>
                         <div style={{ marginBottom: '6px' }}><label>Название {headerText}</label></div>
-                        <input className='wide-input no-file-input' type='text' placeholder={`Введите название ${headerText}`}></input>
+                        <input className='wide-input no-file-input' type='text' placeholder={`Введите название ${headerText}`}
+                            onChange={(e) => { setState({ ...state, title: e.target.value }) }}
+                        ></input>
                         <div className='add-left-block'><label>Выберите страну</label>
-                            <select style={{ width: "300px", height: "50px", textAlign: "center" }}>
-                                <option value='val1'>Val1</option>
-                                <option value='val2'>Val2</option>
+                            <select value={state.chosenCounty.value} style={{ width: "300px", height: "50px", textAlign: "center" }}
+                                onChange={(e) => {
+                                    console.log(e.target.value)
+                                    let elem = state?.countriesList.find(item => item.country_name === e.target.value)
+                                    setState({ ...state, chosenCounty: { value: elem?.country_name, id: elem?.country_id } })
+                                }}>
+                                {countriesOptions}
                             </select>
                         </div>
                         <div className='add-left-block'><label>Выберите категорию</label>
-                            <select style={{ width: "300px", height: "50px", textAlign: "center" }} onChange={(e) => console.log(e.target.key)}>
-                                <option value='val1'>Val1</option>
-                                <option value='val2'>Val2</option>
+                            <select value={state.chosenCategory.value}
+                                style={{ width: "300px", height: "50px", textAlign: "center" }}
+                                onChange={(e) => {
+                                    console.log(e.target.value)
+                                    let elem = state?.categoriesList.find(item => item.category_title === e.target.value)
+                                    setState({ ...state, chosenCategory: { value: elem?.category_title, id: elem?.category_id } })
+                                }}>
+                                {categoriesOptions}
                             </select>
                         </div>
                         <div className='add-left-block'><label>Дата начала тура</label>
-                            <input type='date' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }}></input>
+                            <input type='date' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }}
+                                onChange={(e) => { setState({ ...state, dateStart: e.target.value }) }}
+                            ></input>
                         </div>
                         <div className='add-left-block'><label>Дата окончания тура</label>
-                            <input type='date' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }}></input>
+                            <input type='date' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }}
+                                onChange={(e) => { setState({ ...state, dateEnd: e.target.value }) }}
+                            ></input>
                         </div>
                         <div className='add-left-block'><label>Стоимость тура</label>
-                            <input type='number' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }} placeholder='Введите цену'></input>
+                            <input type='number' className='no-file-input' style={{ width: "200px", padding: "0 30px 0 20px" }}
+                                placeholder='Введите цену'
+                                onChange={(e) => { setState({ ...state, price: e.target.value }) }}
+                            ></input>
                         </div>
                     </div>
                     <div>
@@ -149,13 +202,31 @@ export default function AddTour(props) {
                 <div style={{ position: 'relative', top: '-30px' }}>
                     <div>
                         <div style={{ marginBottom: '6px' }}><label>Краткое описание {headerText}</label></div>
-                        <textarea className='wide-input hight-input no-file-input' style={{ height: "140px" }} placeholder={`Введите описание ${headerText}`}></textarea>
+                        <textarea className='wide-input hight-input no-file-input' style={{ height: "140px" }}
+                            placeholder={`Введите описание ${headerText}`}
+                            onChange={(e) => { setState({ ...state, shortDesc: e.target.value }) }}
+                        ></textarea>
                     </div>
                     <div>
                         <div style={{ marginBottom: '6px' }}><label>Описание {headerText}</label></div>
-                        <textarea className='wide-input hight-input no-file-input' placeholder={`Введите описание ${headerText}`}></textarea>
+                        <textarea className='wide-input hight-input no-file-input' placeholder={`Введите описание ${headerText}`}
+                            onChange={(e) => { setState({ ...state, desc: e.target.value }) }}
+                        ></textarea>
                     </div>
                 </div>
+                <div className='form-container' style={{ justifyContent: "start" }}>
+                    <div className='add-left-block'><label>Выберите акцию</label>
+                        <select value={state.chosenOffer.value}
+                            style={{ width: "300px", height: "50px", textAlign: "center" }}
+                            onChange={(e) => {
+                                let elem = state?.offersList.find(item => item.offer_title === e.target.value)
+                                setState({ ...state, chosenOffer: { value: elem?.offer_title, id: elem?.offer_id } })
+                            }}>
+                            {offersOptions}
+                        </select>
+                    </div>
+                </div>
+
                 <div className='form-container' style={{ justifyContent: "end" }}>
                     <div className='submit-button-block'>
                         <button type='submit' className='primary-btn'>Добавить</button>

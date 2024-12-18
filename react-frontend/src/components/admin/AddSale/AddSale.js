@@ -3,8 +3,8 @@ import './AddSale.css';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import { refreshToken, checkToken, fetchData, sendData } from '../../general/web_ops';
-import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
+import { fetchData, sendData } from '../../general/web_ops';
+import { deleteCookie } from '../../general/cookie_ops';
 
 
 export default function AddSale(props) {
@@ -29,7 +29,8 @@ export default function AddSale(props) {
                         offer_title: data.offer_title,
                         discount_size: data.discount_size,
                         end_date: data.end_date
-                    })
+                    });
+                    setUserData(response.userData);
 
                     return response;
                 }
@@ -50,6 +51,7 @@ export default function AddSale(props) {
             };
             callFetch();
         }
+    // eslint-disable-next-line
     }, [])
 
     const sendForm = async () => {
@@ -69,6 +71,7 @@ export default function AddSale(props) {
         const response = await sendData(userData, url, JSON.stringify(data), method);
         if (response.data) {
             console.log(response)
+            setUserData(response.userData);
             alert("Успешно!");
             navigate("/admin/entitylist?name=offers");
         }

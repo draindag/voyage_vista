@@ -1,8 +1,3 @@
-import { deleteCookie } from "./cookie_ops";
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { useAuthContext } from "./AuthContext/AuthContext";
-
 const refreshToken = async (token) => {
     let response = await fetch("http://127.0.0.1:8000/api/refresh", {
         method: 'POST',
@@ -71,22 +66,24 @@ const tryPostReq = async (token, url, reqData, method, form = false) => {
 };
 
 
-const sendData = async (userData, url, reqData, method, form = false) => {
+const sendData = async (userData, url, reqData, method, form = false, needCheck = true) => {
     let result = null;
     let newUser = userData;
     try {
         let token = userData.access_token;
-        console.log("CHECK")
-        let check = await checkToken(userData?.access_token)
-        if (!check) {
-            console.log("Refresh")
-            let refresh = await refreshToken(userData?.refresh_token)
-            if (!refresh) {
-                return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
+        // console.log("CHECK")
+        if(needCheck){
+            const check = await checkToken(userData?.access_token)
+            if (!check) {
+                // console.log("Refresh")
+                let refresh = await refreshToken(userData?.refresh_token)
+                if (!refresh) {
+                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
+                }
+                newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
             }
-            newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
         }
-        console.log("SUCCESS to refresh")
+        // console.log("SUCCESS to refresh")
         let response = await tryPostReq(token, url, reqData, method, form);
         console.log(result);
         if (response.status === 201 || response.status === 200) {
@@ -102,22 +99,24 @@ const sendData = async (userData, url, reqData, method, form = false) => {
 };
 
 
-const fetchData = async (userData, url) => {
+const fetchData = async (userData, url, needCheck = true) => {
     let result = null;
     let newUser = userData;
     try {
         let token = userData.access_token;
-        console.log("CHECK")
-        let check = await checkToken(userData?.access_token)
-        if (!check) {
-            console.log("Refresh")
-            let refresh = await refreshToken(userData?.refresh_token)
-            if (!refresh) {
-                return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
+        // console.log("CHECK")
+        if(needCheck){
+            let check = await checkToken(userData?.access_token)
+            if (!check) {
+                console.log("Refresh")
+                let refresh = await refreshToken(userData?.refresh_token)
+                if (!refresh) {
+                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
+                }
+                newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
             }
-            newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
         }
-        console.log("SUCCESS to refresh")
+        // console.log("SUCCESS to refresh")
         let response = await tryGetReq(token, url);
         console.log(result);
         if (response.status === 200) {

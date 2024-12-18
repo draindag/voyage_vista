@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './AddCountryOrCategory.css';
 
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-import { refreshToken, checkToken, tryGetReq, fetchData, sendData } from '../../general/web_ops';
-import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
+import { fetchData, sendData } from '../../general/web_ops';
+import { deleteCookie } from '../../general/cookie_ops';
 
 import PlusImage from '../../../resources/admin/Images/cricle_plus.png'
 
@@ -53,7 +53,8 @@ export default function AddCountryOrCategory(props) {
                         image: `/cover_images/${responseData[`${nameField}_image`]}`,
                         imageToShow: `/cover_images/${responseData[`${nameField}_image`]}`,
                         prevImage: `/cover_images/${responseData[`${nameField}_image`]}`
-                    })
+                    });
+                    setUserData(response.userData);
                 }
                 else {
                     if (response.action === "unauth") {
@@ -70,7 +71,8 @@ export default function AddCountryOrCategory(props) {
             };
             callFetch();
         }
-    }, [props]);
+    // eslint-disable-next-line    
+    }, []);
 
 
     const sendForm = async () => {
@@ -84,7 +86,7 @@ export default function AddCountryOrCategory(props) {
             method = 'PUT';
             url = `/api/admin_panel/${apiPath}/${id}/edit`;
             formData.append(`${nameField}_id`, state.ent_id);
-            if (state.image != state.prevImage) {
+            if (state.image !== state.prevImage) {
                 console.log("ОДИНАКОВЫЕ")
                 formData.append(`cover_image`, state.image)
             }
@@ -99,6 +101,7 @@ export default function AddCountryOrCategory(props) {
         if (response.action === "ok") {
             console.log(response)
             alert("Успешно!");
+            setUserData(response.userData);
             navigate(`/admin/entitylist?name=${apiPath}`);
         }
         else {
