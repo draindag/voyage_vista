@@ -11,7 +11,6 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from webapp import db
 
-upload_folder = os.getenv("UPLOADED_PHOTOS_DEST")
 file_ext = os.getenv("COVER_IMAGES_EXT")
 
 
@@ -26,7 +25,7 @@ class Category(db.Model):
 
     @property
     def category_image(self):
-        return f"{upload_folder}{self.category_id}{file_ext}"
+        return f"{self.category_id}{file_ext}"
 
     def __repr__(self):
         return f"<Category(name={self.category_title}, description={self.category_description})>"

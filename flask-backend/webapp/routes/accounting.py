@@ -52,6 +52,19 @@ def refresh():
         "access_token": access_token}), 200
 
 
+@accounting_bp.route('/check_token', methods=['POST'])
+@jwt_required()
+@swag_from("swagger_definitions/check_token.yaml")
+def check_token():
+    """
+        Проверяет истёк ли access токен
+        ---
+        """
+
+    return jsonify({"success": True,
+         "message": "Токен ещё жив"}), 200
+
+
 @accounting_bp.route('/registration', methods=['POST'])
 @anonymous_required
 @swag_from("swagger_definitions/registration.yaml")
