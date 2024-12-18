@@ -1,0 +1,42 @@
+Проверяет статус подключения аккаунта
+---
+parameters:
+  - name: acc_id
+    in: path
+    type: number
+    format: integer
+    required: true
+    description: ID телеграм аккаунта
+  - name: secret_key
+    in: query
+    type: string
+    required: true
+    description: Секретный api ключ для внутренней логики бота
+
+responses:
+  200:
+    description: Аккаунт подключен / не подключен
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        connected:
+          type: boolean
+          example: true
+        user_id:
+          type: integer
+          example: 12345678
+
+  403:
+    description: Секретный api ключ не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Неверный api ключ"

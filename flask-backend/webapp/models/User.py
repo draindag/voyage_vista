@@ -7,6 +7,7 @@
 """
 
 import uuid
+from hashlib import sha256
 
 from sqlalchemy import CheckConstraint
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -15,6 +16,7 @@ from webapp import db
 from sqlalchemy.dialects.postgresql import UUID
 from webapp.models.Reply import Reply
 from webapp.models.Review import Review
+from webapp.models.TelegramAccount import TelegramAccount
 from webapp.models.FavTour import fav_tours
 from webapp.models.Transaction import transactions
 
@@ -33,6 +35,8 @@ class User(db.Model):
 
     fav_tours = db.relationship('Tour', secondary=fav_tours, backref='favoured_by', lazy='dynamic')
     transactions = db.relationship('Tour', secondary=transactions, backref='paid_by', lazy='dynamic')
+
+    telegram_account = db.relationship('TelegramAccount', backref='user', lazy='joined', uselist=False)
 
     __table_args__ = (
         CheckConstraint("role IN ('visitor', 'moderator', 'admin')", name="users_role_check"),
@@ -55,6 +59,12 @@ class User(db.Model):
 
     def set_moderator_role(self):
         self.role = "moderator"
+
+    def get_verification_code(self) -> str:
+        return sha256(self.email.encode("utf-8")).hexdigest()[:8].upper()
+
+    def is_verification_code_valid(self, verification_code: str) -> bool:
+        return verification_code == self.get_verification_code()
 
     def __repr__(self):
         return '<User {}>'.format(self.login)

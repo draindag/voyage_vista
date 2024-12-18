@@ -1,0 +1,51 @@
+Отвязывает телеграм аккаунт от рассылки уведомлений
+---
+parameters:
+  - name: acc_id
+    in: path
+    type: number
+    format: integer
+    required: true
+    description: ID телеграм аккаунта
+  - name: secret_key
+    in: query
+    type: string
+    required: true
+    description: Секретный api ключ для внутренней логики бота
+
+responses:
+  200:
+    description: Аккаунт успешно отвязан от рассылки
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Аккаунт успешно отключён от отправки уведомлений"
+
+  401:
+    description: Аккаунт не найден
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Такого аккаунта не существует"
+
+  403:
+    description: Секретный api ключ не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Неверный api ключ"
