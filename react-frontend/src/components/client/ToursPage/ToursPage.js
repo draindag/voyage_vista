@@ -33,7 +33,10 @@ export default function ToursPage() {
             path = `/api/tours/categories/${id}`;
             break;
         case 'by-country':
-            path = `/api/tours/categories/${id}`;
+            path = `/api/tours/countries/${id}`;
+            break;
+        case 'discount':
+            path = `/api/tours/special_offers`;
             break;
         default:
             path = '/api/tours/popular';

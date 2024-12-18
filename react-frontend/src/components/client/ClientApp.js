@@ -16,6 +16,7 @@ function ClientApp() {
                 <Route path='/reg' element={<AuthPage />}></Route>
                 <Route path='/tours' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
                 <Route path='/tour' element={<ToursPage />}></Route>
+                <Route path='/tour/:id' element={<ToursPage />}></Route>
             </Routes>
         </>
     );
