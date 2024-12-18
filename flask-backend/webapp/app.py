@@ -95,7 +95,7 @@ def create_app(config: dict = None):
         return jsonify({"success": False,
             "message": "Неверный токен"}), 401
 
-    app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, url_prefix="/api")
 
     app.register_blueprint(tours_bp,  url_prefix="/api/tours")
 
