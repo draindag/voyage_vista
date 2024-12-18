@@ -140,6 +140,21 @@ def show_offers_for_admin():
                     "next_page": offers.has_next}), 200
 
 
+@admin_bp.route("/offers_all", methods=["GET"])
+@swag_from("swagger_definitions/show_offers_all.yaml")
+def show_offers_all():
+    """
+       Возвращает все акции для выпадающего списка
+       ---
+       """
+
+    offers = SpecialOffer.query.all()
+    offers_schema = OfferSchema(many=True)
+    offers_data = offers_schema.dump(offers)
+    return jsonify({"success": True,
+                    "special_offers": offers_data}), 200
+
+
 @admin_bp.route("/categories/new", methods=["POST"])
 @jwt_required()
 @swag_from("swagger_definitions/add_category.yaml")
