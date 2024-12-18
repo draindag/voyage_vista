@@ -1,0 +1,73 @@
+Привязывает телеграм аккаунт к рассылке уведомлений
+---
+parameters:
+  - name: acc_id
+    in: path
+    type: number
+    format: integer
+    required: true
+    description: ID телеграм аккаунта
+  - name: data
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        user_email:
+          type: string
+          format: email
+          description: Email модератора
+        verification_code:
+          type: string
+          description: Код верификации модератора
+  - name: secret_key
+    in: query
+    type: string
+    required: true
+    description: Секретный api ключ для внутренней логики бота
+
+responses:
+  201:
+    description: Аккаунт успешно привязан к рассылке уведомлений
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+
+  400:
+    description: Произошла ошибка при привязке аккаунта
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "У пользователя уже есть привязанный аккаунт"
+
+  401:
+    description: Аккаунт не найден
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Пользователь не найден"
+
+  403:
+    description: Секретный api ключ не прошел проверку
+    schema:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "Неверный api ключ"

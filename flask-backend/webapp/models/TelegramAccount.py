@@ -1,3 +1,9 @@
+"""
+Этот модуль определяет модель TelegramAccount для работы с телеграм аккаунтами.
+
+Таблица связывает идентификаторы телеграм аккаунта и  профиль модератора на сайте.
+"""
+
 from webapp import db
 from sqlalchemy.dialects.postgresql import UUID
 

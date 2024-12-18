@@ -98,7 +98,8 @@ def registration():
         "success": True,
         "message": "Пользователь успешно зарегистрирован!",
         "access_token": access_token,
-        "refresh_token": refresh_token
+        "refresh_token": refresh_token,
+        "role": "visitor"
     }), 201
 
 
@@ -129,7 +130,8 @@ def login():
         refresh_token = create_refresh_token(identity=user.login)
         return jsonify({"success": True,
                         "access_token": access_token,
-                        "refresh_token": refresh_token
+                        "refresh_token": refresh_token,
+                        "role": user.role
         }), 200
 
     return jsonify({"success": False,
