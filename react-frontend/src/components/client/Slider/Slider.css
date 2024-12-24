@@ -8,8 +8,15 @@
   border: 1px solid black;
 }
 
-.card img {
+.image-container {
   width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.card img {
+  height: 100%;
+  width: auto;
 }
 
 .card-container {
@@ -39,7 +46,7 @@
   width: 80%;
 }
 
-.Centered-slider{
+.Centered-slider {
   width: 1660px !important;
 }
 

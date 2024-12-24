@@ -2,6 +2,7 @@
     padding-left: 50px;
     padding-right: 50px;
     height: calc(100% - 110px);
+    overflow: auto;
 }
 
 .entity-list {
@@ -21,10 +22,15 @@
 }
 
 .element-btn {
+    display: inline;
+    cursor: pointer;
+    font: inherit;
+    line-height: normal; /* Стандартная высота строки */
+    border: 0px;
     border-radius: 10px;
     background-color: #285785CC;
     margin-right: 12px;
-    height: 60px;
+    height: 40px;
     padding: 10px 34px;
     color: #FFFFFF;
     text-decoration: none;
@@ -40,4 +46,11 @@
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
 
+}
+
+.paginator{
+    display: flex;
+}
+.paginator button{
+    color: black;
 }

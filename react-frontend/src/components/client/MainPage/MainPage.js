@@ -1,13 +1,16 @@
 import '../../../resources/constants.css';
 
 import './MainPage.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import buttonImg from '../../../resources/MainPage/Images/arrow_tour.png';
 import man from '../../../resources/MainPage/Images/man.png';
 import girl from '../../../resources/MainPage/Images/girl.png';
 import train from '../../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../Slider/Slider';
 import SlideImage from '../../../resources/Slider/Images/slideImg.png'
+import { useAuthContext } from '../../general/AuthContext/AuthContext';
+
+import { fetchData } from '../../general/web_ops';
 
 
 const imageArr = [
@@ -45,21 +48,69 @@ const settings = {
 
 export default function MainPage() {
 
-    let sliderObjects = []
-    imageArr.forEach(item => {
-        sliderObjects.push(<>
+    const { userData, setUserData } = useAuthContext();
+
+    const [state, setState] = useState([]);
+
+    let categCards = [
+        <>
+            <a href='/tour?type=popular' style={{ textDecoration: "none", }}>
+                <div>
+                    <div className='card'>
+                        <div className='image-container'>
+                            <img src={``} alt="" />
+                        </div>
+                        <div className='card-container'>
+                            <p>Популярные</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </>,
+        <>
+            <a href='/tour?type=discount' style={{ textDecoration: "none", }}>
+                <div>
+                    <div className='card'>
+                        <div className='image-container'>
+                            <img src={``} alt="" />
+                        </div>
+                        <div className='card-container'>
+                            <p>Со скидкой</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </>,
+    ];
+    state.forEach(item => {
+        categCards.push(<>
+            <a href={`/tour/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
             <div>
                 <div className='card'>
-                    <div>
-                        <img src={item} alt="" />
+                    <div className='image-container'>
+                        <img src={`/cover_images/${item.category_image}`} alt="" />
                     </div>
                     <div className='card-container'>
-                        <p>Text</p>
+                        <p>{item.category_title}</p>
                     </div>
                 </div>
             </div>
+        </a>
         </>)
-    })
+    });
+
+    useEffect(() => {
+        const callFetch = async () => {
+            const response = await fetchData(userData, "/api", false);
+            console.log(response)
+            if (response.data) {
+                setState(response.data.categories);
+            }
+        };
+        callFetch();
+        // eslint-disable-next-line 
+    }, []);
+
     return (
         <>
             <div className="header-main">
@@ -85,7 +136,7 @@ export default function MainPage() {
                     <img src={man} alt="" />
                 </div>
                 {/* {sliderObjects} */}
-                <SimpleSlider sliderObjects={sliderObjects} settings={settings} main={true}/>
+                <SimpleSlider sliderObjects={categCards} settings={settings} main={true} />
 
                 <h1>Почему стоит выбрать нас?</h1>
                 <div className='container'>

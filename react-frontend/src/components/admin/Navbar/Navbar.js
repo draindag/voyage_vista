@@ -16,7 +16,7 @@ export default function Navbar() {
                     <a className='primary-btn' href="/admin/entitylist?name=countries"><span>Страны</span></a>
                     <a className='primary-btn' href="/admin/entitylist?name=tours"><span>Туры</span></a>
                     <a className='primary-btn' href="/admin/entitylist?name=offers"><span>Акции</span></a>
-                    <a className='primary-btn' href="/admin"><span>Добавить пользователя</span></a>
+                    <a className='primary-btn' href="/admin/moderreg"><span>Добавить пользователя</span></a>
                     <a className='primary-btn' href="/"><span>На сайт</span></a>
                 </div>
             </div>
