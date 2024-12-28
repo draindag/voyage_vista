@@ -1,0 +1,138 @@
+.tours-header {
+    height: 531px;
+    width: 100%;
+    background: blue;
+    margin-bottom: 108px;
+}
+
+.triangle-back {
+    width: 100%;
+    height: 100%;
+    background: white;
+    /* Цвет фона */
+    clip-path: polygon(50% 70%, 0% 100%, 100% 100%);
+    /* Треугольник */
+}
+
+.tours-container {
+    margin: auto;
+    max-width: 1712px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.tour-card {
+    height: 487px;
+    width: 457px;
+    border: 1px solid black;
+    margin-bottom: 100px;
+}
+
+.tour-card-image-container {
+    width: 100%;
+    /* Ширина контейнера на всю ширину родителя */
+    height: 200px;
+    /* Задайте желаемую высоту */
+    overflow: hidden;
+    /* Скрываем часть изображения, выходящую за границы */
+    /* position: relative; */
+    /* display: flex; */
+}
+
+.tour-card-image-container img {
+    height: auto;
+    width: 100%;
+}
+
+.tour-card-info-container {
+    padding: 20px 10px 20px 10px;
+    height: 247px;
+}
+
+.tour-card-info-container h1 {
+    height: auto;
+    vertical-align: bottom;
+
+    font-family: Inter;
+    font-size: 46px;
+    font-weight: 200;
+    line-height: 55.67px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+
+    text-align: center;
+    margin: 0px;
+}
+
+.tour-card-info-container h2 {
+    width: 100%;
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 200;
+    line-height: 38.73px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    
+    text-align: center;
+    margin: 0px;
+}
+
+.price_block{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.price_block span{
+    font-family: Inter;
+    font-size: 46px;
+    font-weight: 300;
+    line-height: 55.67px;
+    text-align: left;
+    text-decoration-line: line-through;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    
+    margin: 0 10px 0 0;
+}
+
+.tour-card-info-container h3 {
+    font-family: Inria Serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 43.16px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+
+    text-align: center;
+    margin: 0px;
+}
+
+.tour-card-info {
+    height: 80px;
+    padding-top: 27px;
+}
+
+.tour-card-info p {
+    vertical-align: end;
+    margin: 0 0 10px 0px;
+
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 19.36px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}

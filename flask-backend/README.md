@@ -70,7 +70,8 @@ sudo docker pull nordraven/voyage-vista:latest
 ```
 Создание и запуск контейнера:
 ```bash
-sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest
+sudo docker run --name voyage-vista-db --network host -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest # Linux
+docker run --name voyage-vista-db -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 nordraven/voyage-vista:latest # Windows
 ```
 Для последующих запусков контейнера:
 ```bash
@@ -99,6 +100,9 @@ flask --app run.py db downgrade
 ## Запуск проекта
 
 Файлом для запуска проекта является run.py
+```bash
+python run.py
+```
 
 
 ## Документация по backend части проекта
@@ -117,4 +121,16 @@ Swagger-документация по API-путям проекта доступ
 - Пароль для пользователя admin - admin
 
 Так как картинки, в отличие от данных в БД, не могут добавляться и удаляться с каждым воспроизведением миграции, 
-необходимо самостоятельно очистить папку `/flask-backend/webapp/cover_images`, когда тестовые обложки перестанут быть нужны
+необходимо самостоятельно очистить папку `/react-frontend/public/cover_images`, когда тестовые обложки перестанут быть нужны
+
+## Проверка работоспособности бота в Telegram / работа с ngrok
+Для обеспечения работы вебхука телеграм бота используется сервис ngrok. После регистрации и установки
+идет настройка конфигурации приложения
+```bash
+ngrok config add-authtoken 2q6vedUThQBnMHXKkD0hagAep5t_TKqPxvweStwsMgwUEiCx
+```
+После этого в приложении ngrok необходимо выполнить команду 
+```bash
+ngrok http --url=adequately-internal-bullfrog.ngrok-free.app 8000
+```
+трафик локального приложения теперь станет доступен глобально

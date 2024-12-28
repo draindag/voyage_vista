@@ -1,0 +1,72 @@
+@import url("../../../resources/constants.css");
+
+.tours-categoryes-bgpage {
+    background-image: url("../../../resources/ToursCategoryesPage/Images/image.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 1215px;
+}
+
+.tours-categoryes-header-text {
+    position: absolute;
+    max-width: 1230px;
+    text-align: center;
+    top: 187px;
+    left: 99px;
+    font-family: Beiruti;
+    font-size: 110px;
+    font-weight: 200;
+    line-height: 168px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    
+
+}
+
+
+.card-tc{
+    display: flex;
+    width: 1238px;
+    height: 700px;
+    justify-content: space-between;
+    align-items: center;
+    border: 4px solid #186fff;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.card-tc img{
+    width: 471px;
+    height: 594px;
+    border: 1px solid;
+    border-radius: 50px 0 0 0;
+    
+}
+
+.card-tc h1{
+    font-family: Bebas Neue;
+    font-size: 50px;
+    font-weight: 400;
+    line-height: 60px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+    margin-bottom: 70px;
+    
+}
+
+.card-tc p{
+    font-family: Bebas Neue;
+font-size: 20px;
+font-weight: 400;
+line-height: 45px;
+text-align: left;
+text-underline-position: from-font;
+text-decoration-skip-ink: none;
+
+max-width: 580px;
+
+}

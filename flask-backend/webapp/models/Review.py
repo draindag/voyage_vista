@@ -21,4 +21,4 @@ class Review(db.Model):
     tour_id = db.Column(UUID(as_uuid=True), db.ForeignKey('tours.tour_id'), nullable=False)
 
     def __repr__(self):
-        return '<Reply {}>'.format(self.reply_text)
+        return '<Reply {}>'.format(self.review_text)

@@ -45,12 +45,16 @@ responses:
         refresh_token:
           type: string
           description: Токен обновления для получения нового токена доступа
+        role:
+          type: string
+          description: Роль зарегистрировавшегося пользователя
     examples:
       application/json:
         success: true
         message: "Пользователь успешно зарегистрирован!"
         access_token: "eyJhbGciOiJIUzI1NiIsInR..."
         refresh_token: "eyJhbGciOiJIUzI1NiIsInR..."
+        role: "visitor"
 
   400:
     description: Данные для регистрации не прошли проверку

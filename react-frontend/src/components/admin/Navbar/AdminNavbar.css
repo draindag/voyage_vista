@@ -1,0 +1,47 @@
+@import url("../../../resources/constants.css");
+
+.header-admnavbar {
+    height: 110px;
+    margin-right: 10px;
+    margin-left: 200px;
+}
+
+.admnavbar {
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #6990b6;
+}
+
+.admnavbar-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    
+    text-align: left;
+    text-wrap: wrap;
+}
+
+.admnavbar-content a{
+    text-decoration: none;
+    margin-right: 40px;
+    /* display: block; */
+    align-items: center;
+    color: var(--nav-link-color);
+    transition: 0.1s ease;
+}
+
+.admnavbar-content a:hover{
+    color: #c9c9c9;
+}
+
+
+.admnavbar-content span {
+    display: inline-block;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+

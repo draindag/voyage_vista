@@ -11,15 +11,18 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify
+from flask_cors import CORS
 from flask_jwt_extended.exceptions import JWTDecodeError, NoAuthorizationError
 from flask_uploads import IMAGES, configure_uploads
 
 from jwt import ExpiredSignatureError, InvalidTokenError
 
 from webapp import db, migrate, ma, swagger, jwt, photos
+from webapp.bot import create_webhook
 from webapp.routes import main_bp
 from webapp.routes.accounting import accounting_bp
 from webapp.routes.admin_panel import admin_bp
+from webapp.routes.notifications import notifications_bp
 from webapp.routes.tours import tours_bp
 
 load_dotenv()
@@ -52,17 +55,25 @@ def create_app(config: dict = None):
 
     if config is not None:
         app.config.update(config)
+
+    CORS(app)
     db.init_app(app)
     migrate.init_app(app, db, compare_type=True)
     ma.init_app(app)
     jwt.init_app(app)
     swagger.init_app(app)
     configure_uploads(app, photos)
+    create_webhook(app)
 
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({"success": False,
             'message': 'Страница не найдена'}), 404
+
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({"success": False,
+                        'message': 'Что-то пошло не так, пожалуйста, повторите попытку позже'}), 500
 
     @app.errorhandler(NoAuthorizationError)
     def handle_missing_authorization_header(ex):
@@ -84,12 +95,14 @@ def create_app(config: dict = None):
         return jsonify({"success": False,
             "message": "Неверный токен"}), 401
 
-    app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, url_prefix="/api")
 
     app.register_blueprint(tours_bp,  url_prefix="/api/tours")
 
     app.register_blueprint(accounting_bp, url_prefix="/api")
 
     app.register_blueprint(admin_bp, url_prefix="/api/admin_panel")
+
+    app.register_blueprint(notifications_bp)
 
     return app

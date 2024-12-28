@@ -1,18 +1,14 @@
-Возвращает все категории туров для слайдера и страны для выпадающего списка на главной
+Возвращает все страны для выпадающего списка на главной
 ---
 responses:
   200:
-    description: Вернул все категории и страны
+    description: Вернул все страны
     schema:
         type: object
         properties:
           success:
             type: boolean
             description: Показатель успеха/неуспеха
-          categories:
-              type: array
-              items:
-                $ref: '#/definitions/Category'
           countries:
               type: array
               items:
@@ -20,11 +16,6 @@ responses:
     examples:
         application/json:
           success: true
-          categories:
-              - category_id: "e8c7c3d4-e23a-4b91-b770-1b884bfc3fda"
-                category_title: "Приключения"
-                category_description: "Описание приключений"
-                category_image: "flask-backend/webapp/cover_images/e8c7c3d4-e23a-4b91-b770-1b884bfc3fda.png"
           countries:
               - country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
                 country_name: "Италия"

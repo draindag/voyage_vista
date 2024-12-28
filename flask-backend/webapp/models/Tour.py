@@ -20,7 +20,6 @@ from webapp.models.Review import Review
 from webapp.models.FavTour import fav_tours
 from webapp.models.OffersAndTours import offers_tours
 
-upload_folder = os.getenv("UPLOADED_PHOTOS_DEST")
 file_ext = os.getenv("COVER_IMAGES_EXT")
 
 
@@ -52,7 +51,7 @@ class Tour(db.Model):
 
     @property
     def tour_image(self):
-        return f"{upload_folder}{self.tour_id}{file_ext}"
+        return f"{self.tour_id}{file_ext}"
 
     def __repr__(self):
         return f"<Tour(title={self.tour_title}, price={self.tour_price})>"

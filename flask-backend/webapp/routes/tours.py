@@ -13,6 +13,7 @@ from marshmallow import EXCLUDE, ValidationError
 from sqlalchemy import func
 
 from webapp import db
+from webapp.bot import send_notification
 from webapp.models.Category import Category
 from webapp.models.Reply import Reply
 from webapp.models.Review import Review
@@ -437,6 +438,8 @@ def add_reply(tour_id: str):
             if parent_reply.replies:
                 return jsonify({"success": False,
                                 "message": "На данный комментарий уже дан ответ"}), 400
+    else:
+        send_notification(current_user.login, tour.category.category_title, tour.tour_title, reply.reply_text)
 
     db.session.add(reply)
     db.session.commit()

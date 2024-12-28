@@ -1,0 +1,118 @@
+@import url("../../../resources/constants.css");
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    font-family: var(--logo-font);
+    font-size: 40px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 56px;
+    text-align: left;
+    color: var(--nav-logo--text-color);
+    padding-right: 10px;
+}
+
+.header-navbar {
+    width: 1412px;
+    height: 110px;
+    top: 30px;
+    left: 405px;
+    gap: 0px;
+    border-radius: 30px 30px 30px 30px;
+    opacity: 0px;
+    background: var(--navbar-background);
+    margin-right: 10px;
+    transition: background-color 0.5s ease;
+}
+
+.scrolled {
+    background: #617eef;
+    transition: background-color 0.5s ease;
+}
+
+.navbar {
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    transition: background-color 0.5s ease;
+}
+
+.navbar-content {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+    font-family: var(--nav-link-font);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29.05px;
+    text-align: left;
+    text-wrap: wrap;
+}
+
+.navbar-content a, button{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: var(--nav-link-color);
+    transition: 0.1s ease;
+}
+
+.navbar-content button {
+    background: none;
+    border: none;
+    font: inherit; /* Наследует шрифт от родителя */
+    cursor: pointer; /* Указывает, что это кнопка */
+}
+
+
+.navbar-content a:hover, button:hover{
+    color: #c9c9c9;
+}
+
+.navbar-content img {
+    padding-right: 12px;
+}
+
+.navbar-content span {
+    display: inline-block;
+    max-width: 178px;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+
+header p {
+    color: #FFFFFF99;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    white-space: normal;
+    overflow-wrap: break-word;
+
+}
+
+
+
+@media (max-width: 600px) {
+    /* Стили для мобильных */
+}
+
+/* Для планшетов (от 601px до 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    /* Стили для планшетов */
+}
+
+/* Для настольных компьютеров (от 1025px до 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    /* Стили для настольных */
+}
+
+/* Для больших экранов (больше 1440px) */
+@media (min-width: 1441px) {
+    /* Стили для больших экранов */
+}
