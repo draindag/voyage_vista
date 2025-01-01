@@ -101,7 +101,7 @@ export default function MainPage() {
 
     useEffect(() => {
         const callFetch = async () => {
-            const response = await fetchData(userData, "/api", false);
+            const response = await fetchData(userData, "/api/categories_all", false);
             console.log(response)
             if (response.data) {
                 setState(response.data.categories);
