@@ -120,14 +120,17 @@ export default function AddTour(props) {
             let chosenCategoryTmp;
 
             // Загрузка данных категорий и стран
-            response = await fetchData(userData, `/api`, false);
+            response = await fetchData(userData, `/api/categories_all`, false);
             if (response.data) {
                 categories = response.data.categories;
-                countries = response.data.countries;
-                
-                chosenCountyTmp= { value: countries[0].country_name, id: countries[0].country_id };
                 chosenCategoryTmp= { value: categories[0].category_title, id: categories[0].category_id };
             }
+            response = await fetchData(userData, `/api/countries_all`, false);
+            if (response.data) {
+                countries = response.data.countries;
+                chosenCountyTmp= { value: countries[0].country_name, id: countries[0].country_id };
+            }
+
             // Загрузка данных акций
             response = await fetchData(userData, `/api/admin_panel/offers_all`, false);
             if (response.data) {
