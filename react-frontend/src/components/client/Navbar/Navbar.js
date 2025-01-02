@@ -94,7 +94,7 @@ export default function Navbar() {
                     >
                         <option>asfasfasf</option>
                     </select>
-                    <a href="/tourist"><img src={tourist} alt="" /><span>Туристам</span></a>
+                    <a href="/info"><img src={tourist} alt="" /><span>Туристам</span></a>
                     <a href="/contacts"><img src={contacts} alt="" /><span>Контактная информация</span></a>
                     <button id='profile-button' className='profile-button' onClick={() => setShowProfileManager(!showProfileManager)}><img src={personalAccount} alt="" /><span>Мой кабинет</span></button>
                 </div>

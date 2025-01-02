@@ -5,6 +5,7 @@ import AuthPage from './AuthPage/AuthPage';
 import ToursCategoryesPage from './ToursCategoryesPage/ToursCategoryesPage';
 import { Route, Routes } from 'react-router';
 import ToursPage from './ToursPage/ToursPage';
+import InfoPage from './InfoPage/InfoPage';
 
 function ClientApp() {
     return (
@@ -14,6 +15,7 @@ function ClientApp() {
                 <Route path='/' element={<MainPage></MainPage>}></Route>
                 <Route path='/login' element={<AuthPage />}></Route>
                 <Route path='/reg' element={<AuthPage />}></Route>
+                <Route path='/info' element={<InfoPage />}></Route>
                 <Route path='/tours' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
                 <Route path='/tour' element={<ToursPage />}></Route>
                 <Route path='/tour/:id' element={<ToursPage />}></Route>
