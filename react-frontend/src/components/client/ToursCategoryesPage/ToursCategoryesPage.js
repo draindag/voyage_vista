@@ -1,7 +1,9 @@
 import '../../../resources/constants.css';
 import './ToursCategoryesPage.css';
 import React from 'react';
-import SimpleSlider from '../Slider/Slider';
+import TourSlider from './TourSlider';
+
+import '../MainPage/MainPage.css';
 
 import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 const imageArr = [
@@ -45,8 +47,10 @@ export default function ToursCategoryesPage() {
             <div className="tours-categoryes-bgpage">
                 <p className="tours-categoryes-header-text">Выберите свой тур с<br></br>нами</p>
             </div>
-            <SimpleSlider sliderObjects={sliderObjects} settings={sliderSettings}/>
-
+            <div className='container'>
+                <TourSlider sliderObjects={sliderObjects} settings={sliderSettings}/>
+            </div>
+        
         </>
     );
 }
