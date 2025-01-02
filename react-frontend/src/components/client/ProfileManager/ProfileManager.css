@@ -1,13 +1,41 @@
-.profile-manager{
-    position: fixed;
-    top: 150px;
-    right: 20px;
-    width: 200px;
-    height: 300px;
+.profile-manager {
+    width: 230px;
+    height: 145px;
     border: 1px solid #000000;
-    border-radius: 30px;
-    background: #5f5e5a;
+    border-radius: 20px;
+    background: #FFFF;
     /* opacity: 0; */
     /* transform: translateY(-10px); */
     /* transition: opacity 1.3s ease, transform 1.3s ease; */
+}
+
+.profile-manager a, .profile-manager button {
+    color: #000000;
+    text-decoration: none;
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 31.17px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+.profile-manager button {
+    border: none;
+    cursor: pointer;
+    background-color: inherit;
+    padding: 0;
+}
+
+.profile-manager ul {
+    height: 100%;
+    list-style: none;
+    padding: 20px 0px 0px 15px;
+    margin: 0;
+}
+
+.profile-manager li {
+    margin-bottom: 20px;
 }

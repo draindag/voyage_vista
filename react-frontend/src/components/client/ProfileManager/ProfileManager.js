@@ -22,7 +22,7 @@ export default function ProfileManager(props) {
     }
 
     return (
-        <div className='profile-manager'>
+        <div className='profile-manager' style={props.style}>
             <ul>
                 {ulContent}
             </ul>
