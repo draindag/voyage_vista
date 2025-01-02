@@ -1,7 +1,14 @@
+.profile-container {
+    padding-left: 77px;
+    display: flex;
+}
+
+
 .control-panel {
     width: 421px;
     height: 679px;
     border: 3px solid #5D7EA7;
+    margin-right: 59px;
 }
 
 .control-panel button {
@@ -26,15 +33,88 @@
 }
 
 
-.control-panel-head{
+.control-panel-head {
     display: flex;
     align-items: center;
     height: 126px;
     border-bottom: 1px solid #5D7EA7;
+    margin-bottom: 70px;
 }
 
-.control-panel-head p{
+.control-panel-head p {
     width: 100%;
     text-align: center;
     margin: 0;
+}
+
+.profile-data {
+    width: 800px;
+}
+
+.profile-data button {
+    color: #1A58C4;
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+
+    font-family: Inria Serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.profile-data button:hover{
+    color: #124192;
+    text-decoration: underline;
+}
+
+
+.profile-data h1 {
+    margin-top: 0;
+    margin-bottom: 59px;
+    vertical-align: text-top;
+    font-family: Inria Serif;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 44px;
+    text-align: left;
+    text-decoration-skip-ink: none;
+
+}
+
+.profile-data label {
+
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-bottom: 23px;
+    display: block;
+
+}
+
+.profile-data input {
+    padding-left: 10px;
+    display: inline-block;
+    width: 614px;
+    height: 54px;
+    border: 3px solid #5D7EA7;
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-right: 49px;
+    margin-bottom: 39px;
+
 }
