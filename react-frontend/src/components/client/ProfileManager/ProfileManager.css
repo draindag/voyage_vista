@@ -1,9 +1,11 @@
 .profile-manager {
+    position: fixed;
     width: 230px;
     height: 145px;
     border: 1px solid #000000;
     border-radius: 20px;
     background: #FFFF;
+    z-index: 1000;
     /* opacity: 0; */
     /* transform: translateY(-10px); */
     /* transition: opacity 1.3s ease, transform 1.3s ease; */
