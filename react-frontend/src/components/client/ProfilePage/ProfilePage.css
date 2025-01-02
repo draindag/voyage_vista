@@ -1,0 +1,40 @@
+.control-panel {
+    width: 421px;
+    height: 679px;
+    border: 3px solid #5D7EA7;
+}
+
+.control-panel button {
+    width: 100%;
+    height: 110px;
+    border: none;
+    font-family: Inria Serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: black;
+    background-color: #fff;
+    cursor: pointer;
+    transition: 0.1s ease;
+}
+
+.control-panel button:hover {
+    background-color: #e4e4e4;
+}
+
+
+.control-panel-head{
+    display: flex;
+    align-items: center;
+    height: 126px;
+    border-bottom: 1px solid #5D7EA7;
+}
+
+.control-panel-head p{
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}

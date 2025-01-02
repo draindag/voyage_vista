@@ -55,7 +55,7 @@
     text-wrap: wrap;
 }
 
-.navbar-content a, button{
+.navbar-content a, .navbar-content button{
     text-decoration: none;
     display: flex;
     align-items: center;

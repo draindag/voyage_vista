@@ -88,12 +88,6 @@ export default function Navbar() {
                     <a href="/"><img src={home} alt="" /><span>Главная</span></a>
                     {/* <a href="/countryes"><img src={country} alt="" /><span>Страны</span></a> */}
                     <button id='country-button' className='country-button' onClick={() => setShowList(!showList)}><img src={country} alt="" /><span>Страны</span></button>
-                    <select
-                        style={{ display: 'none' }}
-                        ref={countrySelect}
-                    >
-                        <option>asfasfasf</option>
-                    </select>
                     <a href="/info"><img src={tourist} alt="" /><span>Туристам</span></a>
                     <a href="/contacts"><img src={contacts} alt="" /><span>Контактная информация</span></a>
                     <button id='profile-button' className='profile-button' onClick={() => setShowProfileManager(!showProfileManager)}><img src={personalAccount} alt="" /><span>Мой кабинет</span></button>

@@ -8,7 +8,6 @@ export default function ProfileManager(props) {
     const {userData, setUserData} = useAuthContext();
     const navigate = useNavigate();
     let ulContent;
-    console.log(userData);
     if(userData === null){
         ulContent = <><li><a href='/login'>Войти</a></li><li><a href='/reg'>Регистрация</a></li></>
     }
