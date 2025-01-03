@@ -51,7 +51,7 @@
     width: 1300px;
 }
 
-.profile-data button {
+.profile-data-button {
     color: #1A58C4;
     border: none;
     background-color: inherit;
@@ -68,7 +68,7 @@
     text-decoration-skip-ink: none;
 }
 
-.profile-data button:hover {
+.profile-data-button:hover {
     color: #124192;
     text-decoration: underline;
 }
@@ -116,8 +116,29 @@
     text-decoration-skip-ink: none;
     margin-right: 49px;
     margin-bottom: 39px;
+    margin: 0 49px 39px 0px;
+}
+
+.profile-data-input-p {
+    padding-top: 15px;
+}
+
+.submit-new-profile-button {
+    color: #fff;
+    background-color: #5D7EA7;
+    width: 261px;
+    height: 82px;
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 35px;
+
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    display: block;
 
 }
+
 
 
 .slide-label {
@@ -131,6 +152,7 @@
     width: 240px;
     /* display: inline-block; */
 }
+
 
 .slide-input {
     padding-left: 10px;
