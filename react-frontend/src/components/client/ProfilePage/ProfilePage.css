@@ -5,7 +5,7 @@
 
 
 .control-panel {
-    width: 421px;
+    max-width: 400px;
     height: 679px;
     border: 3px solid #5D7EA7;
     margin-right: 59px;
@@ -48,7 +48,7 @@
 }
 
 .profile-data {
-    width: 800px;
+    width: 1300px;
 }
 
 .profile-data button {
@@ -68,13 +68,13 @@
     text-decoration-skip-ink: none;
 }
 
-.profile-data button:hover{
+.profile-data button:hover {
     color: #124192;
     text-decoration: underline;
 }
 
 
-.profile-data h1 {
+.profile-data-h1 {
     margin-top: 0;
     margin-bottom: 59px;
     vertical-align: text-top;
@@ -87,7 +87,7 @@
 
 }
 
-.profile-data label {
+.profile-data-label {
 
     font-family: Inria Serif;
     font-size: 24px;
@@ -101,7 +101,7 @@
 
 }
 
-.profile-data input {
+.profile-data-input {
     padding-left: 10px;
     display: inline-block;
     width: 614px;
@@ -116,5 +116,66 @@
     text-decoration-skip-ink: none;
     margin-right: 49px;
     margin-bottom: 39px;
+
+}
+
+
+.slide-label {
+    font-family: Inria Serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    width: 240px;
+    /* display: inline-block; */
+}
+
+.slide-input {
+    padding-left: 10px;
+    height: 44px;
+    width: 370px;
+    border-radius: 3px;
+    border: 2px solid #5D7EA7;
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 31.17px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+
+}
+
+
+.profile-tour-card {
+    width: 993px;
+    height: 492px;
+    border: 3px solid #5D7EA7;
+    margin: auto;
+}
+
+.profile-tour-card div {
+    margin-bottom: 13px;
+}
+
+.profile-tour-card-line-div {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.profile-tour-card-h1 {
+    font-family: Inria Serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
 
 }

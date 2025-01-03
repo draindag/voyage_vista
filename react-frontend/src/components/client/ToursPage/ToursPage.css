@@ -31,13 +31,8 @@
 
 .tour-card-image-container {
     width: 100%;
-    /* Ширина контейнера на всю ширину родителя */
     height: 200px;
-    /* Задайте желаемую высоту */
     overflow: hidden;
-    /* Скрываем часть изображения, выходящую за границы */
-    /* position: relative; */
-    /* display: flex; */
 }
 
 .tour-card-image-container img {
@@ -106,7 +101,7 @@
 
 .tour-card-info-container h3 {
     font-family: Inria Serif;
-    font-size: 36px;
+    font-size: 30px;
     font-weight: 300;
     line-height: 43.16px;
     text-align: left;
