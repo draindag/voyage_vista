@@ -66,6 +66,8 @@ export default function ToursPage() {
     state.tours_list.forEach(item => {
         toursCards.push(
             <>
+                <a href={`/tour-page/${item.tour_id}`}>
+                
                 <div className='tour-card'>
                     <div className='tour-card-image-container'>
                         <img src={`/cover_images/${item.tour_image}`} alt="" />
@@ -83,6 +85,8 @@ export default function ToursPage() {
                         </div>
                     </div>
                 </div>
+                </a>
+
             </>
         )
     })

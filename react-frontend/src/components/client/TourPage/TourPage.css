@@ -1,0 +1,13 @@
+.tour-header {
+    width: 100%;
+    height: 350px;
+    overflow: hidden; /* Обрезаем излишки изображения */
+}
+
+.tour-header img{
+    width: 100%; 
+    height: auto; 
+    min-height: 100%; 
+    object-fit: cover; 
+}
+
