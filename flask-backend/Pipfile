@@ -41,6 +41,7 @@ pylint = "==3.3.1"
 flask-reuploaded = "==1.4.0"
 pytelegrambotapi = "==4.25.0"
 flask-cors = "==5.0.0"
+pytest = "*"
 
 [dev-packages]
 

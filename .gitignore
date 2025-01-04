@@ -1,3 +1,12 @@
 **/__pycache__/
 venv
 .idea
+
+# Исключение файла покрытия
+.coverage
+pytest_output.log
+
+# Исключение артефактов отчётов покрытия
+htmlcov/
+coverage.xml
+*.coverage.*
