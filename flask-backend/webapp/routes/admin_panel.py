@@ -612,7 +612,7 @@ def edit_country(country_id: str):
     return jsonify({
         "success": True,
         "message": "Данные страны успешно изменены!",
-        "category": country_schema.dump(country)
+        "country": country_schema.dump(country)
     }), 200
 
 
@@ -641,7 +641,7 @@ def show_country_delete_page(country_id: str):
             return jsonify({"success": False,
                 "message": "Страна с таким ID не найдена"}), 404
 
-        country_schema = Country(exclude=("country_image",))
+        country_schema = CountrySchema(exclude=("country_image",))
 
         country_data = country_schema.dump(country)
 
