@@ -71,7 +71,7 @@ export default function Navbar() {
 
     countries.forEach(elem => {
         ulElements.push(<li>
-            <a href={`${elem.country_id}?type=by-country`}>{elem.country_name}</a>
+            <a href={`/tour/${elem.country_id}?type=by-country`}>{elem.country_name}</a>
         </li>)
     })
 

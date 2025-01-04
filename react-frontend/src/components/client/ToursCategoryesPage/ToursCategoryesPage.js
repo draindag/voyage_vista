@@ -1,9 +1,10 @@
 import '../../../resources/constants.css';
 import './ToursCategoryesPage.css';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import TourSlider from './TourSlider';
 
 import '../MainPage/MainPage.css';
+import { fetchData } from '../../general/web_ops';
 
 import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 const imageArr = [
@@ -27,20 +28,34 @@ const sliderSettings = {
 
 export default function ToursCategoryesPage() {
 
+    const [state, setState] = useState([]);
+
     let sliderObjects = []
-    imageArr.forEach(item => {
+    state.forEach(item => {
         sliderObjects.push(<>
             <div className='card-tc'>
                 <div>
-                    <h1>Зимний отдых</h1>
-                    <p>Зимние курорты предлагают уникальные возможности для любителей снега и зимних видов спорта. Здесь можно насладиться горнолыжными склонами, провести время на свежем воздухе и увидеть северное сияние. Эта категория отличается от других тем, что акцент сделан на активном отдыхе в условиях холодного климата. Также зимний отдых часто включает в себя уютный досуг, такие как горячий шоколад и вечерние посиделки у камина.</p>
+                    <h1>{item?.category_title}</h1>
+                    <p>{item?.category_description}</p>
                 </div>
-                <div>
-                    <img src={item} alt=''></img>
+                <div className='tour-image-container-cat-page'>
+                    <img src={`/cover_images/${item.category_image}`}alt=''></img>
                 </div>
             </div>
         </>)
     })
+
+    useEffect(() => {
+        const callFetch = async () => {
+            const response = await fetchData({}, "/api/categories_all", false);
+            console.log(response)
+            if (response.data) {
+                setState(response.data.categories);
+            }
+        };
+        callFetch();
+        // eslint-disable-next-line 
+    }, []);
 
     return (
         <>
