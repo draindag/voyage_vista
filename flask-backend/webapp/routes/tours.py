@@ -127,19 +127,12 @@ def show_category_page(category_id: str):
 
 
 @tours_bp.route("/<string:tour_id>", methods=["GET"])
-@jwt_required()
 @swag_from("swagger_definitions/show_tour_page.yaml")
 def show_tour_page(tour_id: str):
     """
        Возвращает всю информацию про конкретный тур, комментарии - постранично
        ---
        """
-
-    user_login = get_jwt_identity()
-    current_user = User.query.filter_by(login=user_login).first()
-
-    if current_user is None:
-        return jsonify({"success": False, "message": "Пользователь не найден"}), 401
 
     try:
         valid_tour_uuid = UUID(tour_id)
@@ -157,7 +150,7 @@ def show_tour_page(tour_id: str):
     tour_schema = TourSchema()
     replies_schema = ReplySchema(many=True)
     tour_data = tour_schema.dump(tour)
-    replies= tour.tour_replies.paginate(
+    replies = tour.tour_replies.paginate(
         page=page, per_page=int(os.getenv("REPLIES_PER_PAGE")), error_out=False)
 
     return jsonify({"success": True,

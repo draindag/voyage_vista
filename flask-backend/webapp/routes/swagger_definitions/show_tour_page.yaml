@@ -1,12 +1,6 @@
 Возвращает всю информацию про конкретный тур, комментарии - постранично
 ---
 parameters:
-  - name: Authorization
-    in: header
-    required: true
-    description: JWT access токен для доступа. Пример - `Bearer <token>`
-    schema:
-      type: string
   - name: tour_id
     description: ID тура
     in: path
@@ -88,8 +82,6 @@ responses:
         next_page: true
   400:
     description: Неверный формат uuid
-  401:
-    description: JWT токен с данными пользователя не прошел проверку
   404:
     description: Если тура с таким id нет
 
