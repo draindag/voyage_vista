@@ -95,40 +95,100 @@ export default function ProfilePage() {
         </div>
     ));
 
+    const sendProgileEdit = async (type) => {
+        let sendedData;
+        switch (type) {
+            case 'edit_login':
+                sendedData = { new_login: newProfileData.new_login, password: newProfileData.password }
+                break;
+            case 'edit_email':
+                sendedData = { email: newProfileData.email, password: newProfileData.password }
+                break;
+            default:
+                sendedData = { old_password: newProfileData.password, new_password: newProfileData.new_password }
+                break;
+        }
+        await sendData(userData, `/api/${type}`, JSON.stringify(sendedData), 'PUT').then(response => {
+            if (response.data) {
+                let new_user;
+                switch (type) {
+                    case 'edit_login':
+                        new_user = {...state.user, login: newProfileData.new_login}
+                        setUserData({...response.userData, access_token: response.data.access_token, refresh_token: response.data.refresh_token});
+                        break;
+                    case 'edit_email':
+                        new_user = {...state.user, email: newProfileData.email}
+                        setUserData(response.userData);
+                        break;
+                    default:
+                        new_user = state.user
+                        setUserData(response.userData);
+                        // sendedData = { old_password: newProfileData.password, new_password: newProfileData.new_password }
+                        break;
+                }
+                setState({...state, user: new_user});
+                setChanges(null);
+                alert("Успешно!");
+            }
+            else {
+                if (response.action === "unauth") {
+                    deleteCookie();
+                    setUserData(null);
+                    alert(response.message);
+                    navigate("/login");
+                }
+                else {
+                    switch (type) {
+                        case 'edit_login':
+                            alert('Недопустимый логин или неверный пароль');
+                            break;
+                        case 'edit_email':
+                            alert('Недопустимый email или неверный пароль');
+                            break;
+                        default:
+                            alert('Недопустимый новый пароль или неверный старый пароль');
+                            break;
+                    }
+                }
+            }
+        })
 
+
+    }
+
+
+    const fetchProfile = async () => {
+        if (!userData) { return };
+        console.log(userData)
+        const response = await fetchData(userData, `/api/profile`);
+        console.log(response)
+        if (response.data) {
+            let data = response.data.user
+            setState({
+                user: { login: data.login, email: data.email },
+                favor: data.fav_tours,
+                tours: data.transactions,
+            });
+            if (!prevUserDataRef.current || JSON.stringify(prevUserDataRef.current) !== JSON.stringify(userData)) {
+                setUserData(response.userData);
+            }
+            prevUserDataRef.current = userData;
+            return;
+        }
+        else {
+
+            deleteCookie();
+            setUserData(null);
+            alert(response.message);
+            navigate("/login");
+            return;
+
+        }
+    }
 
 
     useEffect(() => {
-        const fetchCountry = async () => {
-            if (!userData) { return };
-            console.log(userData)
-            const response = await fetchData(userData, `/api/profile`);
-            console.log(response)
-            if (response.data) {
-                let data = response.data.user
-                setState({
-                    user: { login: data.login, email: data.email },
-                    favor: data.fav_tours,
-                    tours: data.transactions,
-                });
-                if (!prevUserDataRef.current || JSON.stringify(prevUserDataRef.current) !== JSON.stringify(userData)) {
-                    setUserData(response.userData);
-                }
-                prevUserDataRef.current = userData;
-                return;
-            }
-            else {
-
-                deleteCookie();
-                setUserData(null);
-                alert(response.message);
-                navigate("/login");
-                return;
-
-            }
-        }
-
-        fetchCountry();
+        fetchProfile();
     }, [userData]);
 
 
@@ -161,6 +221,7 @@ export default function ProfilePage() {
                             // value={newProfileData.password}
                             onChange={(value) => setNewProfileData({ ...newProfileData, password: value.target.value })}
                         ></input>
+                        <button onClick={() => sendProgileEdit('edit_login')} className='submit-new-profile-button'>Изменить</button>
                     </>
 
                     break;
@@ -170,29 +231,30 @@ export default function ProfilePage() {
                         <label className='profile-data-label'>Почта:</label>
                         <input className='profile-data-input' type='text'
                             // value={newProfileData.email}
-                            onChange={(value) => setNewProfileData({ ...newProfileData, email: value.target.value }) }
+                            onChange={(value) => setNewProfileData({ ...newProfileData, email: value.target.value })}
                         ></input>
                         <label className='profile-data-label'>Пароль:</label>
                         <input className='profile-data-input' type='password'
                             // value={newProfileData.password}
-                            onChange={(value) => setNewProfileData({ ...newProfileData, password: value.target.value }) }
+                            onChange={(value) => setNewProfileData({ ...newProfileData, password: value.target.value })}
                         ></input>
+                        <button onClick={() => sendProgileEdit('edit_email')} className='submit-new-profile-button'>Изменить</button>
                     </>
                     break;
                 case 3:
                     name = 'ИЗМЕНЕНИЕ ПАРОЛЯ'
                     content = <>
                         <label className='profile-data-label'>Старый пароль:</label>
-                        <input className='profile-data-input' type='text' 
+                        <input className='profile-data-input' type='text'
                             // value={newProfileData.password}
-                            onChange={(value) => setNewProfileData({ ...newProfileData, password: value.target.value }) }
+                            onChange={(value) => setNewProfileData({ ...newProfileData, password: value.target.value })}
                         ></input>
                         <label className='profile-data-label'>Новый пароль:</label>
                         <input className='profile-data-input' type='password'
                             // value={newProfileData.new_password}
-                            onChange={(value) => setNewProfileData({ ...newProfileData, new_password: value.target.value }) }
+                            onChange={(value) => setNewProfileData({ ...newProfileData, new_password: value.target.value })}
                         ></input>
-                        <button className='submit-new-profile-button'>Изменить</button>
+                        <button onClick={() => sendProgileEdit('edit_password')} className='submit-new-profile-button'>Изменить</button>
                     </>
                     break;
                 default:

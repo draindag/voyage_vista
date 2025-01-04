@@ -84,7 +84,7 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
                 // console.log("Refresh")
                 let refresh = await refreshToken(userData?.refresh_token)
                 if (!refresh) {
-                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
+                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth", status: response.status };
                 }
                 newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
             }
@@ -96,7 +96,7 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
             result = await response.json()
             return { data: result, userData: newUser, message: "OK", action: "ok" };
         } else {
-            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail" };
+            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail", status: response.status};
         }
     } catch (e) {
         console.log(e)
