@@ -4,6 +4,7 @@ venv
 
 # Исключение файла покрытия
 .coverage
+pytest_output.log
 
 # Исключение артефактов отчётов покрытия
 htmlcov/

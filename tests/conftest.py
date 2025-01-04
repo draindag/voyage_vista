@@ -4,6 +4,7 @@
 
 import sys
 import os
+from unittest.mock import patch
 
 import pytest
 from flask_jwt_extended import create_access_token
@@ -23,6 +24,27 @@ from webapp.models.Reply import Reply
 from webapp.models.Review import Review
 from webapp.models.User import User
 
+
+@pytest.fixture(scope="session", autouse=True)
+def mock_telegram_api():
+    """
+    Глобальная фикстура для мокирования методов Telegram API.
+    Автоматически применяется ко всем тестам.
+    """
+    with patch("telebot.TeleBot.set_webhook") as mocked_set_webhook, \
+         patch("telebot.TeleBot.get_webhook_info") as mocked_get_webhook_info:
+
+        # Настройка заглушек
+        mocked_set_webhook.return_value = True
+        mocked_get_webhook_info.return_value = {
+            "url": "https://example.com/webhook",
+            "has_custom_certificate": False,
+            "pending_update_count": 0,
+        }
+
+        yield  # Передаёт управление тестам
+
+        # Заглушки автоматически отключаются после завершения тестов
 
 @pytest.fixture
 def app():
@@ -132,6 +154,20 @@ def moderator(db_session):
         email="moderator@example.com",
         password="password123",
         role="moderator"
+    )
+    user.set_password("password123")  # Задаем пароль для пользователя
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+@pytest.fixture
+def admin(db_session):
+    """Фикстура для создания пользователя."""
+    user = User(
+        login="admin",
+        email="admin@example.com",
+        password="password123",
+        role="admin"
     )
     user.set_password("password123")  # Задаем пароль для пользователя
     db.session.add(user)
@@ -331,6 +367,13 @@ def auth_client(client, user, db_session):
 def auth_moderator(client, moderator, db_session):
     """Фикстура для аутентифицированного модератора."""
     token = create_access_token(identity=moderator.login)
+    client.environ_base['HTTP_AUTHORIZATION'] = f"Bearer {token}"
+    return client
+
+@pytest.fixture
+def auth_admin(client, admin, db_session):
+    """Фикстура для аутентифицированного модератора."""
+    token = create_access_token(identity=admin.login)
     client.environ_base['HTTP_AUTHORIZATION'] = f"Bearer {token}"
     return client
 
