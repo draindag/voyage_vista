@@ -1,5 +1,5 @@
 .info {
-    background-image: url('../../../resources/InfoPage/back.png');
+    background-image: url('../../../../public/InfoPage/back.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
