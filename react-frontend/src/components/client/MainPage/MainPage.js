@@ -7,20 +7,9 @@ import man from '../../../resources/MainPage/Images/man.png';
 import girl from '../../../resources/MainPage/Images/girl.png';
 import train from '../../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../Slider/Slider';
-import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 
 import { fetchData } from '../../general/web_ops';
-
-
-const imageArr = [
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage
-]
 
 const settings = {
     // className: "center",
@@ -48,7 +37,7 @@ const settings = {
 
 export default function MainPage() {
 
-    const { userData, setUserData } = useAuthContext();
+    const { userData} = useAuthContext();
 
     const [state, setState] = useState([]);
 

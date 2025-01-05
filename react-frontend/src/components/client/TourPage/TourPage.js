@@ -129,7 +129,7 @@ export default function TourPage() {
                 </div>
                 <div className='tour-page-price-block'>
                     <p>{`${dayjs(state?.tour?.tour_start_date).format("DD.MM.YY")}-${dayjs(state?.tour?.tour_end_date).format("DD.MM.YY")}`}</p>
-                    <img src={Serv}></img>
+                    <img src={Serv} alt=''></img>
                     <div>
                         <h1>Цена: {state?.tour?.price_with_discount ? <span>{state?.tour?.tour_price}</span> : null}{state?.tour?.price_with_discount ? state?.tour?.price_with_discount : state?.tour?.tour_price}руб</h1>
                     </div>

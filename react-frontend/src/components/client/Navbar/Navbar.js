@@ -1,7 +1,7 @@
 import './Navbar.css';
 import '../../../resources/constants.css';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfileManager from '../ProfileManager/ProfileManager';
 
 import { fetchData } from '../../general/web_ops';
@@ -14,7 +14,6 @@ import logo from '../../../resources/Navbar/Images/logo.svg';
 
 
 export default function Navbar() {
-    const countrySelect = useRef(null);
 
     const [scrolled, setScrolled] = useState(false);
     const [showProfileManager, setShowProfileManager] = useState(false);
@@ -64,6 +63,7 @@ export default function Navbar() {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleResize);
         };
+    // eslint-disable-next-line
     }, []);
 
 

@@ -20,7 +20,7 @@ export default function AuthPage() {
     const [passwordAgain, setPasswordAgain] = useState("");
     const [validPassAgain, setPassAgain,] = useState(true);
 
-    const { userData, setUserData } = useAuthContext();
+    const {setUserData } = useAuthContext();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

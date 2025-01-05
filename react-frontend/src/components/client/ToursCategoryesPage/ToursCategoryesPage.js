@@ -6,16 +6,6 @@ import TourSlider from './TourSlider';
 import '../MainPage/MainPage.css';
 import { fetchData } from '../../general/web_ops';
 
-import SlideImage from '../../../resources/Slider/Images/slideImg.png'
-const imageArr = [
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage
-]
-
 const sliderSettings = {
     className: "center",
     centerMode: true,
