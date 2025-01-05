@@ -1,11 +1,6 @@
 import '../../../resources/constants.css';
-
 import './MainPage.css';
 import React, { useEffect, useState } from 'react';
-import buttonImg from '../../../resources/MainPage/Images/arrow_tour.png';
-import man from '../../../resources/MainPage/Images/man.png';
-import girl from '../../../resources/MainPage/Images/girl.png';
-import train from '../../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../Slider/Slider';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 
@@ -108,7 +103,7 @@ export default function MainPage() {
                 <a style={{ textDecoration: 'none' }} href='/tours-categoryes'>
                     <div className="choose-country-button">
                         <span>Выбрать тур</span>
-                        <img src={buttonImg} alt="" />
+                        <img src={'/MainPage/Images/arrow_tour.png'} alt="" />
                     </div>
                 </a>
             </div>
@@ -122,7 +117,7 @@ export default function MainPage() {
                         который станет источником ярких впечатлений и уникальных моментов.
                         Мы организуем как индивидуальные, так и групповые туры, предлагая широкий спектр направлений и услуг.
                     </p>
-                    <img src={man} alt="" />
+                    <img src={'/MainPage/Images/man.png'} alt="" />
                 </div>
                 {/* {sliderObjects} */}
                 <SimpleSlider sliderObjects={categCards} settings={settings} main={true} />
@@ -182,8 +177,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/girl.png'} alt="" />
+                                <h3>Арина Котова</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -202,8 +197,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/glad.jpg'} alt="" />
+                                <h3>Валерий Жмышенко</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -217,8 +212,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/mops.jpeg'} alt="" />
+                                <h3>Золтан Хивай</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -236,7 +231,7 @@ export default function MainPage() {
                 </div>
             </div>
 
-            <img src={train} style={{ width: '100%' }} alt='Poezd LOL'></img>
+            <img src={'/MainPage/Images/Bottom_map.png'} style={{ width: '100%' }} alt='Poezd LOL'></img>
 
 
         </>
