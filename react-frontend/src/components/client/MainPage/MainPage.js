@@ -47,7 +47,7 @@ export default function MainPage() {
                 <div>
                     <div className='card'>
                         <div className='image-container'>
-                            <img src={``} alt="" />
+                            <img src={`popular.jpg`} alt="" />
                         </div>
                         <div className='card-container'>
                             <p>Популярные</p>
@@ -61,7 +61,7 @@ export default function MainPage() {
                 <div>
                     <div className='card'>
                         <div className='image-container'>
-                            <img src={``} alt="" />
+                            <img src={`sales.jpg`} alt="" />
                         </div>
                         <div className='card-container'>
                             <p>Со скидкой</p>
