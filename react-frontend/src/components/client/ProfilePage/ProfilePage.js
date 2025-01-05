@@ -3,7 +3,7 @@ import '../../../resources/constants.css';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import React, { useState, useEffect, useRef } from 'react';
 import TourSlider from './TourSlider';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 import '../ToursPage/ToursPage.css';
@@ -26,8 +26,6 @@ export default function ProfilePage() {
     let navigate = useNavigate();
     console.log(state)
     console.log(newProfileData)
-    // console.log(tab)
-
 
     const { userData, setUserData } = useAuthContext();
 
@@ -59,10 +57,15 @@ export default function ProfilePage() {
                         <label className='slide-label'>Категория:</label>
                         <input className='slide-input' type='text' defaultValue={item?.category?.category_title}></input>
                     </div>
-                    <div className='profile-tour-card-line-div'>
-                        <label className='slide-label'>Стоимость с <br />учетом скидки:</label>
-                        <input className='slide-input' type='text' defaultValue={`${item.price_with_discount}руб`}></input>
-                    </div>
+                    {
+                        item.price_with_discount ?
+                            <div className='profile-tour-card-line-div'>
+                                <label className='slide-label'>Стоимость с <br />учетом скидки:</label>
+                                <input className='slide-input' type='text' defaultValue={`${item.price_with_discount}руб`}></input>
+                            </div>
+                            : null
+                    }
+
                     {/* <div style={{display: 'flex', justifyContent: 'end'}}>
                         <label>Итого</label>
                     </div> */}
@@ -113,11 +116,11 @@ export default function ProfilePage() {
                 let new_user;
                 switch (type) {
                     case 'edit_login':
-                        new_user = {...state.user, login: newProfileData.new_login}
-                        setUserData({...response.userData, access_token: response.data.access_token, refresh_token: response.data.refresh_token});
+                        new_user = { ...state.user, login: newProfileData.new_login }
+                        setUserData({ ...response.userData, access_token: response.data.access_token, refresh_token: response.data.refresh_token });
                         break;
                     case 'edit_email':
-                        new_user = {...state.user, email: newProfileData.email}
+                        new_user = { ...state.user, email: newProfileData.email }
                         setUserData(response.userData);
                         break;
                     default:
@@ -126,7 +129,7 @@ export default function ProfilePage() {
                         // sendedData = { old_password: newProfileData.password, new_password: newProfileData.new_password }
                         break;
                 }
-                setState({...state, user: new_user});
+                setState({ ...state, user: new_user });
                 setChanges(null);
                 alert("Успешно!");
             }
@@ -189,17 +192,8 @@ export default function ProfilePage() {
 
     useEffect(() => {
         fetchProfile();
+    // eslint-disable-next-line 
     }, [userData]);
-
-
-    let favItems = [];
-    let tourItems = [];
-
-    // countries.forEach(elem => {
-    //     ulElements.push(<li>
-    //         <a href={elem.country_id}>{elem.country_name}</a>
-    //     </li>)
-    // })
 
 
     let content;

@@ -1,4 +1,3 @@
-// import './App.css';
 import MainPage from './MainPage/MainPage';
 import Navbar from './Navbar/Navbar';
 import AuthPage from './AuthPage/AuthPage';
