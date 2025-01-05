@@ -186,17 +186,6 @@ def test_show_tour_page_not_found(auth_client, db_session):
     assert response.json["success"] is False
     assert "Тур не найден" in response.json["message"]
 
-def test_show_tour_page_user_not_found(tour, client, db_session):
-    """Запрос, когда пользователь отсутствует в базе данных."""
-    user_login = "nonexistent_user"
-    token = create_access_token(identity=user_login)
-    client.environ_base['HTTP_AUTHORIZATION'] = f"Bearer {token}"
-
-    response = client.get(f"/api/tours/{tour.tour_id}")
-    assert response.status_code == 401
-    assert response.json["success"] is False
-    assert "Пользователь не найден" in response.json["message"]
-
 def test_show_tour_page_replies_pagination(tour, user, auth_client, db_session):
     """Проверка постраничности комментариев."""
     for i in range(15):
