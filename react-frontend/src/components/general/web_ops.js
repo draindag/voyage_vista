@@ -122,9 +122,9 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
 
 
 const fetchData = async (userData, url, needCheck = true) => {
-    try {
+    // try {
         let newUser = userData;
-        console.log(`Токен начала ${newUser.access_token}`)
+        console.log(`Токен начала ${newUser?.access_token}`)
         if (needCheck) {
             let refreshResult = await refresh(userData);
             if (!refreshResult) {
@@ -134,14 +134,14 @@ const fetchData = async (userData, url, needCheck = true) => {
                 newUser = refreshResult;
             }
         }
-        console.log(`Токен факт ${newUser.access_token}`)
-        const response = await tryGetReq(newUser.access_token, url);
+        console.log(`Токен факт ${newUser?.access_token}`)
+        const response = await tryGetReq(newUser?.access_token, url);
         const content = await response.json();
         console.log(content);
         return formAnswer(content, response.status, newUser)
-    } catch (e) {
-        return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", ex: e };
-    }
+    // } catch (e) {
+    //     return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", ex: e };
+    // }
 };
 
 

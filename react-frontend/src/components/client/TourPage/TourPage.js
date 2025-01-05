@@ -35,7 +35,7 @@ export default function TourPage() {
 
 
     const callFetch = async (page = 1) => {
-        const response = await fetchData({}, `/api/tours/${id}?page=${page}`, false);
+        const response = await fetchData(null, `/api/tours/${id}?page=${page}`, false);
         // console.log(response)
         if (response.data) {
             setState(response.data);
