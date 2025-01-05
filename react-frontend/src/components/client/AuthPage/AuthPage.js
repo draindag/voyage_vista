@@ -149,7 +149,7 @@ export default function AuthPage() {
             <label>Почта</label>
             <input className={validLogin ? '' : 'invalid-input'}
                 title={validLogin ? '' : 'Логин должен иметь не менее 4-х символов'}
-                type='text' placeholder='Введите логин'
+                type='text' placeholder='Введите почту'
                 onChange={(value) => setEmail(value.target.value)}
             ></input>
             <label>Пароль</label>

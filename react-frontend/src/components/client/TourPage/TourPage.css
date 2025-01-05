@@ -1,13 +1,167 @@
 .tour-header {
     width: 100%;
     height: 350px;
-    overflow: hidden; /* Обрезаем излишки изображения */
+    overflow: hidden;
+    margin-bottom: 50px;
+    /* Обрезаем излишки изображения */
 }
 
-.tour-header img{
-    width: 100%; 
-    height: auto; 
-    min-height: 100%; 
-    object-fit: cover; 
+.tour-header img {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
 }
 
+
+.first-tab {
+    position: absolute;
+    width: 280px;
+    height: 35px;
+    top: 315px;
+    right: 280px;
+}
+
+.second-tab {
+    position: absolute;
+    width: 280px;
+    height: 35px;
+    top: 315px;
+    right: 0px;
+}
+
+.angled-corner-button {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    border: none;
+    color: rgb(0, 0, 0);
+    /* padding: 15px 32px;  */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    clip-path: polygon(0% 100%, 15% 0%, 100% 0%, 100% 100%);
+}
+
+
+.angled-corner-button:hover {
+    background-color: #c7c7c7;
+    color: #444444;
+}
+
+
+.tour-page-container {
+    padding-left: 95px;
+    padding-right: 95px;
+}
+
+
+.tour-page-content {
+    display: flex;
+}
+
+.tour-page-info-block {
+    /* width: 604px; */
+    margin-right: 100px;
+}
+
+.tour-page-info-block h1 {
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-family: Roboto;
+    font-size: 68px;
+    font-weight: 200;
+    line-height: 60px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.tour-page-info-block p {
+
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 40px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.tour-page-price-block span {
+    font-family: Inter;
+    font-size: 46px;
+    font-weight: 300;
+    line-height: 55.67px;
+    text-align: left;
+    text-decoration-line: line-through;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+    margin: 0 10px 0 0;
+}
+
+.tour-page-price-block h1 {
+    margin-top: 88px;
+    font-family: Inter;
+    font-size: 55px;
+    font-weight: 200;
+    line-height: 66.56px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+
+.tour-page-price-block p {
+    margin: 0;
+    margin-bottom: 66px;
+    font-family: Inria Serif;
+    font-size: 55px;
+    font-weight: 300;
+    line-height: 65.95px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+
+.tour-page-button {
+    font-family: Beiruti;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 35px;
+    /* text-align: left; */
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    border: none;
+    color: black;
+    background-color: #E9E9E9;
+    transition: background-color 0.3s;
+    width: 300px;
+    height: 55px;
+}
+
+.tour-page-button:hover {
+    background-color: #c2bfbf;
+    color: #444444;
+}
+
+.btn-block-tour-page{
+    display: flex;
+    justify-content: end;
+}
+
+.question-input-area{
+    width: 707px;
+    height: 258px;
+    resize: none;
+    padding: 15px 20px 15px 20px;
+    border-radius: 15px;
+    border: 1px solid black;
+    margin-bottom: 54px;
+}
