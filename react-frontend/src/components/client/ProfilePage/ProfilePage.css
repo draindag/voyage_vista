@@ -156,6 +156,7 @@
 
 .slide-input {
     padding-left: 10px;
+    padding-top: 10px;
     height: 44px;
     width: 370px;
     border-radius: 3px;
@@ -165,8 +166,11 @@
     font-weight: 400;
     line-height: 31.17px;
     text-align: left;
+    vertical-align: middle;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
+    margin: 0;
+    display: inline-block;
 
 
 }

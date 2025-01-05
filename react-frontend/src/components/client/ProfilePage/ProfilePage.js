@@ -39,29 +39,28 @@ export default function ProfilePage() {
                     <div style={{ display: 'flex' }}>
                         <div>
                             <label className='slide-label'>Дата:</label>
-                            <input className='slide-input'
-                                style={{ width: '244px', marginRight: '130px' }}
-                                type='text'
-                                defaultValue={`${dayjs(item.tour_start_date).format("DD.MM.YY")}-${dayjs(item.tour_end_date).format("DD.MM.YY")}`}></input>
+                            <p className='slide-input'
+                                style={{ width: '244px', marginRight: '130px' }}>
+                                {`${dayjs(item.tour_start_date).format("DD.MM.YY")}-${dayjs(item.tour_end_date).format("DD.MM.YY")}`}</p>
                         </div>
                         <div>
                             <label className='slide-label'>Страна:</label>
-                            <input className='slide-input' style={{ width: '426px' }} type='text' defaultValue={item?.country?.country_name}></input>
+                            <p className='slide-input' style={{ width: '426px' }}>{item?.country?.country_name}</p>
                         </div>
                     </div>
                     <div className='profile-tour-card-line-div'>
                         <label className='slide-label'>Стоимость:</label>
-                        <input className='slide-input' type='text' defaultValue={`${item.tour_price}руб`}></input>
+                        <p className='slide-input'>{`${item.tour_price}руб`}</p>
                     </div>
                     <div className='profile-tour-card-line-div'>
                         <label className='slide-label'>Категория:</label>
-                        <input className='slide-input' type='text' defaultValue={item?.category?.category_title}></input>
+                        <p className='slide-input'>{item?.category?.category_title}</p>
                     </div>
                     {
                         item.price_with_discount ?
                             <div className='profile-tour-card-line-div'>
                                 <label className='slide-label'>Стоимость с <br />учетом скидки:</label>
-                                <input className='slide-input' type='text' defaultValue={`${item.price_with_discount}руб`}></input>
+                                <p className='slide-input'>{`${item.price_with_discount}руб`}</p>
                             </div>
                             : null
                     }
@@ -192,7 +191,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         fetchProfile();
-    // eslint-disable-next-line 
+        // eslint-disable-next-line 
     }, [userData]);
 
 
