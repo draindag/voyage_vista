@@ -3,7 +3,7 @@ import './TourPage.css';
 import React, { useEffect, useState } from 'react';
 
 
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 
 import Serv from '../../../resources/Tour/services.png'
@@ -36,7 +36,6 @@ export default function TourPage() {
 
     const callFetch = async (page = 1) => {
         const response = await fetchData(null, `/api/tours/${id}?page=${page}`, false);
-        // console.log(response)
         if (response.data) {
             setState(response.data);
             setVisible(response.data.tour_replies.map(() => false));
@@ -46,7 +45,6 @@ export default function TourPage() {
     const send = async (url, data, method) => {
         const response = await sendData(userData, url, JSON.stringify(data), method);
         if (response.data) {
-            // console.log(response)
             alert("Успешно!");
             callFetch(page);
         }
@@ -255,71 +253,3 @@ export default function TourPage() {
         </>
     );
 }
-
-
-
-// {
-//     "success": true,
-//     "tour": {
-//       "tour_id": "e8c7c3d4-e23a-4b91-b770-1b884bfc3fda",
-//       "tour_title": "Приключенческий тур",
-//       "tour_description": "Описание приключенческого тура",
-//       "tour_text": "Текст приключенческого тура. Будет очень большим",
-//       "tour_price": 1200.5,
-//       "price_with_discount": 960.4,
-//       "tour_start_date": "2024-06-01",
-//       "tour_end_date": "2024-06-10",
-//       "tour_image": "flask-backend/webapp/tour_images/e8c7c3d4-e23a-4b91-b770-1b884bfc3fda.png",
-//       "category": {
-//         "category_id": "123e4567-e89b-12d3-a456-426614174000",
-//         "category_title": "Приключения",
-//         "category_description": "Описание приключений"
-//       },
-//       "country": {
-//         "country_id": "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62",
-//         "country_name": "Италия",
-//         "country_description": "Страна с богатой культурой"
-//       },
-//       "offers": [
-//         {
-//           "offer_id": "f1c5a1e2-34bc-4567-89ef-fedcba123456",
-//           "offer_title": "Скидка 20%",
-//           "discount_size": 20,
-//           "end_date": "2024-05-31"
-//         }
-//       ]
-//     },
-//     "tour_replies": [
-//       {
-//         "reply_id": "abcdef01-2345-6789-abcd-ef0123456789",
-//         "reply_text": "Это был замечательный тур!",
-//         "parent_reply_id": null,
-//         "author": {
-//           "login": "Пользователь123"
-//         },
-//         "replies": []
-//       },
-//       {
-//         "reply_id": "abcdef01-2345-6789-abcd-ef0123456790",
-//         "reply_text": "Очень понравилось!",
-//         "parent_reply_id": null,
-//         "author": {
-//           "login": "Пользователь456"
-//         },
-//         "replies": [
-//           {
-//             "reply_id": "abcdef01-2345-6789-abcd-ef0123456781",
-//             "reply_text": "Согласен! Это было незабываемо!",
-//             "parent_reply_id": "abcdef01-2345-6789-abcd-ef0123456790",
-//             "author": {
-//               "login": "Пользователь789"
-//             },
-//             "replies": []
-//           }
-//         ]
-//       }
-//     ],
-//     "prev_page": false,
-//     "next_page": true
-//   }
-
