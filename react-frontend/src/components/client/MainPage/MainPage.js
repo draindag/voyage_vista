@@ -7,9 +7,6 @@ import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData } from '../../general/web_ops';
 
 const settings = {
-    // className: "center",
-    // centerMode: true,
-    // infinite: true,
     centerPadding: "0px",
     slidesToShow: 4,
     speed: 500,
@@ -119,7 +116,6 @@ export default function MainPage() {
                     </p>
                     <img src={'/MainPage/Images/man.png'} alt="" />
                 </div>
-                {/* {sliderObjects} */}
                 <SimpleSlider sliderObjects={categCards} settings={settings} main={true} />
 
                 <h1>Почему стоит выбрать нас?</h1>
