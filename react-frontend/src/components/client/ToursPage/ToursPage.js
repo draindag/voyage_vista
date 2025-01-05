@@ -1,25 +1,13 @@
 import './ToursPage.css';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import SlideImage from '../../../resources/Slider/Images/slideImg.png'
+import { useParams, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData } from '../../general/web_ops';
 import dayjs from 'dayjs'
 
-const imageArr = [
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage
-]
-
-
 export default function ToursPage() {
     const { id } = useParams();
-    let navigate = useNavigate();
-    const { userData, setUserData } = useAuthContext();
+    const { userData } = useAuthContext();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const name = queryParams.get('type');
@@ -89,22 +77,6 @@ export default function ToursPage() {
         )
     })
 
-
-    let sliderObjects = []
-    imageArr.forEach(item => {
-        sliderObjects.push(<>
-            <div>
-                <div className='card'>
-                    <div>
-                        <img src={item} alt="" />
-                    </div>
-                    <div className='card-container'>
-                        <p>Text</p>
-                    </div>
-                </div>
-            </div>
-        </>)
-    })
     return (
         <>
             <div className="tours-header">
