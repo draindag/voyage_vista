@@ -7,6 +7,11 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 
 import Serv from '../../../resources/Tour/services.png'
+
+import Arrow from '../../../resources/Tour/arrow_down.png'
+import ArrowLeft from '../../../resources/Tour/arrow_left.png'
+
+
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
 import dayjs from 'dayjs'
@@ -16,16 +21,54 @@ export default function TourPage() {
 
     const { userData, setUserData } = useAuthContext();
     const [state, setState] = useState({});
+
+    const [visible, setVisible] = useState([]);
+
+    const [page, setPage] = useState(1);
+
+    const [reply_text, setReply] = useState("");
+
+
     const [tab, setTab] = useState(1);
     const { id } = useParams();
     let navigate = useNavigate();
 
     const callFetch = async () => {
-        const response = await fetchData({}, `/api/tours/${id}?page=1`, false);
+        const response = await fetchData({}, `/api/tours/${id}?page=${page}`, false);
         console.log(response)
         if (response.data) {
             setState(response.data);
+            setVisible(response.data.tour_replies.map(() => false));
         }
+    };
+
+    const send = async (url, data, method) => {
+        const response = await sendData(userData, url, JSON.stringify(data), method);
+        if (response.data) {
+            console.log(response)
+            alert("Успешно!");
+        }
+        else {
+            if (response.action === "unauth") {
+                deleteCookie();
+                setUserData(null);
+                alert(response.message);
+                navigate("/login");
+            }
+            else {
+                alert(response.message);
+            }
+        }
+    };
+
+    const handleToggle = (index) => {
+
+        const newVisibleItems = [...visible];
+
+        newVisibleItems[index] = !newVisibleItems[index];
+
+        setVisible(newVisibleItems);
+
     };
 
     const isLogin = () => {
@@ -40,14 +83,20 @@ export default function TourPage() {
     }
 
     const addToProfile = () => {
-        if(isLogin()){
-            alert('norm');
+        if (isLogin()) {
+            const result = window.confirm("Подтвердите действие");
+            if(result){
+                send(`/api/tours/${id}/payment`, {acceptance: true}, 'POST');
+            }
         };
     };
 
     const sendQuestion = () => {
-        if(isLogin()){
-            alert('norm');
+        if (isLogin()) {
+            const result = window.confirm("Подтвердите действие");
+            if(result){
+                send(`/api/tours/${id}/add_reply`, {reply_text: reply_text}, 'POST');
+            }
         };
     }
 
@@ -57,6 +106,7 @@ export default function TourPage() {
     }, []);
 
     let content;
+    let paginator = null;
     switch (tab) {
         case 1:
             content = <>
@@ -78,14 +128,52 @@ export default function TourPage() {
             </>;
             break;
         default:
+
+            paginator = <>
+                <div
+                    className={!(state.prev_page || state.next_page) ? 'hidden-class' : 'tour-page-paginator'}
+                // className='tour-page-paginator'
+                >
+                    <button><img src={ArrowLeft} alt=''></img></button>
+                    <div className='paginator-cur-page'>{page}</div>
+                    <button><img className='next-img' src={ArrowLeft} alt=''></img></button>
+                </div>
+            </>
+
+            let qAndABlock = [];
+            state.tour_replies.forEach((elem, index) => {
+                qAndABlock.push(<>
+                    <div className='question'>
+                        <h3>{elem.author.login}</h3>
+                        <p>{elem.reply_text}</p>
+                    </div>
+                    {elem.replies.length > 0 ?
+                        <div className='answer'>
+                            <div className='show-answer'>
+                                <h3>ОТВЕТ</h3>
+                                <button className='show-answer-btn'
+                                    onClick={() => handleToggle(index)}>
+                                    <img className={!visible[index] ? 'image-flip' : ""} src={Arrow} alt=''></img>
+                                </button>
+                            </div>
+                            <p className={!visible[index] ? 'hidden-class' : ""}>{elem.replies[0].reply_text}</p>
+                        </div> : null}
+                </>);
+
+            })
+
             content = <>
                 <div className='tour-page-info-block'>
                     <h1>{state?.tour?.tour_title}</h1>
-                    <textarea className='question-input-area' placeholder='Задайте нам свой вопрос'></textarea>
+                    <textarea onChange={(val) => setReply(val.target.value)} className='question-input-area' placeholder='Задайте нам свой вопрос'></textarea>
                     <div className='btn-block-tour-page' style={{ justifyContent: 'start' }}>
-                        <button onClick={() => {sendQuestion()}} className='tour-page-button'>Отправить</button>
+                        <button onClick={() => { sendQuestion() }} className='tour-page-button'>Отправить</button>
                     </div>
                 </div>
+                <div className='tour-page-quest-block'>
+                    {qAndABlock}
+                </div>
+
 
             </>;
             break;
@@ -106,6 +194,7 @@ export default function TourPage() {
                 <div className='tour-page-content'>
                     {content}
                 </div>
+                {paginator}
             </div>
 
         </>
