@@ -1,16 +1,7 @@
 import './TourPage.css';
 import React, { useEffect, useState } from 'react';
-
-
 import { useNavigate, useParams} from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
-
-import Serv from '../../../resources/Tour/services.png'
-
-import Arrow from '../../../resources/Tour/arrow_down.png'
-import ArrowLeft from '../../../resources/Tour/arrow_left.png'
-
-
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
 import dayjs from 'dayjs'
@@ -128,7 +119,7 @@ export default function TourPage() {
                 </div>
                 <div className='tour-page-price-block'>
                     <p>{`${dayjs(state?.tour?.tour_start_date).format("DD.MM.YY")}-${dayjs(state?.tour?.tour_end_date).format("DD.MM.YY")}`}</p>
-                    <img src={Serv} alt=''></img>
+                    <img src={'/Tour/services.png'} alt=''></img>
                     <div>
                         <h1>Цена: {state?.tour?.price_with_discount ? <span>{state?.tour?.tour_price}</span> : null}{state?.tour?.price_with_discount ? state?.tour?.price_with_discount : state?.tour?.tour_price}руб</h1>
                     </div>
@@ -146,9 +137,9 @@ export default function TourPage() {
                     className={!(state.prev_page || state.next_page) ? 'hidden-class' : 'tour-page-paginator'}
                 // className='tour-page-paginator'
                 >
-                    <button disabled={!state.prev_page} onClick={()=>newPage(page-1)}><img src={ArrowLeft} alt=''></img></button>
+                    <button disabled={!state.prev_page} onClick={()=>newPage(page-1)}><img src={'/Tour/arrow_left.png'} alt=''></img></button>
                     <div className='paginator-cur-page'>{page}</div>
-                    <button disabled={!state.next_page} onClick={()=>newPage(page+1)}><img className='next-img' src={ArrowLeft} alt=''></img></button>
+                    <button disabled={!state.next_page} onClick={()=>newPage(page+1)}><img className='next-img' src={'/Tour/arrow_left.png'} alt=''></img></button>
                 </div>
             </>
 
@@ -166,7 +157,7 @@ export default function TourPage() {
                                 <h3>ОТВЕТ</h3>
                                 <button className='show-answer-btn'
                                     onClick={() => handleToggle(index)}>
-                                    <img className={!visible[index] ? 'image-flip' : ""} src={Arrow} alt=''></img>
+                                    <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
                                 </button>
                             </div>
                             <p className={!visible[index] ? 'hidden-class' : ""}>{elem.replies[0].reply_text}</p>
@@ -180,7 +171,7 @@ export default function TourPage() {
                                 <h3>ОТВЕТИТЬ</h3>
                                 <button className='show-answer-btn'
                                     onClick={() => handleToggle(index)}>
-                                    <img className={!visible[index] ? 'image-flip' : ""} src={Arrow} alt=''></img>
+                                    <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
                                 </button>
                             </div>
                             <textarea

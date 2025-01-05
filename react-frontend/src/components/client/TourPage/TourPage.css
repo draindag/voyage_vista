@@ -3,7 +3,6 @@
     height: 350px;
     overflow: hidden;
     margin-bottom: 50px;
-    /* Обрезаем излишки изображения */
 }
 
 .tour-header img {
