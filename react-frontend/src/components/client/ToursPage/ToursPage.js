@@ -1,5 +1,3 @@
-import '../../../resources/constants.css';
-
 import './ToursPage.css';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';

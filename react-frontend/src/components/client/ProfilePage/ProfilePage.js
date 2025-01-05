@@ -1,5 +1,4 @@
 import './ProfilePage.css';
-import '../../../resources/constants.css';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import React, { useState, useEffect, useRef } from 'react';
 import TourSlider from './TourSlider';

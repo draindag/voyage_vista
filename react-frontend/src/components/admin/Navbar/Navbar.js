@@ -1,6 +1,4 @@
 import './AdminNavbar.css';
-import '../../../resources/constants.css';
-
 import React from 'react';
 
 

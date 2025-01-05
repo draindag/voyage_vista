@@ -1,10 +1,5 @@
-import '../../../resources/constants.css';
-
 import './InfoPage.css';
-
 import React from 'react';
-
-
 
 export default function InfoPage() {
     return (
@@ -81,9 +76,6 @@ export default function InfoPage() {
 
 
             </div>
-
-            {/* <img src={BackPage}></img> */}
-
         </>
     );
 }

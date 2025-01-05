@@ -1,4 +1,3 @@
-import '../../../resources/constants.css';
 import './MainPage.css';
 import React, { useEffect, useState } from 'react';
 import SimpleSlider from '../Slider/Slider';

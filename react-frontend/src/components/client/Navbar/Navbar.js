@@ -1,5 +1,4 @@
 import './Navbar.css';
-import '../../../resources/constants.css';
 
 import React, { useState, useEffect } from 'react';
 import ProfileManager from '../ProfileManager/ProfileManager';

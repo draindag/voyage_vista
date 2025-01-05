@@ -1,4 +1,3 @@
-import '../../../resources/constants.css';
 import './ToursCategoryesPage.css';
 import React, { useEffect, useState } from 'react';
 import TourSlider from './TourSlider';
