@@ -6,7 +6,6 @@ import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
 
-import PlusImage from '../../../resources/admin/Images/cricle_plus.png'
 
 export default function AddCountryOrCategory(props) {
     const { id } = useParams();
@@ -96,7 +95,6 @@ export default function AddCountryOrCategory(props) {
         }
         console.log(formData)
 
-        // formData = "category_description=asfasfasfas&password=секрет"
         const response = await sendData(userData, url, formData, method, true);
         if (response.action === "ok") {
             console.log(response)
@@ -146,7 +144,7 @@ export default function AddCountryOrCategory(props) {
                     </div>
                     <div>
                         <div className='image-preview'>
-                            <img src={state.image ? state.imageToShow : PlusImage} alt=''></img>
+                            <img src={state.image ? state.imageToShow : '/admin/Images/cricle_plus.png'} alt=''></img>
                         </div>
                         <div className='add-image-input-block'>
                             <label>Загрузить картинку с компьютера:</label>

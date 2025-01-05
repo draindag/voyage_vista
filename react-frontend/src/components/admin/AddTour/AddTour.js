@@ -5,8 +5,6 @@ import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
 
-import PlusImage from '../../../resources/admin/Images/cricle_plus.png'
-
 const { v4: uuidv4 } = require('uuid');
 
 export default function AddTour(props) {
@@ -67,10 +65,6 @@ export default function AddTour(props) {
             method = 'PUT';
             url = `/api/admin_panel/tours/${id}/edit`;
             formData.append(`tour_id`, id);
-            // if (state.image !== state.prevImage) {
-            //     console.log("ОДИНАКОВЫЕ")
-            //     formData.append(`cover_image`, state.image)
-            // }
         }
         else {
             formData.append(`cover_image`, state.image)
@@ -198,11 +192,6 @@ export default function AddTour(props) {
         // eslint-disable-next-line    
     }, []);
 
-
-    // state?.countriesList.map( (item)=>{<>
-    //     <option value={item.country_name}>{item.country_name}</option>
-    // </>
-    // });
     let countriesOptions = [];
     state?.countriesList.forEach(elem => {
         countriesOptions.push(
@@ -279,7 +268,7 @@ export default function AddTour(props) {
                     </div>
                     <div>
                         <div className='image-preview'>
-                            <img src={state.image ? state.imageToShow : PlusImage} alt=''></img>
+                            <img src={state.image ? state.imageToShow : '/admin/Images/cricle_plus.png'} alt=''></img>
                         </div>
                         <div className='add-image-input-block'>
                             <label>Загрузить картинку с компьютера:</label>
