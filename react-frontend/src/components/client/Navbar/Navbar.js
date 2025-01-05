@@ -1,15 +1,7 @@
 import './Navbar.css';
-
 import React, { useState, useEffect } from 'react';
 import ProfileManager from '../ProfileManager/ProfileManager';
-
 import { fetchData } from '../../general/web_ops';
-import home from '../../../resources/Navbar/Images/home.svg';
-import contacts from '../../../resources/Navbar/Images/contacts.svg';
-import tourist from '../../../resources/Navbar/Images/tourist.svg';
-import personalAccount from '../../../resources/Navbar/Images/personalAccount.svg';
-import country from '../../../resources/Navbar/Images/country.svg';
-import logo from '../../../resources/Navbar/Images/logo.svg';
 
 
 export default function Navbar() {
@@ -79,17 +71,17 @@ export default function Navbar() {
     return <>
         <div className={navClasses} id="navbar" style={{ paddingTop: `${paddingTop}px` }}>
             <div className="header-logo">
-                <img src={logo} alt="" />
+                <img src={'/Navbar/Images/logo.svg'} alt="" />
                 <span style={{ maxWidth: "188px", textWrap: "wrap" }}>Voyage vista</span>
             </div>
             <div className="header-navbar" id="header-navbar" style={{ background: scrolled ? 'none' : 'var(--navbar-background)' }}>
                 <div className="navbar-content">
-                    <a href="/"><img src={home} alt="" /><span>Главная</span></a>
+                    <a href="/"><img src={'/Navbar/Images/home.svg'} alt="" /><span>Главная</span></a>
                     {/* <a href="/countryes"><img src={country} alt="" /><span>Страны</span></a> */}
-                    <button id='country-button' className='country-button' onClick={() => setShowList(!showList)}><img src={country} alt="" /><span>Страны</span></button>
-                    <a href="/info"><img src={tourist} alt="" /><span>Туристам</span></a>
-                    <a href="/contacts"><img src={contacts} alt="" /><span>Контактная информация</span></a>
-                    <button id='profile-button' className='profile-button' onClick={() => setShowProfileManager(!showProfileManager)}><img src={personalAccount} alt="" /><span>Мой кабинет</span></button>
+                    <button id='country-button' className='country-button' onClick={() => setShowList(!showList)}><img src={'/Navbar/Images/country.svg'} alt="" /><span>Страны</span></button>
+                    <a href="/info"><img src={'/Navbar/Images/tourist.svg'} alt="" /><span>Туристам</span></a>
+                    <a href="/contacts"><img src={'/Navbar/Images/contacts.svg'} alt="" /><span>Контактная информация</span></a>
+                    <button id='profile-button' className='profile-button' onClick={() => setShowProfileManager(!showProfileManager)}><img src={'/Navbar/Images/personalAccount.svg'} alt="" /><span>Мой кабинет</span></button>
                 </div>
             </div>
         </div>
