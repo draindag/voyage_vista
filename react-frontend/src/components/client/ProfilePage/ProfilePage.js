@@ -303,16 +303,23 @@ export default function ProfilePage() {
                 <button onClick={() => { setTab(2) }}>ИЗБРАННОЕ</button>
                 <button style={{ background: '#5D7EA7' }} onClick={() => { setTab(3) }}>МОИ ТУРЫ</button>
             </>;
-            content = state.tours.length > 0 ? <>
-                <TourSlider tours={bigTours} settings={{
-                    className: "center",
-                    centerMode: true,
-                    infinite: true,
-                    centerPadding: "0px",
-                    slidesToShow: 1,
-                    speed: 500,
-                }} />
-            </> : 'Данные отсутствуют';
+            switch (state.tours.length) {
+                case 0:
+                    content = 'Данные отсутствуют';
+                    break;
+                case 1:
+                    content = bigTours;
+                    break
+                default:
+                    content = <TourSlider tours={bigTours} settings={{
+                        className: "center",
+                        centerMode: true,
+                        infinite: true,
+                        centerPadding: "0px",
+                        slidesToShow: 1,
+                        speed: 500,
+                    }} />
+            }
             name = 'МОИ ТУРЫ';
             break;
     }
