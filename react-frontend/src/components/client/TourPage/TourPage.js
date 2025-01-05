@@ -34,7 +34,7 @@ export default function TourPage() {
     let navigate = useNavigate();
 
 
-    const callFetch = async () => {
+    const callFetch = async (page = 1) => {
         const response = await fetchData({}, `/api/tours/${id}?page=${page}`, false);
         console.log(response)
         if (response.data) {
@@ -48,6 +48,7 @@ export default function TourPage() {
         if (response.data) {
             console.log(response)
             alert("Успешно!");
+            callFetch(page);
         }
         else {
             if (response.action === "unauth") {
@@ -106,6 +107,12 @@ export default function TourPage() {
                 send(`/api/tours/${id}/add_reply`, data, 'POST');
             }
         };
+    };
+
+    const newPage = async (page) => {
+        setPage(page);
+        setState({...state, prev_page: false, next_page: false})
+        callFetch(page);
     }
 
     useEffect(() => {
@@ -142,9 +149,9 @@ export default function TourPage() {
                     className={!(state.prev_page || state.next_page) ? 'hidden-class' : 'tour-page-paginator'}
                 // className='tour-page-paginator'
                 >
-                    <button><img src={ArrowLeft} alt=''></img></button>
+                    <button disabled={!state.prev_page} onClick={()=>newPage(page-1)}><img src={ArrowLeft} alt=''></img></button>
                     <div className='paginator-cur-page'>{page}</div>
-                    <button><img className='next-img' src={ArrowLeft} alt=''></img></button>
+                    <button disabled={!state.next_page} onClick={()=>newPage(page+1)}><img className='next-img' src={ArrowLeft} alt=''></img></button>
                 </div>
             </>
 
