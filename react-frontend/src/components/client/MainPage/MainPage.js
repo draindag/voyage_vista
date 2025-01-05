@@ -54,7 +54,7 @@ export default function MainPage() {
 
     let categCards = [
         <>
-            <a href='/tour?type=popular' style={{ textDecoration: "none", }}>
+            <a href='/tours?type=popular' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
@@ -68,7 +68,7 @@ export default function MainPage() {
             </a>
         </>,
         <>
-            <a href='/tour?type=discount' style={{ textDecoration: "none", }}>
+            <a href='/tours?type=discount' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
@@ -84,7 +84,7 @@ export default function MainPage() {
     ];
     state.forEach(item => {
         categCards.push(<>
-            <a href={`/tour/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
+            <a href={`/tours/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
             <div>
                 <div className='card'>
                     <div className='image-container'>
@@ -116,7 +116,7 @@ export default function MainPage() {
             <div className="header-main">
 
                 <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                <a style={{ textDecoration: 'none' }} href='/tours'>
+                <a style={{ textDecoration: 'none' }} href='/tours-categoryes'>
                     <div className="choose-country-button">
                         <span>Выбрать тур</span>
                         <img src={buttonImg} alt="" />

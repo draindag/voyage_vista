@@ -1,6 +1,6 @@
 import '../../../resources/constants.css';
 import './ToursCategoryesPage.css';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import TourSlider from './TourSlider';
 
 import '../MainPage/MainPage.css';
@@ -33,15 +33,17 @@ export default function ToursCategoryesPage() {
     let sliderObjects = []
     state.forEach(item => {
         sliderObjects.push(<>
-            <div className='card-tc'>
-                <div>
-                    <h1>{item?.category_title}</h1>
-                    <p>{item?.category_description}</p>
+            <a href={`/tours/${item.category_id}?type=by-categ`}>
+                <div className='card-tc'>
+                    <div>
+                        <h1>{item?.category_title}</h1>
+                        <p>{item?.category_description}</p>
+                    </div>
+                    <div className='tour-image-container-cat-page'>
+                        <img src={`/cover_images/${item.category_image}`} alt=''></img>
+                    </div>
                 </div>
-                <div className='tour-image-container-cat-page'>
-                    <img src={`/cover_images/${item.category_image}`}alt=''></img>
-                </div>
-            </div>
+            </a>
         </>)
     })
 
@@ -63,9 +65,9 @@ export default function ToursCategoryesPage() {
                 <p className="tours-categoryes-header-text">Выберите свой тур с<br></br>нами</p>
             </div>
             <div className='container'>
-                <TourSlider sliderObjects={sliderObjects} settings={sliderSettings}/>
+                <TourSlider sliderObjects={sliderObjects} settings={sliderSettings} />
             </div>
-        
+
         </>
     );
 }

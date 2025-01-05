@@ -19,9 +19,9 @@ function ClientApp() {
                 <Route path='/reg' element={<AuthPage />}></Route>
                 <Route path='/info' element={<InfoPage />}></Route>
                 <Route path='/profile' element={<ProfilePage />}></Route>
-                <Route path='/tours' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
-                <Route path='/tour' element={<ToursPage />}></Route>
-                <Route path='/tour/:id' element={<ToursPage />}></Route>
+                <Route path='/tours-categoryes' element={<ToursCategoryesPage></ToursCategoryesPage>}></Route>
+                <Route path='/tours' element={<ToursPage />}></Route>
+                <Route path='/tours/:id' element={<ToursPage />}></Route>
                 <Route path='/tour-page/:id' element={<TourPage />}></Route>
                 
             </Routes>
