@@ -8,7 +8,7 @@
 
 from decimal import Decimal
 
-from marshmallow import fields, validates, ValidationError, post_load
+from marshmallow import fields, validates, ValidationError, post_load, validates_schema
 
 from webapp import ma
 from webapp.models.Tour import Tour
@@ -85,6 +85,11 @@ class TourSchema(ma.Schema):
     def validate_end_date(self, value):
         if value is None:
             raise ValidationError("Дата окончания тура не должна быть пустой")
+
+    @validates_schema
+    def validate_dates(self, data, **kwargs):
+        if data["tour_end_date"] < data["tour_start_date"]:
+            raise ValidationError("Дата окончания тура не может быть ранее даты начала тура!")
 
     @post_load
     def create_tour(self, data, **kwargs):
