@@ -67,7 +67,7 @@ export default function AuthPage() {
                 setUserData(responseData);
                 console.log(responseData);
                 alert("Вы успешно авторизованы!");
-                navigate("/");
+                navigate(-1);
             } else {
                 let responseData = await response.json()
                 let messages = "";
