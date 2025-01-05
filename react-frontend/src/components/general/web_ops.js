@@ -30,13 +30,13 @@ const checkToken = async (token) => {
 }
 
 const tryGetReq = async (token, url) => {
-    let headers =  {
+    let headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json;charset=utf-8',
         'Authorization': `Bearer ${token}`
     };
-    if(token){
-        headers = {...headers, 'Authorization': `Bearer ${token}`}
+    if (token) {
+        headers = { ...headers, 'Authorization': `Bearer ${token}` }
     }
     let response = await fetch(`http://127.0.0.1:8000${url}`, {
         method: 'GET',
@@ -55,12 +55,12 @@ const tryPostReq = async (token, url, reqData, method, form = false) => {
         'Accept': 'application/json;charset=utf-8',
         'Authorization': `Bearer ${token}`
     }
-    if(form){
+    if (form) {
         headers = {
             // 'Content-Type': 'multipart/form-data;charset=utf-8',
             'Accept': 'application/json;charset=utf-8',
             'Authorization': `Bearer ${token}`,
-            
+
         }
     }
     let response = await fetch(`http://127.0.0.1:8000${url}`, {
@@ -71,66 +71,74 @@ const tryPostReq = async (token, url, reqData, method, form = false) => {
     return response;
 };
 
+const refresh = async (userData) => {
+    let res = await checkToken(userData?.access_token);
+    if (!res) {
+        let resp = await refreshToken(userData?.refresh_token)
+        if (!resp) {
+            return null;
+        }
+        let result = { access_token: resp, refresh_token: userData.refresh_token, role: userData.role }
+        return result;
+    }
+    else {
+        return userData
+    }
+}
+
+const formAnswer = (res, status, userData, type = 1) => {
+    if (type !== 1) {
+        return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth", status: 401 };
+    }
+    if (status === 200 || status === 201) {
+        return { data: res, userData: userData, message: "OK", action: "ok" };
+    } else {
+        return { data: null, userData: userData, message: "Произошла ошибка при загрузке данных", action: "fail", ex: "" };
+    }
+}
+
 
 const sendData = async (userData, url, reqData, method, form = false, needCheck = true) => {
-    let result = null;
-    let newUser = userData;
     try {
-        let token = userData.access_token;
-        // console.log("CHECK")
-        if(needCheck){
-            const check = await checkToken(userData?.access_token)
-            if (!check) {
-                // console.log("Refresh")
-                let refresh = await refreshToken(userData?.refresh_token)
-                if (!refresh) {
-                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth", status: response.status };
-                }
-                newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
+        let newUser = userData;
+        console.log(`Токен начала ${newUser.access_token}`)
+        if (needCheck) {
+            let refreshResult = await refresh(userData);
+            if (!refreshResult) {
+                return formAnswer(null, 0, null, 2)
+            }
+            else {
+                newUser = refreshResult;
             }
         }
-        // console.log("SUCCESS to refresh")
-        let response = await tryPostReq(token, url, reqData, method, form);
-        console.log(result);
-        if (response.status === 201 || response.status === 200) {
-            result = await response.json()
-            return { data: result, userData: newUser, message: "OK", action: "ok" };
-        } else {
-            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail", status: response.status};
-        }
+        console.log(`Токен факт ${newUser.access_token}`)
+        const response = await tryPostReq(newUser.access_token, url, reqData, method, form);
+        const content = await response.json();
+        return formAnswer(content, response.status, newUser)
     } catch (e) {
-        console.log(e)
         return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except" };
     }
 };
 
 
 const fetchData = async (userData, url, needCheck = true) => {
-    let result = null;
-    let newUser = userData;
     try {
-        let token = userData?.access_token;
-        // console.log("CHECK")
-        if(needCheck){
-            let check = await checkToken(token)
-            if (!check) {
-                console.log("Refresh")
-                let refresh = await refreshToken(userData?.refresh_token)
-                if (!refresh) {
-                    return { data: null, userData: null, message: "Авторизируйтесь повторно", action: "unauth" };
-                }
-                newUser = { access_token: refresh, refresh_token: userData.refresh_token, role: userData.role };
+        let newUser = userData;
+        console.log(`Токен начала ${newUser.access_token}`)
+        if (needCheck) {
+            let refreshResult = await refresh(userData);
+            if (!refreshResult) {
+                return formAnswer(null, 0, null, 2)
+            }
+            else {
+                newUser = refreshResult;
             }
         }
-        // console.log("SUCCESS to refresh")
-        let response = await tryGetReq(token, url);
-        console.log(result);
-        if (response.status === 200) {
-            result = await response.json()
-            return { data: result, userData: newUser, message: "OK", action: "ok" };
-        } else {
-            return { data: null, userData: newUser, message: "Произошла ошибка при загрузке данных", action: "fail", ex: "" };
-        }
+        console.log(`Токен факт ${newUser.access_token}`)
+        const response = await tryGetReq(newUser.access_token, url);
+        const content = await response.json();
+        console.log(content);
+        return formAnswer(content, response.status, newUser)
     } catch (e) {
         return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", ex: e };
     }

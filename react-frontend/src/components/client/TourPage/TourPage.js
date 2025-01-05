@@ -36,7 +36,7 @@ export default function TourPage() {
 
     const callFetch = async (page = 1) => {
         const response = await fetchData({}, `/api/tours/${id}?page=${page}`, false);
-        console.log(response)
+        // console.log(response)
         if (response.data) {
             setState(response.data);
             setVisible(response.data.tour_replies.map(() => false));
@@ -46,7 +46,7 @@ export default function TourPage() {
     const send = async (url, data, method) => {
         const response = await sendData(userData, url, JSON.stringify(data), method);
         if (response.data) {
-            console.log(response)
+            // console.log(response)
             alert("Успешно!");
             callFetch(page);
         }
