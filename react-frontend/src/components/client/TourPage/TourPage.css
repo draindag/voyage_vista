@@ -184,6 +184,7 @@
 .tour-page-quest-block {
     height: 650px;
     overflow: auto;
+    min-width: 600px;
 }
 
 .tour-page-quest-block h3 {
@@ -203,6 +204,12 @@
 .show-answer {
     display: flex;
     align-items: center;
+}
+
+.answer p {
+    margin-left: 60px;
+    white-space: pre-wrap; 
+    word-wrap: break-word;
 }
 
 .show-answer-btn {
@@ -242,6 +249,28 @@
     text-decoration-skip-ink: none;
 
 }
+
+.answ-input{
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 50px;
+    width: 90%;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.answ-button{
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 10px 20px 10px 20px;
+    color: #444444;
+    border: 1px solid #444444;
+    background-color: #ffffff;
+}
+.answ-button:hover{
+    color: #720100;
+}
+
 
 .next-img {
     transform: scaleX(-1);

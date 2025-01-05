@@ -33,6 +33,7 @@ export default function TourPage() {
     const { id } = useParams();
     let navigate = useNavigate();
 
+
     const callFetch = async () => {
         const response = await fetchData({}, `/api/tours/${id}?page=${page}`, false);
         console.log(response)
@@ -85,17 +86,24 @@ export default function TourPage() {
     const addToProfile = () => {
         if (isLogin()) {
             const result = window.confirm("Подтвердите действие");
-            if(result){
-                send(`/api/tours/${id}/payment`, {acceptance: true}, 'POST');
+            if (result) {
+                send(`/api/tours/${id}/payment`, { acceptance: true }, 'POST');
             }
         };
     };
 
-    const sendQuestion = () => {
+    const sendRepl = (parent = null) => {
         if (isLogin()) {
             const result = window.confirm("Подтвердите действие");
-            if(result){
-                send(`/api/tours/${id}/add_reply`, {reply_text: reply_text}, 'POST');
+            if (result) {
+                let data;
+                if (parent) {
+                    data = { reply_text: reply_text, parent_reply_id: parent }
+                }
+                else {
+                    data = { reply_text: reply_text }
+                }
+                send(`/api/tours/${id}/add_reply`, data, 'POST');
             }
         };
     }
@@ -141,13 +149,14 @@ export default function TourPage() {
             </>
 
             let qAndABlock = [];
+
+
             state.tour_replies.forEach((elem, index) => {
-                qAndABlock.push(<>
-                    <div className='question'>
-                        <h3>{elem.author.login}</h3>
-                        <p>{elem.reply_text}</p>
-                    </div>
-                    {elem.replies.length > 0 ?
+
+
+                let answerBlock = null;
+                if (elem.replies.length > 0) {
+                    answerBlock = <>
                         <div className='answer'>
                             <div className='show-answer'>
                                 <h3>ОТВЕТ</h3>
@@ -157,7 +166,39 @@ export default function TourPage() {
                                 </button>
                             </div>
                             <p className={!visible[index] ? 'hidden-class' : ""}>{elem.replies[0].reply_text}</p>
-                        </div> : null}
+                        </div>
+                    </>
+                }
+                if (userData?.role === "moderator" && !answerBlock) {
+                    answerBlock = <>
+                        <div className='answer'>
+                            <div className='show-answer'>
+                                <h3>ОТВЕТИТЬ</h3>
+                                <button className='show-answer-btn'
+                                    onClick={() => handleToggle(index)}>
+                                    <img className={!visible[index] ? 'image-flip' : ""} src={Arrow} alt=''></img>
+                                </button>
+                            </div>
+                            <textarea
+                                onChange={(val) => setReply(val.target.value)}
+                                className={!visible[index] ? 'hidden-class answ-input' : "answ-input"}></textarea>
+                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                <button
+                                    onClick={() => { sendRepl(elem.reply_id) }}
+                                    className={!visible[index] ? 'hidden-class answ-input' : "answ-button"}>Ответить</button>
+                            </div>
+                        </div>
+                    </>
+                }
+
+
+
+                qAndABlock.push(<>
+                    <div className='question'>
+                        <h3>{elem.author.login}</h3>
+                        <p>{elem.reply_text}</p>
+                    </div>
+                    {answerBlock}
                 </>);
 
             })
@@ -165,10 +206,17 @@ export default function TourPage() {
             content = <>
                 <div className='tour-page-info-block'>
                     <h1>{state?.tour?.tour_title}</h1>
-                    <textarea onChange={(val) => setReply(val.target.value)} className='question-input-area' placeholder='Задайте нам свой вопрос'></textarea>
-                    <div className='btn-block-tour-page' style={{ justifyContent: 'start' }}>
-                        <button onClick={() => { sendQuestion() }} className='tour-page-button'>Отправить</button>
-                    </div>
+                    {
+                        userData?.role === "moderator" ?
+                            null :
+                            <>
+                                <textarea onChange={(val) => setReply(val.target.value)}
+                                    className='question-input-area' placeholder='Задайте нам свой вопрос'></textarea>
+                                <div className='btn-block-tour-page' style={{ justifyContent: 'start' }}>
+                                    <button onClick={() => { sendRepl() }} className='tour-page-button'>Отправить</button>
+                                </div>
+                            </>
+                    }
                 </div>
                 <div className='tour-page-quest-block'>
                     {qAndABlock}
