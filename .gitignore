@@ -1,6 +1,7 @@
 **/__pycache__/
 venv
 .idea
+.env
 
 # Исключение файла покрытия
 .coverage
