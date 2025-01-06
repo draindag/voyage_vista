@@ -2,39 +2,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import './TourSlider.css';
-
-import arrowLeft from '../../../resources/Slider/Images/arrow_left.png';
-import arrowRight from '../../../resources/Slider/Images/arrow_right.png';
-
-
-const tour =     {
-
-    tour_image: 'image1.jpg',
-
-    tour_title: 'Приключение на Гавайях',
-
-    tour_start_date: '2025-01-10',
-
-    tour_end_date: '2025-01-20',
-
-    tour_description: 'Незабываемое путешествие на самый красивый остров.',
-
-    country: { country_name: 'США' },
-
-    tour_price: 1000,
-
-    price_with_discount: 800,
-
-}
-
-const toursData = [
-    tour, tour, tour
-
-    // Добавьте дополнительные туры здесь
-
-];
 
 
 function SampleNextArrow(props) {
@@ -50,7 +18,7 @@ function SampleNextArrow(props) {
                 zIndex: 1 // Чтобы стрелка была поверх других элементов
             }}
             onClick={onClick}>
-            <img src={arrowRight} alt=''></img>
+            <img src={'/Slider/Images/arrow_right.png'} alt=''></img>
         </div>
     );
 }
@@ -70,7 +38,7 @@ function SamplePrevArrow(props) {
 
             }}
             onClick={onClick}>
-            <img src={arrowLeft} alt=''></img>
+            <img src={'/Slider/Images/arrow_left.png'} alt=''></img>
         </div>
     );
 }

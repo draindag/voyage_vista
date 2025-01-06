@@ -77,24 +77,31 @@ export default function ProfilePage() {
     ));
 
     const smallTour = state.favor?.map((item, index) => (
-        <div className='tour-card'>
-            <div className='tour-card-image-container'>
-                <img src={`/cover_images/${item?.tour_image}`} alt="" />
-            </div>
-            <div className='tour-card-info-container'>
-                <h2>{item?.tour_title}</h2>
-                <h3>{`${dayjs(item.tour_start_date).format("DD.MM.YYYY")} - ${dayjs(item.tour_end_date).format("DD.MM.YYYY")}`}</h3>
-                <div className='tour-card-info'>
-                    <p>{item.tour_description}</p>
-                    <p>Страна: {item?.country?.country_name}</p>
+        <div>
+            <div className='tour-card'>
+                <div className='tour-card-image-container'>
+                    <img src={`/cover_images/${item?.tour_image}`} alt="" />
                 </div>
-                <div className='price_block'>
-                    {item.price_with_discount ? <span>{item.tour_price}</span> : null}
-                    <h1>{item.price_with_discount ? item.price_with_discount : item.tour_price}</h1>
+                <div className='tour-card-info-container'>
+                    <h2>{item?.tour_title}</h2>
+                    <h3>{`${dayjs(item.tour_start_date).format("DD.MM.YYYY")} - ${dayjs(item.tour_end_date).format("DD.MM.YYYY")}`}</h3>
+                    <div className='tour-card-info'>
+                        <p>{item.tour_description}</p>
+                        <p>Страна: {item?.country?.country_name}</p>
+                    </div>
+                    <div className='price_block'>
+                        {item.price_with_discount ? <span>{item.tour_price}</span> : null}
+                        <h1>{item.price_with_discount ? item.price_with_discount : item.tour_price}</h1>
+                    </div>
                 </div>
             </div>
+            <button
+                onClick={async () => await favorReq(item.tour_id, index)}
+                className= 'un-favor-btn'></button>
         </div>
     ));
+
+
 
     const sendProgileEdit = async (type) => {
         let sendedData;
@@ -154,6 +161,34 @@ export default function ProfilePage() {
             }
         })
 
+
+    }
+
+    const favorReq = async (id, index) => {
+        let method = "DELETE"
+        let url = `/api/tours/${id}/out_of_favourite`;
+        let conf = window.confirm('Вы уверены, что хотите убрать тур из избранного?')
+        if(!conf){
+            return
+        }
+        const response = await sendData(userData, url, JSON.stringify(""), method);
+        if (response.data) {
+            const newFavList = [...state.favor];
+            newFavList.splice(index, 1);
+            alert("Успешно!");
+            setState({ ...state, favor: newFavList });
+        }
+        else {
+            if (response.action === "unauth") {
+                deleteCookie();
+                setUserData(null);
+                alert(response.message);
+                navigate("/login");
+            }
+            else {
+                alert(response.message);
+            }
+        }
 
     }
 
@@ -285,16 +320,23 @@ export default function ProfilePage() {
                 <button style={{ background: '#5D7EA7' }} onClick={() => { setTab(2) }}>ИЗБРАННОЕ</button>
                 <button onClick={() => { setTab(3) }}>МОИ ТУРЫ</button>
             </>;
-            content = state.favor.length > 0 ? <>
-                <TourSlider tours={smallTour} settings={{
-                    className: "center",
-                    centerMode: true,
-                    infinite: true,
-                    centerPadding: "0px",
-                    slidesToShow: 2,
-                    speed: 500,
-                }} />
-            </> : 'Данные отсутствуют';
+            switch (state.favor.length) {
+                case 0:
+                    content = 'Данные отсутствуют';
+                    break;
+                case 1:
+                    content = smallTour;
+                    break
+                default:
+                    content = <TourSlider tours={smallTour} settings={{
+                        className: "center",
+                        centerMode: true,
+                        infinite: true,
+                        centerPadding: "0px",
+                        slidesToShow: 2,
+                        speed: 500,
+                    }} />
+            };
             name = 'ИЗБРАННОЕ';
             break;
         default:
@@ -343,7 +385,6 @@ export default function ProfilePage() {
                 <h1 className='profile-data-h1 '>{name}</h1>
                 <div>
                     {content}
-
                 </div>
             </div>
 
