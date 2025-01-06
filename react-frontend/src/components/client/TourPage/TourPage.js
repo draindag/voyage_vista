@@ -146,10 +146,23 @@ export default function TourPage() {
             </>
 
             let qAndABlock = [];
-            if(state.tour_replies.length === 0){
+            if (state.tour_replies.length === 0) {
                 qAndABlock = "Будьте первым, кто оставит отзыв!"
             }
             state.tour_replies.forEach((elem, index) => {
+
+
+                let delBtn = userData?.role === "moderator" ?
+                    <>
+                        <button className='del-btn'
+                            onClick={() => {
+                                let conf = window.confirm("Вы уверены, что хотите удалить комментарий?")
+                                if (conf) {
+                                    send(`/api/tours/replies/${elem.reply_id}/delete`, "", 'DELETE')
+                                }
+                            }}>Удалить</button>
+                    </>
+                    : null;
 
 
                 let answerBlock = null;
@@ -162,16 +175,7 @@ export default function TourPage() {
                                     onClick={() => handleToggle(index)}>
                                     <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
                                 </button>
-                                <button className='del-btn'
-                                    onClick={() => {
-                                        let conf = window.confirm("Вы уверены, что хотите удалить комментарий?")
-                                        if (conf) {
-                                            send(`/api/tours/replies/${elem.reply_id}/delete`, "", 'DELETE')
-                                        }
-                                    }}
-                                >
-                                    Удалить
-                                </button>
+                                {delBtn}
                             </div>
                             <p className={!visible[index] ? 'hidden-class' : ""}>{elem.replies[0].reply_text}</p>
                         </div>
@@ -186,16 +190,7 @@ export default function TourPage() {
                                     onClick={() => handleToggle(index)}>
                                     <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
                                 </button>
-                                <button className='del-btn'
-                                    onClick={() => {
-                                        let conf = window.confirm("Вы уверены, что хотите удалить комментарий?")
-                                        if (conf) {
-                                            send(`/api/tours/replies/${elem.reply_id}/delete`, "", 'DELETE')
-                                        }
-                                    }}
-                                >
-                                    Удалить
-                                </button>
+                                {delBtn}
                             </div>
                             <textarea
                                 onChange={(val) => setReply(val.target.value)}
