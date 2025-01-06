@@ -138,14 +138,8 @@ export default function ToursPage() {
     return (
         <>
             <div className="tours-header">
+                <img alt='' src={`/cover_images/${id}.png`}></img>
                 <div className='triangle-back'></div>
-                {/* <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                <a style={{ textDecoration: 'none' }} href='/tours'>
-                    <div className="choose-country-button">
-                        <span>Выбрать тур</span>
-                        <img src={buttonImg} alt="" />
-                    </div>
-                </a> */}
             </div>
             <div className='tours-container'>
                 {toursCards}
