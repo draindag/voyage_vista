@@ -37,6 +37,7 @@ export default function TourPage() {
         if (response.data) {
             alert("Успешно!");
             callFetch(page);
+            setUserData(response.userData);
         }
         else {
             if (response.action === "unauth") {

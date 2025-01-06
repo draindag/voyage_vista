@@ -131,3 +131,36 @@
     text-decoration-skip-ink: none;
 
 }
+
+.to-favor-btn{
+    z-index: 1000;
+    position: relative;
+    height: 51px;
+    width: 62px;
+    top: -570px;
+    left: 360px;
+    border: none;
+    background-color: #ffffff00;
+    background-image: url('../../../../public/ToursPage/heart.png');
+    cursor: pointer;
+}
+
+.to-favor-btn:hover{
+    background-image: url('../../../../public/ToursPage/heart_hover.png');
+}
+
+.un-favor-btn{
+    position: relative;
+    height: 51px;
+    width: 62px;
+    top: -570px;
+    left: 360px;
+    border: none;
+    background-color: #ffffff00;
+    background-image: url('../../../../public/ToursPage/heart_hover.png');
+    /* cursor: pointer; */
+}
+
+.un-favor-btn:hover{
+    background-image: url('../../../../public/ToursPage/heart.png');
+}
