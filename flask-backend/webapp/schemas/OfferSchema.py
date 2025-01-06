@@ -33,6 +33,11 @@ class OfferSchema(ma.Schema):
         if len(value) > 50:
             raise ValidationError("Название скидки должно содержать не более 50 символов")
 
+    @validates('discount_size')
+    def validate_discount_size(self, value):
+        if not (isinstance(value, float) and 1 <= value <= 99.9):
+            raise ValidationError("Процент скидки должен быть числом от 1 до 99.9")
+
     @validates('end_date')
     def validate_end_date(self, value):
         if value is None:
