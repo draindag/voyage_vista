@@ -1,6 +1,6 @@
 import './TourPage.css';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
@@ -98,9 +98,10 @@ export default function TourPage() {
         };
     };
 
+
     const newPage = async (page) => {
         setPage(page);
-        setState({...state, prev_page: false, next_page: false})
+        setState({ ...state, prev_page: false, next_page: false })
         callFetch(page);
     }
 
@@ -138,15 +139,16 @@ export default function TourPage() {
                     className={!(state.prev_page || state.next_page) ? 'hidden-class' : 'tour-page-paginator'}
                 // className='tour-page-paginator'
                 >
-                    <button disabled={!state.prev_page} onClick={()=>newPage(page-1)}><img src={'/Tour/arrow_left.png'} alt=''></img></button>
+                    <button disabled={!state.prev_page} onClick={() => newPage(page - 1)}><img src={'/Tour/arrow_left.png'} alt=''></img></button>
                     <div className='paginator-cur-page'>{page}</div>
-                    <button disabled={!state.next_page} onClick={()=>newPage(page+1)}><img className='next-img' src={'/Tour/arrow_left.png'} alt=''></img></button>
+                    <button disabled={!state.next_page} onClick={() => newPage(page + 1)}><img className='next-img' src={'/Tour/arrow_left.png'} alt=''></img></button>
                 </div>
             </>
 
             let qAndABlock = [];
-
-
+            if(state.tour_replies.length === 0){
+                qAndABlock = "Будьте первым, кто оставит отзыв!"
+            }
             state.tour_replies.forEach((elem, index) => {
 
 
@@ -159,6 +161,16 @@ export default function TourPage() {
                                 <button className='show-answer-btn'
                                     onClick={() => handleToggle(index)}>
                                     <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
+                                </button>
+                                <button className='del-btn'
+                                    onClick={() => {
+                                        let conf = window.confirm("Вы уверены, что хотите удалить комментарий?")
+                                        if (conf) {
+                                            send(`/api/tours/replies/${elem.reply_id}/delete`, "", 'DELETE')
+                                        }
+                                    }}
+                                >
+                                    Удалить
                                 </button>
                             </div>
                             <p className={!visible[index] ? 'hidden-class' : ""}>{elem.replies[0].reply_text}</p>
@@ -173,6 +185,16 @@ export default function TourPage() {
                                 <button className='show-answer-btn'
                                     onClick={() => handleToggle(index)}>
                                     <img className={!visible[index] ? 'image-flip' : ""} src={'/Tour/arrow_down.png'} alt=''></img>
+                                </button>
+                                <button className='del-btn'
+                                    onClick={() => {
+                                        let conf = window.confirm("Вы уверены, что хотите удалить комментарий?")
+                                        if (conf) {
+                                            send(`/api/tours/replies/${elem.reply_id}/delete`, "", 'DELETE')
+                                        }
+                                    }}
+                                >
+                                    Удалить
                                 </button>
                             </div>
                             <textarea
