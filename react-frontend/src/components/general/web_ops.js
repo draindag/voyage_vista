@@ -93,7 +93,7 @@ const formAnswer = (res, status, userData, type = 1) => {
     if (status === 200 || status === 201) {
         return { data: res, userData: userData, message: "OK", action: "ok" };
     } else {
-        return { data: null, userData: userData, message: "Произошла ошибка при загрузке данных", action: "fail", ex: "" };
+        return { data: null, userData: userData, message: "Произошла ошибка при загрузке данных", action: "fail", ex: "", log: res };
     }
 }
 
@@ -116,7 +116,7 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
         const content = await response.json();
         return formAnswer(content, response.status, newUser)
     } catch (e) {
-        return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except" };
+        return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", log: e.message };
     }
 };
 

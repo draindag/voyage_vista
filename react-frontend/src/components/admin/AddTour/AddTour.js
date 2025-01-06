@@ -85,7 +85,8 @@ export default function AddTour(props) {
                 navigate("/login");
             }
             else {
-                // alert(response.message);
+                let logMess = `${response.message}\n${JSON.stringify(response.log)}`
+                alert(logMess);
             }
         }
     };
