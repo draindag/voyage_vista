@@ -2,18 +2,17 @@ import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import './Slider.css';
+import './TourSlider.css';
 
 function SampleNextArrow(props) {
     const { onClick } = props;
     return (
         <div className='SampleNextArrow'
         style={{
-
             display: "block",
             position: "absolute",
             top: "50%",
-            right: "-100px", 
+            right: "-50px", 
             transform: "translateY(-50%)", 
             zIndex: 1 
         }}
@@ -28,11 +27,10 @@ function SamplePrevArrow(props) {
     return (
         <div
         style={{
-
             display: "block",
             position: "absolute",
             top: "50%",
-            left: "-100px", 
+            left: "-80px", 
             transform: "translateY(-50%)", 
             zIndex: 1 
         }}
@@ -42,9 +40,9 @@ function SamplePrevArrow(props) {
     );
 }
 
-export default function SimpleSlider(props) {
+export default function TourSlider(props) {
     const sett = props.settings
-    const className = `Slider ${props.main ? "": 'Centered-slider'}`
+    const className = `Slider Centered-slider'}`
     return (
         <div className={className}>
             {props.main ? <div style={{ textAlign: 'center' }}>

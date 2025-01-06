@@ -1,0 +1,56 @@
+.contacts-container {
+    width: 100%;
+    display: flex;
+    padding-left: 65px;
+    padding-right: 111px;
+    box-sizing: border-box;
+}
+
+.contacts-container p {
+    display: inline-block;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+
+.contacts-container h1 {
+    text-align: center;
+    margin-top: 0;
+
+    font-family: Inria Serif;
+    font-size: 45px;
+    font-weight: 300;
+    line-height: 35px;
+
+}
+
+.contacts-text-block {
+    margin-right: 100px;
+    width: 900px;
+}
+
+.contacts-bt {
+    font-family: Inria Serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-right: 30px;
+}
+
+.contacts-st {
+    font-family: Inria Serif;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.date-p {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}

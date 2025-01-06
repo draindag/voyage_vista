@@ -2,7 +2,9 @@
     /* Colors */
     --nav-link-color: #ffffff;
     --nav-logo--text-color: #ffffff;
-    --navbar-background: #FFFCFC66;
+    --nav-logo--text-color-dark: #6B6464;
+    --navbar-background: #617eef;
+    --navbar-background-dark: #6B646499;
     /* Fonts */
     --logo-font: Lucida Calligraphy;
     --nav-link-font: Inter;

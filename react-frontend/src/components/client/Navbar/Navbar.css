@@ -1,5 +1,3 @@
-@import url("../../../resources/constants.css");
-
 .header-logo {
     display: flex;
     align-items: center;
@@ -55,7 +53,7 @@
     text-wrap: wrap;
 }
 
-.navbar-content a, button{
+.navbar-content a, .navbar-content button{
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -96,6 +94,37 @@ header p {
 
 }
 
+.country-list {
+    width: 230px;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    background: #FFFF;
+    z-index: 1000;
+}
+
+.country-list a{
+    color: #000000;
+    text-decoration: none;
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 31.17px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+.country-list ul {
+    height: 100%;
+    list-style: none;
+    padding: 20px 0px 0px 15px;
+    margin: 0;
+}
+
+.country-list li {
+    margin-bottom: 20px;
+}
 
 
 @media (max-width: 600px) {

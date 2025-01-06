@@ -1,7 +1,5 @@
-@import url("../../../resources/constants.css");
-
 .tours-categoryes-bgpage {
-    background-image: url("../../../resources/ToursCategoryesPage/Images/image.png");
+    background-image: url("../../../../public/ToursCategoryesPage/Images/image.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -37,13 +35,26 @@
     padding-right: 50px;
 }
 
-.card-tc img{
+.tour-image-container-cat-page{
     width: 471px;
     height: 594px;
     border: 1px solid;
     border-radius: 50px 0 0 0;
+    overflow: hidden; /* Обрезаем излишки изображения */
     
 }
+
+.tour-image-container-cat-page img{
+    width: 100%; 
+
+    height: auto; 
+
+    min-height: 100%; 
+
+    object-fit: cover; 
+}
+
+
 
 .card-tc h1{
     font-family: Bebas Neue;

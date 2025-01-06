@@ -1,31 +1,11 @@
-import '../../../resources/constants.css';
-
 import './MainPage.css';
 import React, { useEffect, useState } from 'react';
-import buttonImg from '../../../resources/MainPage/Images/arrow_tour.png';
-import man from '../../../resources/MainPage/Images/man.png';
-import girl from '../../../resources/MainPage/Images/girl.png';
-import train from '../../../resources/MainPage/Images/Bottom_map.png';
 import SimpleSlider from '../Slider/Slider';
-import SlideImage from '../../../resources/Slider/Images/slideImg.png'
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 
 import { fetchData } from '../../general/web_ops';
 
-
-const imageArr = [
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage,
-    SlideImage
-]
-
 const settings = {
-    // className: "center",
-    // centerMode: true,
-    // infinite: true,
     centerPadding: "0px",
     slidesToShow: 4,
     speed: 500,
@@ -48,17 +28,17 @@ const settings = {
 
 export default function MainPage() {
 
-    const { userData, setUserData } = useAuthContext();
+    const { userData} = useAuthContext();
 
     const [state, setState] = useState([]);
 
     let categCards = [
         <>
-            <a href='/tour?type=popular' style={{ textDecoration: "none", }}>
+            <a href='/tours?type=popular' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
-                            <img src={``} alt="" />
+                            <img src={`/MainPage/Images/popular.jpg`} alt="" />
                         </div>
                         <div className='card-container'>
                             <p>Популярные</p>
@@ -68,11 +48,11 @@ export default function MainPage() {
             </a>
         </>,
         <>
-            <a href='/tour?type=discount' style={{ textDecoration: "none", }}>
+            <a href='/tours?type=discount' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
-                            <img src={``} alt="" />
+                            <img src={`/MainPage/Images/sales.jpg`} alt="" />
                         </div>
                         <div className='card-container'>
                             <p>Со скидкой</p>
@@ -84,7 +64,7 @@ export default function MainPage() {
     ];
     state.forEach(item => {
         categCards.push(<>
-            <a href={`/tour/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
+            <a href={`/tours/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
             <div>
                 <div className='card'>
                     <div className='image-container'>
@@ -101,7 +81,7 @@ export default function MainPage() {
 
     useEffect(() => {
         const callFetch = async () => {
-            const response = await fetchData(userData, "/api", false);
+            const response = await fetchData(userData, "/api/categories_all", false);
             console.log(response)
             if (response.data) {
                 setState(response.data.categories);
@@ -116,10 +96,10 @@ export default function MainPage() {
             <div className="header-main">
 
                 <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                <a style={{ textDecoration: 'none' }} href='/tours'>
+                <a style={{ textDecoration: 'none' }} href='/tours-categoryes'>
                     <div className="choose-country-button">
                         <span>Выбрать тур</span>
-                        <img src={buttonImg} alt="" />
+                        <img src={'/MainPage/Images/arrow_tour.png'} alt="" />
                     </div>
                 </a>
             </div>
@@ -133,9 +113,8 @@ export default function MainPage() {
                         который станет источником ярких впечатлений и уникальных моментов.
                         Мы организуем как индивидуальные, так и групповые туры, предлагая широкий спектр направлений и услуг.
                     </p>
-                    <img src={man} alt="" />
+                    <img src={'/MainPage/Images/man.png'} alt="" />
                 </div>
-                {/* {sliderObjects} */}
                 <SimpleSlider sliderObjects={categCards} settings={settings} main={true} />
 
                 <h1>Почему стоит выбрать нас?</h1>
@@ -170,7 +149,7 @@ export default function MainPage() {
                                     <h3>Доступные цены и уникальные предложения</h3>
                                     <p>Мы предоставляем выгодные условия и часто радуем клиентов специальными предложениями и скидками.</p>
                                 </div>
-                                <h2 style={{ top: '-450px' }}>04</h2>
+                                <h2 style={{ top: '-480px' }}>04</h2>
                             </div>
                         </div>
 
@@ -193,8 +172,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/girl.png'} alt="" />
+                                <h3>Арина Котова</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -213,8 +192,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/glad.jpg'} alt="" />
+                                <h3>Валерий Жмышенко</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -228,8 +207,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={girl} alt="" />
-                                <h3>Имя Фамилия</h3>
+                                <img src={'/MainPage/Images/mops.jpeg'} alt="" />
+                                <h3>Золтан Хивай</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
@@ -247,7 +226,7 @@ export default function MainPage() {
                 </div>
             </div>
 
-            <img src={train} style={{ width: '100%' }} alt='Poezd LOL'></img>
+            <img src={'/MainPage/Images/Bottom_map.png'} style={{ width: '100%' }} alt='Poezd LOL'></img>
 
 
         </>

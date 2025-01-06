@@ -1,0 +1,298 @@
+.tour-header {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    margin-bottom: 50px;
+}
+
+.tour-header img {
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    object-fit: cover;
+}
+
+
+.first-tab {
+    position: absolute;
+    width: 280px;
+    height: 35px;
+    top: 315px;
+    right: 280px;
+}
+
+.second-tab {
+    position: absolute;
+    width: 280px;
+    height: 35px;
+    top: 315px;
+    right: 0px;
+}
+
+.angled-corner-button {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    border: none;
+    color: rgb(0, 0, 0);
+    /* padding: 15px 32px;  */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    clip-path: polygon(0% 100%, 15% 0%, 100% 0%, 100% 100%);
+}
+
+
+.angled-corner-button:hover {
+    background-color: #c7c7c7;
+    color: #444444;
+}
+
+
+.tour-page-container {
+    padding-left: 95px;
+    padding-right: 95px;
+}
+
+
+.tour-page-content {
+    display: flex;
+}
+
+.tour-page-info-block {
+    /* width: 604px; */
+    margin-right: 100px;
+}
+
+.tour-page-info-block h1 {
+    max-width: 600px;
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-family: Roboto;
+    font-size: 68px;
+    font-weight: 200;
+    line-height: 60px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.tour-page-info-block p {
+
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 40px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.tour-page-price-block span {
+    font-family: Inter;
+    font-size: 46px;
+    font-weight: 300;
+    line-height: 55.67px;
+    text-align: left;
+    text-decoration-line: line-through;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+    margin: 0 10px 0 0;
+}
+
+.tour-page-price-block h1 {
+    margin-top: 88px;
+    font-family: Inter;
+    font-size: 55px;
+    font-weight: 200;
+    line-height: 66.56px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+
+.tour-page-price-block p {
+    margin: 0;
+    margin-bottom: 66px;
+    font-family: Inria Serif;
+    font-size: 55px;
+    font-weight: 300;
+    line-height: 65.95px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+
+.tour-page-button {
+    font-family: Beiruti;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 35px;
+    /* text-align: left; */
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    border: none;
+    color: black;
+    background-color: #E9E9E9;
+    transition: background-color 0.3s;
+    width: 300px;
+    height: 55px;
+}
+
+.tour-page-button:hover {
+    background-color: #c2bfbf;
+    color: #444444;
+}
+
+.btn-block-tour-page {
+    display: flex;
+    justify-content: end;
+}
+
+.question-input-area {
+    width: 707px;
+    height: 258px;
+    resize: none;
+    padding: 15px 20px 15px 20px;
+    border-radius: 15px;
+    border: 1px solid black;
+    margin-bottom: 54px;
+
+    font-family: Beiruti;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+
+}
+
+.question h3 {
+    color: #720100;
+}
+
+.tour-page-quest-block {
+    height: 650px;
+    overflow: auto;
+    min-width: 600px;
+}
+
+.tour-page-quest-block h3 {
+    width: auto;
+    margin: 0;
+    margin-right: 10px;
+    font-family: Chango;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+.show-answer {
+    display: flex;
+    align-items: center;
+}
+
+.answer p {
+    margin-left: 60px;
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+}
+
+.show-answer-btn {
+    border: none;
+    display: inline-block;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.show-answer-btn:hover {
+    background-color: #a5a5a5;
+}
+
+
+.tour-page-paginator {
+    display: flex;
+    justify-content: end;
+}
+
+.tour-page-paginator button {
+    border: none;
+    background-color: #ffffff;
+
+}
+
+.paginator-cur-page {
+    width: 30px;
+    height: 30px;
+    background-color: #D9D9D9;
+    font-family: Beiruti;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}
+
+.answ-input{
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 50px;
+    width: 90%;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.answ-button{
+    cursor: pointer;
+    width: 120px;
+    margin-top: 20px;
+    padding: 10px 20px 10px 20px;
+    color: #444444;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    background-color: #ffffff;
+    transition: all 0.1s ease;
+}
+.answ-button:hover, .del-btn:hover{
+    color: #720100;
+    font-weight: bold;
+}
+
+.del-btn {
+    border: none;
+    color: #444444;
+    background-color: #ffffff;
+    transition: all 0.1s ease;
+}
+
+
+.next-img {
+    transform: scaleX(-1);
+    /* transform: scaleX(0.5); */
+}
+
+
+/* monke flip */
+.image-flip {
+    transform: scaleY(-1);
+}
+
+.hidden-class {
+    display: none;
+}

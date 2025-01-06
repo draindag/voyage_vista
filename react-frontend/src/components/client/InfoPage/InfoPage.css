@@ -1,0 +1,28 @@
+.info {
+    background-image: url('../../../../public/InfoPage/back.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 130%;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    max-width: 1667px;
+}
+
+.info-card {
+    background: #FFDADA;
+    border-radius: 20px;
+    padding: 10px;
+    width: 455px;
+    margin-bottom: 22px;
+}
+
+.info-card h2 {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}

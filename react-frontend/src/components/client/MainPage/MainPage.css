@@ -1,5 +1,3 @@
-@import url("../../../resources/constants.css");
-
 h1 {
     font-weight: 400;
     font-size: 55px;
@@ -7,7 +5,7 @@ h1 {
 
 
 .header-main {
-    background-image: url("../../../resources/MainPage/Images/background.png");
+    background-image: url("../../../../public/MainPage/Images/background.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -170,6 +168,8 @@ h1 {
 
 .reason h2 {
     margin: 0;
+    color: #ffffff00;
+    -webkit-text-stroke: 1px #000000;
     position: relative;
     font-family: Inter;
     left: -305px;

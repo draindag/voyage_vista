@@ -1,17 +1,25 @@
 .tours-header {
     height: 531px;
     width: 100%;
-    background: blue;
+    overflow: hidden;
     margin-bottom: 108px;
+}
+
+.tours-header img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    height: 531px;
+    object-fit: cover;
 }
 
 .triangle-back {
     width: 100%;
     height: 100%;
     background: white;
-    /* Цвет фона */
     clip-path: polygon(50% 70%, 0% 100%, 100% 100%);
-    /* Треугольник */
 }
 
 .tours-container {
@@ -31,13 +39,8 @@
 
 .tour-card-image-container {
     width: 100%;
-    /* Ширина контейнера на всю ширину родителя */
     height: 200px;
-    /* Задайте желаемую высоту */
     overflow: hidden;
-    /* Скрываем часть изображения, выходящую за границы */
-    /* position: relative; */
-    /* display: flex; */
 }
 
 .tour-card-image-container img {
@@ -106,7 +109,7 @@
 
 .tour-card-info-container h3 {
     font-family: Inria Serif;
-    font-size: 36px;
+    font-size: 30px;
     font-weight: 300;
     line-height: 43.16px;
     text-align: left;
@@ -135,4 +138,38 @@
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
 
+}
+
+.to-favor-btn{
+    z-index: 999;
+    position: relative;
+    height: 51px;
+    width: 62px;
+    top: -570px;
+    left: 360px;
+    border: none;
+    background-color: #ffffff00;
+    background-image: url('../../../../public/ToursPage/heart.png');
+    cursor: pointer;
+}
+
+.to-favor-btn:hover{
+    background-image: url('../../../../public/ToursPage/heart_hover.png');
+}
+
+.un-favor-btn{
+    z-index: 999;
+    position: relative;
+    height: 51px;
+    width: 62px;
+    top: -570px;
+    left: 360px;
+    border: none;
+    background-color: #ffffff00;
+    background-image: url('../../../../public/ToursPage/heart_hover.png');
+    /* cursor: pointer; */
+}
+
+.un-favor-btn:hover{
+    background-image: url('../../../../public/ToursPage/heart.png');
 }

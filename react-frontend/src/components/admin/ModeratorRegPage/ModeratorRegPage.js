@@ -145,7 +145,7 @@ export default function ModeratorRegPage() {
                     </form>
                 </div>
                 <div className='button-block'>
-                    <button className='auth-button' onClick={handleReg}>Зарегестрировать</button>
+                    <button className='auth-button' onClick={handleReg}>Зарегистрировать</button>
                 </div>
             </div>
 

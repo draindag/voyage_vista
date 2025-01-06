@@ -20,7 +20,7 @@ export default function AuthPage() {
     const [passwordAgain, setPasswordAgain] = useState("");
     const [validPassAgain, setPassAgain,] = useState(true);
 
-    const { userData, setUserData } = useAuthContext();
+    const {setUserData } = useAuthContext();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -67,7 +67,7 @@ export default function AuthPage() {
                 setUserData(responseData);
                 console.log(responseData);
                 alert("Вы успешно авторизованы!");
-                navigate("/");
+                navigate(-1);
             } else {
                 let responseData = await response.json()
                 let messages = "";
@@ -149,7 +149,7 @@ export default function AuthPage() {
             <label>Почта</label>
             <input className={validLogin ? '' : 'invalid-input'}
                 title={validLogin ? '' : 'Логин должен иметь не менее 4-х символов'}
-                type='text' placeholder='Введите логин'
+                type='text' placeholder='Введите почту'
                 onChange={(value) => setEmail(value.target.value)}
             ></input>
             <label>Пароль</label>

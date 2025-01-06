@@ -1,0 +1,207 @@
+.profile-container {
+    padding-left: 77px;
+    display: flex;
+}
+
+
+.control-panel {
+    max-width: 400px;
+    height: 679px;
+    border: 3px solid #5D7EA7;
+    margin-right: 59px;
+}
+
+.control-panel button {
+    width: 100%;
+    height: 110px;
+    border: none;
+    font-family: Inria Serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: black;
+    background-color: #fff;
+    cursor: pointer;
+    transition: 0.1s ease;
+}
+
+.control-panel button:hover {
+    background-color: #e4e4e4;
+}
+
+
+.control-panel-head {
+    display: flex;
+    align-items: center;
+    height: 126px;
+    border-bottom: 1px solid #5D7EA7;
+    margin-bottom: 70px;
+}
+
+.control-panel-head p {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.profile-data {
+    width: 1300px;
+}
+
+.profile-data-button {
+    color: #1A58C4;
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+
+    font-family: Inria Serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.profile-data-button:hover {
+    color: #124192;
+    text-decoration: underline;
+}
+
+
+.profile-data-h1 {
+    margin-top: 0;
+    margin-bottom: 59px;
+    vertical-align: text-top;
+    font-family: Inria Serif;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 44px;
+    text-align: left;
+    text-decoration-skip-ink: none;
+
+}
+
+.profile-data-label {
+
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-bottom: 23px;
+    display: block;
+
+}
+
+.profile-data-input {
+    padding-left: 10px;
+    display: inline-block;
+    width: 614px;
+    height: 54px;
+    border: 3px solid #5D7EA7;
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-right: 49px;
+    margin-bottom: 39px;
+    margin: 0 49px 39px 0px;
+}
+
+.profile-data-input-p {
+    padding-top: 15px;
+}
+
+.submit-new-profile-button {
+    color: #fff;
+    background-color: #5D7EA7;
+    width: 261px;
+    height: 82px;
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 35px;
+
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    display: block;
+
+}
+
+
+
+.slide-label {
+    font-family: Inria Serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    width: 240px;
+    /* display: inline-block; */
+}
+
+
+.slide-input {
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 44px;
+    width: 370px;
+    border-radius: 3px;
+    border: 2px solid #5D7EA7;
+    font-family: Inria Serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 31.17px;
+    text-align: left;
+    vertical-align: middle;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin: 0;
+    display: inline-block;
+
+
+}
+
+
+.profile-tour-card {
+    width: 993px;
+    height: 492px;
+    border: 3px solid #5D7EA7;
+    margin: auto;
+}
+
+.profile-tour-card div {
+    margin-bottom: 13px;
+}
+
+.profile-tour-card-line-div {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.profile-tour-card-h1 {
+    font-family: Inria Serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 35px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+
+}
