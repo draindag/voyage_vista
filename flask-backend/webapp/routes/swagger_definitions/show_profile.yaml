@@ -19,6 +19,9 @@ responses:
           description: Показатель успеха/неуспеха
         user:
           $ref: '#/definitions/User'
+        verification_code:
+          type: string
+          description: Личный код модератора для подключения рассылки в телеграме
     examples:
       application/json:
         success: true
@@ -63,6 +66,7 @@ responses:
                 country_id: "b0a3a4ce-b5c8-42d9-b23a-d93d768e0c62"
                 country_name: "Италия"
                 country_description: "Страна с богатой культурой"
+        verification_code: "1M2O3D4E5R6"
 
   401:
     description: JWT токен с данными пользователя не прошел проверку
