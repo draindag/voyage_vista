@@ -28,11 +28,11 @@ jobs:
           pip install pytest pytest-cov  # pytest будет использоваться для тестирования
           
       - name: Run tests
-        run: pytest tests/  
+        run: pytest --ignore=tests/conftest.py tests/
 
       # Генерация и загрузка отчёта о покрытии кода тестами на Codecov
       - name: Check code coverage
-        run: pytest --cov=flask-backend --cov-report=xml  
+        run: pytest --cov=flask-backend --cov-report=xml --cov-ignore=tests/conftest.py 
         
       - name: Upload coverage report
         uses: codecov/codecov-action@v3
