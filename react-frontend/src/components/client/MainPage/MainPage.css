@@ -168,6 +168,8 @@ h1 {
 
 .reason h2 {
     margin: 0;
+    color: #ffffff00;
+    -webkit-text-stroke: 1px #000000;
     position: relative;
     font-family: Inter;
     left: -305px;
