@@ -13,7 +13,7 @@ import dayjs from 'dayjs'
 
 
 export default function ProfilePage() {
-    const [state, setState] = useState({ user: null, favor: [{}], tours: [{}] });
+    const [state, setState] = useState({ user: null, favor: [{}], tours: [{}], tgToken: null });
     const [tab, setTab] = useState(1);
     const [changes, setChanges] = useState(null);
 
@@ -200,10 +200,15 @@ export default function ProfilePage() {
         console.log(response)
         if (response.data) {
             let data = response.data.user
+            let token = null;
+            if(userData.role === 'moderator'){
+                token = response.data.verification_code
+            }
             setState({
                 user: { login: data.login, email: data.email },
                 favor: data.fav_tours,
                 tours: data.transactions,
+                tgToken: token
             });
             if (!prevUserDataRef.current || JSON.stringify(prevUserDataRef.current) !== JSON.stringify(userData)) {
                 setUserData(response.userData);
@@ -286,6 +291,10 @@ export default function ProfilePage() {
                     break;
                 default:
                     name = 'ПРОФИЛЬ';
+                    let tokenText = state.tgToken ? <>
+                    <p className='token-text'>Ваш код для подключения рассылки уведомлений: <span className='token-code'>{state.tgToken}</span></p>
+                </> : null;
+                    
                     content = <>
                         <p className='profile-data-label'>Логин:</p>
                         <div>
@@ -305,6 +314,7 @@ export default function ProfilePage() {
                             {/* <p className='profile-data-input profile-data-input-p' >***</p> */}
                             <button className='profile-data-button' style={{ display: 'inline-block' }} onClick={() => { setChanges(3) }}>Изменить</button>
                         </div>
+                        {tokenText}
                     </>;
                     break;
             }

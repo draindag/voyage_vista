@@ -16,6 +16,8 @@ export default function ToursPage() {
 
     let path;
 
+    let headerImg = `/cover_images/${id}.png`;
+
     switch (name) {
         case 'by-categ':
             path = `/api/tours/categories/${id}`;
@@ -25,9 +27,11 @@ export default function ToursPage() {
             break;
         case 'discount':
             path = `/api/tours/special_offers`;
+            headerImg = '/MainPage/Images/sales.jpg';
             break;
         default:
             path = '/api/tours/popular';
+            headerImg = '/MainPage/Images/popular.jpg';
             break;
     }
 
@@ -135,10 +139,13 @@ export default function ToursPage() {
             )
         })
     }
+    else{
+        toursCards.push(<>Туров пока нет! Зайдите позже.</>)
+    }
     return (
         <>
             <div className="tours-header">
-                <img alt='' src={`/cover_images/${id}.png`}></img>
+                <img alt='' src={headerImg}></img>
                 <div className='triangle-back'></div>
             </div>
             <div className='tours-container'>

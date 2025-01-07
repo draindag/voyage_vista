@@ -205,3 +205,24 @@
 
 
 }
+
+.token-text {
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.token-code {
+    font-family: Inria Serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 35px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: blue;
+}
