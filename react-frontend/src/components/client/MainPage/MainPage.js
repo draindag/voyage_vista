@@ -192,8 +192,8 @@ export default function MainPage() {
                     <div className='comment-container'>
                         <div className='comment'>
                             <div className='comment-header'>
-                                <img src={'/MainPage/Images/glad.jpg'} alt="" />
-                                <h3>Валерий Жмышенко</h3>
+                                <img src={'/MainPage/Images/glad.png'} alt="" />
+                                <h3>Робаут Жиллиман</h3>
                             </div>
                             <div className='comment-content'>
                                 <p>
