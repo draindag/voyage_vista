@@ -161,7 +161,7 @@ export default function EntityList() {
         };
         fetchData();
     // eslint-disable-next-line
-    }, []);
+    }, [location]);
 
     let listData;
     if (state.entityes) {
