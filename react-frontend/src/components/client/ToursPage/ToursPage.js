@@ -40,18 +40,19 @@ export default function ToursPage() {
         page: 1,
         fav_tours_list: []
     });
-
+    console.log('Состояние')
     console.log(state)
 
     useEffect(() => {
         const callFetch = async () => {
+            console.log("re render")
             const response = await fetchData(userData, path, false);
             let profileResponse = { data: null }
             if (userData) {
                 profileResponse = await fetchData(userData, `/api/profile`);
-                console.log(profileResponse.data)
+                // console.log(profileResponse.data)
             }
-            console.log(response)
+            
             if (response.data && (!userData || profileResponse?.data)) {
                 let fav_tours;
                 if (userData && profileResponse) {
@@ -65,7 +66,7 @@ export default function ToursPage() {
         };
         callFetch();
         // eslint-disable-next-line 
-    }, [userData]);
+    }, [userData, location]);
 
     const favorReq = async (type, id, index) => {
         if (!userData) {

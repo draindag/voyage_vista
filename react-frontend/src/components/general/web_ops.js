@@ -47,9 +47,6 @@ const tryGetReq = async (token, url) => {
 
 
 const tryPostReq = async (token, url, reqData, method, form = false) => {
-    console.log(`${method} запрос для`);
-    console.log(reqData);
-
     let headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Accept': 'application/json;charset=utf-8',
@@ -101,7 +98,6 @@ const formAnswer = (res, status, userData, type = 1) => {
 const sendData = async (userData, url, reqData, method, form = false, needCheck = true) => {
     try {
         let newUser = userData;
-        console.log(`Токен начала ${newUser.access_token}`)
         if (needCheck) {
             let refreshResult = await refresh(userData);
             if (!refreshResult) {
@@ -111,7 +107,6 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
                 newUser = refreshResult;
             }
         }
-        console.log(`Токен факт ${newUser.access_token}`)
         const response = await tryPostReq(newUser.access_token, url, reqData, method, form);
         const content = await response.json();
         return formAnswer(content, response.status, newUser)
@@ -124,7 +119,6 @@ const sendData = async (userData, url, reqData, method, form = false, needCheck 
 const fetchData = async (userData, url, needCheck = true) => {
     // try {
         let newUser = userData;
-        console.log(`Токен начала ${newUser?.access_token}`)
         if (needCheck) {
             let refreshResult = await refresh(userData);
             if (!refreshResult) {
@@ -134,10 +128,8 @@ const fetchData = async (userData, url, needCheck = true) => {
                 newUser = refreshResult;
             }
         }
-        console.log(`Токен факт ${newUser?.access_token}`)
         const response = await tryGetReq(newUser?.access_token, url);
         const content = await response.json();
-        console.log(content);
         return formAnswer(content, response.status, newUser)
     // } catch (e) {
     //     return { data: null, userData: null, message: "Не удалось. Попробуйте позже", action: "except", ex: e };
