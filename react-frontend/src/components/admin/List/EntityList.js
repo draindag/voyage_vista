@@ -1,6 +1,6 @@
 import './EntityList.css';
 import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { refreshToken, checkToken, sendData } from '../../general/web_ops';
 import { setCookieInfo, deleteCookie } from '../../general/cookie_ops';
@@ -169,7 +169,7 @@ export default function EntityList() {
             <div key={item[`${shortName}_id`]} className='entity-list-element'>
                 <div className='entity-name'>{item[nameField]}</div>
                 <div style={{ paddingRight: '50px' }}>
-                    <a href={`/admin/${apiPath}/${item[`${shortName}_id`]}/edit`} className='element-btn'>Изменить</a>
+                    <Link to={`/admin/${apiPath}/${item[`${shortName}_id`]}/edit`} className='element-btn'>Изменить</Link>
                     <button onClick={() => deleteItem(`/api/admin_panel/${apiPath}/${item[`${shortName}_id`]}/delete`)} className='element-btn'>Удалить</button>
                 </div>
             </div>
@@ -182,7 +182,7 @@ export default function EntityList() {
         <div key='entity-container' className='entity-container' style={{ backgroundColor: '#D9D9D9' }}>
             <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
                 <h2>Список {headerName}</h2>
-                <div style={{ paddingRight: '50px' }}><a href={`/admin/${apiPath}/add`} className='element-btn'>Добавить</a></div>
+                <div style={{ paddingRight: '50px' }}><Link to={`/admin/${apiPath}/add`} className='element-btn'>Добавить</Link></div>
             </div>
             <div className='entity-list'>
                 {listData}

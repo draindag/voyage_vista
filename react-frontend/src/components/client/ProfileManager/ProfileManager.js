@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProfileManager.css';
+import { Link } from 'react-router';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { deleteCookie } from '../../general/cookie_ops';
 import { useNavigate } from 'react-router';
@@ -9,10 +10,10 @@ export default function ProfileManager(props) {
     const navigate = useNavigate();
     let ulContent;
     if(userData === null){
-        ulContent = <><li><a href='/login'>Войти</a></li><li><a href='/reg'>Регистрация</a></li></>
+        ulContent = <><li><Link to='/login'>Войти</Link></li><li><Link to='/reg'>Регистрация</Link></li></>
     }
     else{
-        ulContent = <><li><a href='/profile'>Профиль</a></li><li><button onClick={()=>{
+        ulContent = <><li><Link to='/profile'>Профиль</Link></li><li><button onClick={()=>{
             deleteCookie();
             setUserData(null);
             props.onExit();

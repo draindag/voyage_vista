@@ -1,4 +1,5 @@
 import './ToursCategoryesPage.css';
+import { Link } from 'react-router';
 import React, { useEffect, useState } from 'react';
 import TourSlider from './TourSlider';
 
@@ -22,7 +23,7 @@ export default function ToursCategoryesPage() {
     let sliderObjects = []
     state.forEach(item => {
         sliderObjects.push(<>
-            <a href={`/tours/${item.category_id}?type=by-categ`}>
+            <Link to={`/tours/${item.category_id}?type=by-categ`}>
                 <div className='card-tc'>
                     <div>
                         <h1>{item?.category_title}</h1>
@@ -32,7 +33,7 @@ export default function ToursCategoryesPage() {
                         <img src={`/cover_images/${item.category_image}`} alt=''></img>
                     </div>
                 </div>
-            </a>
+            </Link>
         </>)
     })
 

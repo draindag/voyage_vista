@@ -1,4 +1,5 @@
 import './MainPage.css';
+import { Link } from 'react-router';
 import React, { useEffect, useState } from 'react';
 import SimpleSlider from '../Slider/Slider';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
@@ -34,7 +35,7 @@ export default function MainPage() {
 
     let categCards = [
         <>
-            <a href='/tours?type=popular' style={{ textDecoration: "none", }}>
+            <Link to='/tours?type=popular' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
@@ -45,10 +46,10 @@ export default function MainPage() {
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
         </>,
         <>
-            <a href='/tours?type=discount' style={{ textDecoration: "none", }}>
+            <Link to='/tours?type=discount' style={{ textDecoration: "none", }}>
                 <div>
                     <div className='card'>
                         <div className='image-container'>
@@ -59,12 +60,12 @@ export default function MainPage() {
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
         </>,
     ];
     state.forEach(item => {
         categCards.push(<>
-            <a href={`/tours/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
+            <Link to={`/tours/${item.category_id}?type=by-categ`} style={{ textDecoration: "none", }}>
             <div>
                 <div className='card'>
                     <div className='image-container'>
@@ -75,7 +76,7 @@ export default function MainPage() {
                     </div>
                 </div>
             </div>
-        </a>
+        </Link>
         </>)
     });
 
@@ -96,12 +97,12 @@ export default function MainPage() {
             <div className="header-main">
 
                 <p className="first-header-text">Ваше <br></br>идеальное<br></br> путешествие <br></br>начинается здесь!</p>
-                <a style={{ textDecoration: 'none' }} href='/tours-categoryes'>
+                <Link style={{ textDecoration: 'none' }} to='/tours-categoryes'>
                     <div className="choose-country-button">
                         <span>Выбрать тур</span>
                         <img src={'/MainPage/Images/arrow_tour.png'} alt="" />
                     </div>
-                </a>
+                </Link>
             </div>
 
             <div className='container'>

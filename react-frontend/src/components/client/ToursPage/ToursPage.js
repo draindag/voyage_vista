@@ -1,6 +1,6 @@
 import './ToursPage.css';
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuthContext } from '../../general/AuthContext/AuthContext';
 import { fetchData, sendData } from '../../general/web_ops';
 import { deleteCookie } from '../../general/cookie_ops';
@@ -111,7 +111,7 @@ export default function ToursPage() {
             toursCards.push(
                 <>
                     <div>
-                        <a href={`/tour-page/${item.tour_id}`}>
+                        <Link to={`/tour-page/${item.tour_id}`}>
                             <div className='tour-card'>
                                 <div className='tour-card-image-container'>
                                     <img src={`/cover_images/${item.tour_image}`} alt="" />
@@ -129,7 +129,7 @@ export default function ToursPage() {
                                     </div>
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                         <button
                             onClick={async () => await favorReq(state.fav_tours_list[index], item.tour_id, index)}
                             className={!state.fav_tours_list[index] ? 'to-favor-btn' : 'un-favor-btn'}></button>

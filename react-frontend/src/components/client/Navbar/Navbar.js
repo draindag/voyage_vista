@@ -1,4 +1,5 @@
 import './Navbar.css';
+import { Link } from 'react-router';
 import React, { useState, useEffect } from 'react';
 import ProfileManager from '../ProfileManager/ProfileManager';
 import { fetchData } from '../../general/web_ops';
@@ -54,7 +55,7 @@ export default function Navbar() {
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleResize);
         };
-    // eslint-disable-next-line
+        // eslint-disable-next-line
     }, []);
 
 
@@ -62,7 +63,7 @@ export default function Navbar() {
 
     countries.forEach(elem => {
         ulElements.push(<li>
-            <a href={`/tours/${elem.country_id}?type=by-country`}>{elem.country_name}</a>
+            <Link to={`/tours/${elem.country_id}?type=by-country`}>{elem.country_name}</Link>
         </li>)
     })
 
@@ -76,11 +77,10 @@ export default function Navbar() {
             </div>
             <div className="header-navbar" id="header-navbar" style={{ background: scrolled ? 'none' : 'var(--navbar-background)' }}>
                 <div className="navbar-content">
-                    <a href="/"><img src={'/Navbar/Images/home.svg'} alt="" /><span>Главная</span></a>
-                    {/* <a href="/countryes"><img src={country} alt="" /><span>Страны</span></a> */}
+                    <Link to={'/'}><img src={'/Navbar/Images/home.svg'} alt="" /><span>Главная</span></Link>
                     <button id='country-button' className='country-button' onClick={() => setShowList(!showList)}><img src={'/Navbar/Images/country.svg'} alt="" /><span>Страны</span></button>
-                    <a href="/info"><img src={'/Navbar/Images/tourist.svg'} alt="" /><span>Туристам</span></a>
-                    <a href="/contacts"><img src={'/Navbar/Images/contacts.svg'} alt="" /><span>Контактная информация</span></a>
+                    <Link to={'/info'}><img src={'/Navbar/Images/tourist.svg'} alt="" /><span>Туристам</span></Link>
+                    <Link to={'/contacts'}><img src={'/Navbar/Images/contacts.svg'} alt="" /><span>Контактная информация</span></Link>
                     <button id='profile-button' className='profile-button' onClick={() => setShowProfileManager(!showProfileManager)}><img src={'/Navbar/Images/personalAccount.svg'} alt="" /><span>Мой кабинет</span></button>
                 </div>
             </div>
